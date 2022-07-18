@@ -1,4 +1,5 @@
 package best.tigers.tynk_dialog;
+
 import best.tigers.tynk_dialog.game.Dialog;
 import best.tigers.tynk_dialog.game.DialogPage;
 
@@ -18,4 +19,3 @@ public class Main {
     System.out.println(testContainer.serialize().toString());
   }
 }
-

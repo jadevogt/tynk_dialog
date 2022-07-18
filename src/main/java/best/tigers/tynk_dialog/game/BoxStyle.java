@@ -1,4 +1,5 @@
 package best.tigers.tynk_dialog.game;
+
 import java.nio.file.Path;
 import javax.json.Json;
 import javax.json.JsonValue;

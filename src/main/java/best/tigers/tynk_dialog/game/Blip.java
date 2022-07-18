@@ -1,4 +1,5 @@
 package best.tigers.tynk_dialog.game;
+
 import java.nio.file.Path;
 import javax.json.Json;
 import javax.json.JsonValue;
@@ -6,6 +7,7 @@ import javax.json.JsonValue;
 public class Blip {
   // private Path path;
   private String name;
+
   public Blip(String name) {
     this.name = name;
   }

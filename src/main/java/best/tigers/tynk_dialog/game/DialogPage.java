@@ -1,4 +1,5 @@
 package best.tigers.tynk_dialog.game;
+
 import javax.json.JsonObject;
 import javax.json.Json;
 
@@ -9,7 +10,8 @@ public class DialogPage {
   private Blip blip;
   private boolean canSkip;
 
-  public DialogPage(Character speaker, FormattedText content, BoxStyle textBoxStyle, Blip blip, boolean canSkip) {
+  public DialogPage(
+      Character speaker, FormattedText content, BoxStyle textBoxStyle, Blip blip, boolean canSkip) {
     this.content = content;
     this.speaker = speaker;
     this.textBoxStyle = textBoxStyle;
@@ -26,12 +28,14 @@ public class DialogPage {
   }
 
   public String toString() {
-    String result = speaker.toString() + " SAYS: \n" + content.toString() + "\nWITH SOUND " + blip.toString();
+    String result =
+        speaker.toString() + " SAYS: \n" + content.toString() + "\nWITH SOUND " + blip.toString();
     return result;
   }
 
   public JsonObject serialize() {
-    var result = Json.createObjectBuilder()
+    var result =
+        Json.createObjectBuilder()
             .add("textbox", textBoxStyle.serialize())
             .add("txt", content.toString())
             .add("speaker", speaker.toString())
