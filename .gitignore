@@ -1,3 +1,8 @@
 /out/
 tynk_dialog.iml
 /.idea/
+/target/
+compiler.xml
+jarRepositories.xml
+misc.xml
+vcs.xml
