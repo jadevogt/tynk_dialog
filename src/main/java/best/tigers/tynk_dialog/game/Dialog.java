@@ -16,6 +16,11 @@ public class Dialog {
   private String title;
   private ArrayList<DialogPage> contents;
 
+  public Dialog(String title, ArrayList<DialogPage> contents) {
+    this.title = title;
+    this.contents = contents;
+  }
+
   /**
    * Creates a new Dialog with the specified title
    *
@@ -47,10 +52,6 @@ public class Dialog {
     contents.add(newPage);
   }
 
-  public String toString() {
-    return title;
-  }
-
   /**
    * Serializes all contained DialogPages and itself
    *
@@ -67,5 +68,9 @@ public class Dialog {
             .add("contents", pageArray.build())
             .build();
     return result;
+  }
+
+  public String toString() {
+    return serialize().toString();
   }
 }

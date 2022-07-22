@@ -19,6 +19,15 @@ public class DialogPage {
     this.canSkip = canSkip;
   }
 
+  public DialogPage(String raw_speaker, String raw_content, String raw_textBoxStyle,
+                    String raw_blip, boolean canSkip) {
+    speaker = new Character(raw_speaker);
+    content = new FormattedText(raw_content);
+    textBoxStyle = new BoxStyle(raw_textBoxStyle);
+    blip = new Blip(raw_blip);
+    this.canSkip = canSkip;
+  }
+
   public DialogPage(Character speaker) {
     this(speaker, new FormattedText(), new BoxStyle(), new Blip(), true);
   }
