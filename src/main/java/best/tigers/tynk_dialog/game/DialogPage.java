@@ -36,10 +36,39 @@ public class DialogPage {
     this(new Character());
   }
 
+  public Character getSpeaker() {
+    return speaker;
+  }
+
+  public void setSpeaker(String newCharacter) {
+    speaker = new Character(newCharacter);
+  }
+
+  public FormattedText getContent() {
+    return content;
+  }
+
+  public void setContent(String newContent) {
+    content = new FormattedText(newContent);
+  }
+
+  public Blip getBlip() {
+    return blip;
+  }
+
+  public void setBlip(String newBlip) {
+    blip = new Blip(newBlip);
+  }
+  public BoxStyle getTextBoxStyle() {
+    return textBoxStyle;
+  }
+
+  public void setTextBoxStyle(String newStyle) {
+    textBoxStyle = new BoxStyle(newStyle);
+  }
+
   public String toString() {
-    String result =
-        speaker.toString() + " SAYS: \n" + content.toString() + "\nWITH SOUND " + blip.toString();
-    return result;
+    return speaker.toString() + " SAYS: \n" + content.toString() + "\nWITH SOUND " + blip.toString();
   }
 
   public JsonObject serialize() {

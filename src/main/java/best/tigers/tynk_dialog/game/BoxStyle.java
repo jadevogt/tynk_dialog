@@ -16,6 +16,11 @@ public class BoxStyle {
     this.name = null;
   }
 
+  @Override
+  public String toString() {
+    return name;
+  }
+
   public JsonValue serialize() {
     if (java.util.Objects.nonNull(name)) {
       return Json.createValue(name);
