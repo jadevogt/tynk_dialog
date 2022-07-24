@@ -1,11 +1,11 @@
-package best.tigers.tynk_dialog.gui;
+package best.tigers.tynk_dialog.gui.old;
 
 import best.tigers.tynk_dialog.game.DialogPage;
 
-public class DialogPageModel extends Observable {
+public class DialogPageModelOld implements Observable {
   private final DialogPage dialogPage;
 
-  public DialogPageModel(DialogPage dialogPage) {
+  public DialogPageModelOld(DialogPage dialogPage) {
     super();
     this.dialogPage = dialogPage;
   }
@@ -44,5 +44,20 @@ public class DialogPageModel extends Observable {
   public void setBoxStyle(String newStyle) {
     dialogPage.setTextBoxStyle(newStyle);
     notifyListeners();
+  }
+
+  @Override
+  public void attachListener(Observer observer) {
+
+  }
+
+  @Override
+  public void removeListener(Observer observer) {
+
+  }
+
+  @Override
+  public void notifyListeners() {
+
   }
 }

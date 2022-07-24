@@ -4,80 +4,71 @@ import javax.json.JsonObject;
 import javax.json.Json;
 
 public class DialogPage {
-  private Character speaker;
-  private FormattedText content;
-  private BoxStyle textBoxStyle;
-  private Blip blip;
+  private String speaker;
+  private String content;
+  private String textStyle;
+  private String blip;
   private boolean canSkip;
 
   public DialogPage(
-      Character speaker, FormattedText content, BoxStyle textBoxStyle, Blip blip, boolean canSkip) {
+          String speaker, String content, String textStyle, String blip, boolean canSkip) {
     this.content = content;
     this.speaker = speaker;
-    this.textBoxStyle = textBoxStyle;
+    this.textStyle = textStyle;
     this.blip = blip;
     this.canSkip = canSkip;
   }
 
-  public DialogPage(String raw_speaker, String raw_content, String raw_textBoxStyle,
-                    String raw_blip, boolean canSkip) {
-    speaker = new Character(raw_speaker);
-    content = new FormattedText(raw_content);
-    textBoxStyle = new BoxStyle(raw_textBoxStyle);
-    blip = new Blip(raw_blip);
-    this.canSkip = canSkip;
-  }
-
-  public DialogPage(Character speaker) {
-    this(speaker, new FormattedText(), new BoxStyle(), new Blip(), true);
+  public DialogPage(String speaker) {
+    this(speaker, "-", null, null, true);
   }
 
   public DialogPage() {
-    this(new Character());
+    this("Unnamed Character");
   }
 
-  public Character getSpeaker() {
+  public String getSpeaker() {
     return speaker;
   }
 
   public void setSpeaker(String newCharacter) {
-    speaker = new Character(newCharacter);
+    speaker = newCharacter;
   }
 
-  public FormattedText getContent() {
+  public String getContent() {
     return content;
   }
 
   public void setContent(String newContent) {
-    content = new FormattedText(newContent);
+    content = newContent;
   }
 
-  public Blip getBlip() {
+  public String getBlip() {
     return blip;
   }
 
   public void setBlip(String newBlip) {
-    blip = new Blip(newBlip);
+    blip = newBlip;
   }
-  public BoxStyle getTextBoxStyle() {
-    return textBoxStyle;
+  public String getTextBoxStyle() {
+    return textStyle;
   }
 
   public void setTextBoxStyle(String newStyle) {
-    textBoxStyle = new BoxStyle(newStyle);
+    textStyle = newStyle;
   }
 
   public String toString() {
-    return speaker.toString() + " SAYS: \n" + content.toString() + "\nWITH SOUND " + blip.toString();
+    return speaker + " SAYS: \n" + content + "\nWITH SOUND " + blip;
   }
 
   public JsonObject serialize() {
     var result =
         Json.createObjectBuilder()
-            .add("textbox", textBoxStyle.serialize())
-            .add("txt", content.toString())
-            .add("speaker", speaker.toString())
-            .add("blip", blip.serialize())
+            .add("textbox", textStyle)
+            .add("txt", content)
+            .add("speaker", speaker)
+            .add("blip", blip)
             .add("canSkip", canSkip)
             .build();
     return result;

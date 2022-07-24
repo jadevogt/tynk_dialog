@@ -14,6 +14,14 @@ public class Character {
     this(defaultName);
   }
 
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String newName) {
+    name = newName;
+  }
+
   @Override
   public String toString() {
     return name;

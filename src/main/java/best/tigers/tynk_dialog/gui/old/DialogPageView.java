@@ -1,11 +1,9 @@
-package best.tigers.tynk_dialog.gui;
+package best.tigers.tynk_dialog.gui.old;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 public class DialogPageView extends JFrame {
     final private DialogPageViewPanel panel;
@@ -35,10 +33,10 @@ class DialogPageViewPanel extends JPanel implements Observer {
 
     @Override
     public void update() {
-        speakerText.setText(observedModel.getSpeaker());
-        contentText.setText(observedModel.getContent());
-        blipText.setText(observedModel.getBlip());
-        textboxStyleText.setText(observedModel.getBoxStyle());
+        speakerText.setText(observedModel.getSpeaker().toString());
+        contentText.setText(observedModel.getContent().toString());
+        blipText.setText(observedModel.getBlip().toString());
+        textboxStyleText.setText(observedModel.getTextBoxStyle().toString());
     }
 
     public DialogPageViewPanel() {

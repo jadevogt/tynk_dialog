@@ -1,18 +1,16 @@
 package best.tigers.tynk_dialog.game;
 
-import java.nio.file.Path;
 import javax.json.Json;
 import javax.json.JsonValue;
 
-public class BoxStyle {
-  // private Path path;
+public class Style {
   private String name;
 
-  public BoxStyle(String name) {
+  public Style(String name) {
     this.name = name;
   }
 
-  public BoxStyle() {
+  public Style() {
     this.name = null;
   }
 

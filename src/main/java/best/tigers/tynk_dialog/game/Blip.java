@@ -5,7 +5,6 @@ import javax.json.Json;
 import javax.json.JsonValue;
 
 public class Blip {
-  // private Path path;
   private String name;
 
   public Blip(String name) {

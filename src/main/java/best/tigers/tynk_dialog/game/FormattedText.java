@@ -12,6 +12,14 @@ public class FormattedText {
     this(defaultContent);
   }
 
+  public String getContent() {
+    return content;
+  }
+
+  public void setContent(String newContent) {
+    content = newContent;
+  }
+
   @Override
   public String toString() {
     return content;

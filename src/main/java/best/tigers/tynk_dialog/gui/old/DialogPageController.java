@@ -1,4 +1,4 @@
-package best.tigers.tynk_dialog.gui;
+package best.tigers.tynk_dialog.gui.old;
 
 import best.tigers.tynk_dialog.game.DialogPage;
 
@@ -10,7 +10,7 @@ public class DialogPageController {
   final private DialogPageView view;
 
   public DialogPageController(DialogPage displayedPage) {
-    model = new DialogPageModel(displayedPage);
+    model = new DialogPageModel();
     view = new DialogPageView();
 
     view.addWindowListener(new WindowAdapter() {

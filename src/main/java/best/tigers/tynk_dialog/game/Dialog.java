@@ -7,7 +7,6 @@ import javax.json.JsonObject;
 /**
  * Represents what the internal documentation refers to as a "Dialog File," essentially a titled
  * collection of DialogPage objects.
- *
  * @see DialogPage
  */
 public class Dialog {
@@ -23,7 +22,6 @@ public class Dialog {
 
   /**
    * Creates a new Dialog with the specified title
-   *
    * @param title a descriptive title for the Dialog
    */
   public Dialog(String title) {
@@ -45,7 +43,6 @@ public class Dialog {
 
   /**
    * Appends a page to the end of the collection of DialogPages
-   *
    * @param newPage a DialogPage object to be added
    */
   public void addPage(DialogPage newPage) {
@@ -54,7 +51,6 @@ public class Dialog {
 
   /**
    * Serializes all contained DialogPages and itself
-   *
    * @return the JSON representation of the Dialog
    */
   public JsonObject serialize() {
@@ -68,6 +64,10 @@ public class Dialog {
             .add("contents", pageArray.build())
             .build();
     return result;
+  }
+
+  public ArrayList<DialogPage> getPages() {
+    return contents;
   }
 
   public String toString() {
