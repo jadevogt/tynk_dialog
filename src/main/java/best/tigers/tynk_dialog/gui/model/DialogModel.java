@@ -8,53 +8,54 @@ import javax.swing.event.ListDataListener;
 import java.util.ArrayList;
 
 public class DialogModel implements ListModel, Observer {
-    private ArrayList<DialogPageModel> pages;
-    private ArrayList<ListDataListener> listeners;
-    public DialogModel() {
-        pages = new ArrayList<>();
-        listeners = new ArrayList<>();
-    }
+  private final ArrayList<DialogPageModel> pages;
+  private final ArrayList<ListDataListener> listeners;
 
-    public void addPage(DialogPageModel newPage) {
-        newPage.attachSubscriber(this);
-        pages.add(newPage);
-        notifyListeners();
-    }
+  public DialogModel() {
+    pages = new ArrayList<>();
+    listeners = new ArrayList<>();
+  }
 
-    public void deletePage(DialogPageModel removedPage) {
-        pages.remove(removedPage);
-        notifyListeners();
-    }
+  public void addPage(DialogPageModel newPage) {
+    newPage.attachSubscriber(this);
+    pages.add(newPage);
+    notifyListeners();
+  }
 
-    @Override
-    public int getSize() {
-        return pages.size();
-    }
+  public void deletePage(DialogPageModel removedPage) {
+    pages.remove(removedPage);
+    notifyListeners();
+  }
 
-    @Override
-    public Object getElementAt(int index) {
-        return pages.get(index);
-    }
+  @Override
+  public int getSize() {
+    return pages.size();
+  }
 
-    @Override
-    public void addListDataListener(ListDataListener l) {
-        listeners.add(l);
-    }
+  @Override
+  public Object getElementAt(int index) {
+    return pages.get(index);
+  }
 
-    public void notifyListeners() {
-        var event = new ListDataEvent(pages, 0, pages.size() - 1, ListDataEvent.CONTENTS_CHANGED);
-        for (var listener : listeners) {
-            listener.contentsChanged(event);
-        }
-    }
+  @Override
+  public void addListDataListener(ListDataListener l) {
+    listeners.add(l);
+  }
 
-    @Override
-    public void removeListDataListener(ListDataListener l) {
-        listeners.remove(l);
+  public void notifyListeners() {
+    var event = new ListDataEvent(pages, ListDataEvent.CONTENTS_CHANGED, 0, pages.size() - 1);
+    for (var listener : listeners) {
+      listener.contentsChanged(event);
     }
+  }
 
-    @Override
-    public void update() {
-        notifyListeners();
-    }
+  @Override
+  public void removeListDataListener(ListDataListener l) {
+    listeners.remove(l);
+  }
+
+  @Override
+  public void update() {
+    notifyListeners();
+  }
 }

@@ -1,19 +1,20 @@
 package best.tigers.tynk_dialog.game;
 
-import java.util.ArrayList;
 import javax.json.Json;
 import javax.json.JsonObject;
+import java.util.ArrayList;
 
 /**
  * Represents what the internal documentation refers to as a "Dialog File," essentially a titled
  * collection of DialogPage objects.
+ *
  * @see DialogPage
  */
 public class Dialog {
+  private static final String defaultTitle = "Untitled";
   private static int untitledDialogCount = 0;
-  private static String defaultTitle = "Untitled";
-  private String title;
-  private ArrayList<DialogPage> contents;
+  private final String title;
+  private final ArrayList<DialogPage> contents;
 
   public Dialog(String title, ArrayList<DialogPage> contents) {
     this.title = title;
@@ -22,6 +23,7 @@ public class Dialog {
 
   /**
    * Creates a new Dialog with the specified title
+   *
    * @param title a descriptive title for the Dialog
    */
   public Dialog(String title) {
@@ -35,7 +37,7 @@ public class Dialog {
    */
   public Dialog() {
     String suffix =
-        Dialog.untitledDialogCount > 0 ? " " + Integer.toString(Dialog.untitledDialogCount) : "";
+            Dialog.untitledDialogCount > 0 ? " " + Dialog.untitledDialogCount : "";
     title = defaultTitle + suffix;
     contents = new ArrayList<DialogPage>();
     Dialog.untitledDialogCount += 1;
@@ -43,6 +45,7 @@ public class Dialog {
 
   /**
    * Appends a page to the end of the collection of DialogPages
+   *
    * @param newPage a DialogPage object to be added
    */
   public void addPage(DialogPage newPage) {
@@ -51,6 +54,7 @@ public class Dialog {
 
   /**
    * Serializes all contained DialogPages and itself
+   *
    * @return the JSON representation of the Dialog
    */
   public JsonObject serialize() {
@@ -58,12 +62,10 @@ public class Dialog {
     for (DialogPage currentPage : contents) {
       pageArray.add(currentPage.serialize());
     }
-    var result =
-        Json.createObjectBuilder()
+    return Json.createObjectBuilder()
             .add("title", this.title)
             .add("contents", pageArray.build())
             .build();
-    return result;
   }
 
   public ArrayList<DialogPage> getPages() {

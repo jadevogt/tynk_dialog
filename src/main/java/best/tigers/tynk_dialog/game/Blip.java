@@ -1,11 +1,10 @@
 package best.tigers.tynk_dialog.game;
 
-import java.nio.file.Path;
 import javax.json.Json;
 import javax.json.JsonValue;
 
 public class Blip {
-  private String name;
+  private final String name;
 
   public Blip(String name) {
     this.name = name;
@@ -17,8 +16,7 @@ public class Blip {
 
   @Override
   public String toString() {
-    String result = java.util.Objects.nonNull(name) ? name : "unnamed";
-    return result;
+    return java.util.Objects.nonNull(name) ? name : "unnamed";
   }
 
   public JsonValue serialize() {

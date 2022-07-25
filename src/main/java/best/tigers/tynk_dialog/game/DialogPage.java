@@ -1,7 +1,7 @@
 package best.tigers.tynk_dialog.game;
 
-import javax.json.JsonObject;
 import javax.json.Json;
+import javax.json.JsonObject;
 
 public class DialogPage {
   private String speaker;
@@ -50,6 +50,7 @@ public class DialogPage {
   public void setBlip(String newBlip) {
     blip = newBlip;
   }
+
   public String getTextBoxStyle() {
     return textStyle;
   }
@@ -62,15 +63,21 @@ public class DialogPage {
     return speaker + " SAYS: \n" + content + "\nWITH SOUND " + blip;
   }
 
+  public boolean isCanSkip() {
+    return canSkip;
+  }
+
+  public void setCanSkip(boolean skippable) {
+    canSkip = skippable;
+  }
+
   public JsonObject serialize() {
-    var result =
-        Json.createObjectBuilder()
+    return Json.createObjectBuilder()
             .add("textbox", textStyle)
             .add("txt", content)
             .add("speaker", speaker)
             .add("blip", blip)
             .add("canSkip", canSkip)
             .build();
-    return result;
   }
 }

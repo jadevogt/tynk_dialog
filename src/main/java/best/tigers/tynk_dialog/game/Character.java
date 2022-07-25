@@ -1,9 +1,7 @@
 package best.tigers.tynk_dialog.game;
 
-import java.nio.file.Path;
-
 public class Character {
-  private static String defaultName = "???";
+  private static final String defaultName = "???";
   private String name;
 
   public Character(String name) {

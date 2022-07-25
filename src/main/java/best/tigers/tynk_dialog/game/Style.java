@@ -4,7 +4,7 @@ import javax.json.Json;
 import javax.json.JsonValue;
 
 public class Style {
-  private String name;
+  private final String name;
 
   public Style(String name) {
     this.name = name;

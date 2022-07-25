@@ -1,7 +1,7 @@
 package best.tigers.tynk_dialog.game;
 
 public class FormattedText {
-  private static String defaultContent = "-";
+  private static final String defaultContent = "-";
   private String content;
 
   public FormattedText(String content) {
