@@ -1,5 +1,6 @@
 package best.tigers.tynk_dialog.gui.view;
 
+import best.tigers.tynk_dialog.gui.Integration;
 import best.tigers.tynk_dialog.gui.model.DialogModel;
 import best.tigers.tynk_dialog.gui.model.DialogPageModel;
 import best.tigers.tynk_dialog.gui.view.components.DialogPageCellRenderer;
@@ -26,6 +27,7 @@ public class DialogEditorView implements DialogViewer, Observer {
   protected final JPanel panel;
 
   public DialogEditorView(DialogModel model) {
+    Integration.runIntegrations();
     this.model = model;
     panel = new JPanel();
     panel.setMinimumSize(new Dimension(0, 0));

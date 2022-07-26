@@ -1,5 +1,6 @@
 package best.tigers.tynk_dialog.gui.view;
 
+import best.tigers.tynk_dialog.gui.Integration;
 import best.tigers.tynk_dialog.gui.controller.DialogController;
 import best.tigers.tynk_dialog.gui.model.PrimaryListModel;
 import best.tigers.tynk_dialog.gui.view.components.DialogCellRenderer;
@@ -23,6 +24,7 @@ public class PrimaryListView implements Observer {
   final public static Dimension PREFERRED_SIZE = new Dimension(500, 300);
 
   public PrimaryListView(PrimaryListModel model) {
+    Integration.runIntegrations();
     frame = new JFrame();
     frame.setTitle("Tynk Dialog Editor - " + model.getPath());
     this.model = model;

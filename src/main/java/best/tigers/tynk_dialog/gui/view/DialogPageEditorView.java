@@ -1,5 +1,6 @@
 package best.tigers.tynk_dialog.gui.view;
 
+import best.tigers.tynk_dialog.gui.Integration;
 import best.tigers.tynk_dialog.gui.model.DialogPageModel;
 
 import javax.swing.*;
@@ -25,6 +26,7 @@ public class DialogPageEditorView implements Observer, DialogPageViewer {
   private final JTextArea styleField;
 
   public DialogPageEditorView(DialogPageModel model) {
+    Integration.runIntegrations();
     this.model = model;
     panel = new JPanel();
     frame = new JFrame();
