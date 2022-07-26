@@ -65,7 +65,7 @@ public class PrimaryListController {
     }
 
   public void exitOperation() {
-    var response = view.prompt();
+    int response = view.prompt();
     switch (response) {
       case 0:
         saveInPlace();
@@ -78,7 +78,7 @@ public class PrimaryListController {
   }
 
   public void newFile() {
-    var response = view.prompt();
+    int response = view.prompt();
     switch (response) {
       case 0:
         saveInPlace();
@@ -94,23 +94,23 @@ public class PrimaryListController {
   }
 
   public String selectFile() {
-    var chooser = new JFileChooser();
+    JFileChooser chooser = new JFileChooser();
     chooser.setDialogType(JFileChooser.SAVE_DIALOG);
-    var jFilter = new JSONFilter();
-    var tFilter = new TextFilter();
+    JSONFilter jFilter = new JSONFilter();
+    TextFilter tFilter = new TextFilter();
     chooser.addChoosableFileFilter(jFilter);
     chooser.addChoosableFileFilter(tFilter);
     chooser.showDialog(null, "Select or Create");
-    var newPath = chooser.getSelectedFile().getAbsolutePath();
+    String newPath = chooser.getSelectedFile().getAbsolutePath();
     model.setPath(newPath);
     return newPath;
   }
 
   public void openFile() {
     // fileHandle = new DialogFile(path);
-    var path = selectFile();
+    String path = selectFile();
     fileHandle.setPath(path);
-    var theDialogs = new ArrayList<Dialog>();
+    ArrayList<Dialog> theDialogs = new ArrayList<Dialog>();
     try {
       theDialogs = fileHandle.readFile();
     } catch (Exception e) {
@@ -127,20 +127,20 @@ public class PrimaryListController {
   }
 
   public void addDialog() {
-    var newDialog = new DialogModel();
-    var newPanel = new DialogController(newDialog);
+    DialogModel newDialog = new DialogModel();
+    DialogController newPanel = new DialogController(newDialog);
     model.addDialog(newPanel);
   }
 
   public void removeCurrentDialog() {
-    var selected = view.currentSelection();
+    DialogController selected = view.currentSelection();
     if (selected != null) {
       model.deleteDialog(selected);
     }
   }
 
   public void duplicateCurrentDialog() {
-    var selected = view.currentSelection();
+    DialogController selected = view.currentSelection();
     if (selected != null) {
       // This isn't going to work until I implement deep copies
       model.addDialog(selected);
@@ -163,7 +163,7 @@ public class PrimaryListController {
   }
 
   public void saveAs() {
-    var newPath = selectFile();
+    String newPath = selectFile();
     Log.info("Setting path to " + newPath + "...");
     fileHandle.setPath(newPath);
     saveInPlace();

@@ -48,8 +48,8 @@ public class PrimaryListModel extends AbstractModel implements ListModel<DialogC
     this.path = path;
     dialogFiles = new ArrayList<>();
     listDataListeners = new ArrayList<>();
-    for (var dialog : dialogs) {
-      var dialogModel = new DialogModel(dialog);
+    for (Dialog dialog : dialogs) {
+      DialogModel dialogModel = new DialogModel(dialog);
       addDialog(new DialogController(dialogModel));
     }
   }
@@ -82,8 +82,8 @@ public class PrimaryListModel extends AbstractModel implements ListModel<DialogC
 
   public void notifyListeners() {
     modified = true;
-    var event = new ListDataEvent(dialogFiles, ListDataEvent.CONTENTS_CHANGED, 0, dialogFiles.size() - 1);
-    for (var listener : listDataListeners) {
+    ListDataEvent event = new ListDataEvent(dialogFiles, ListDataEvent.CONTENTS_CHANGED, 0, dialogFiles.size() - 1);
+    for (ListDataListener listener : listDataListeners) {
       listener.contentsChanged(event);
     }
     notifySubscribers();
@@ -106,8 +106,8 @@ public class PrimaryListModel extends AbstractModel implements ListModel<DialogC
   }
 
   public ArrayList<Dialog> getContent() {
-    var contents = new ArrayList<Dialog>();
-    for (var currentDialog : dialogFiles) {
+    ArrayList<Dialog> contents = new ArrayList<Dialog>();
+    for (DialogController currentDialog : dialogFiles) {
       contents.add(currentDialog.getModel().getDialog());
     }
     return contents;

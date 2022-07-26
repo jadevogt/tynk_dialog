@@ -6,7 +6,8 @@ import java.util.Optional;
 
 public class ParseUtils {
   public static Optional<String> getNullableTynkValue(JsonValue val) {
-    if (val instanceof JsonString str) {
+    if (val instanceof JsonString) {
+      JsonString str = (JsonString) val;
       return Optional.of(str.getString());
     }
     return Optional.empty();

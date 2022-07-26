@@ -19,18 +19,15 @@ public class Main {
     Integration.runIntegrations();
 
     try {
-      var lf = new NimbusLookAndFeel();
+      NimbusLookAndFeel lf = new NimbusLookAndFeel();
       UIManager.setLookAndFeel(lf);
     } catch (UnsupportedLookAndFeelException e) {
-      Log.error("""
-              Nimbus LAF is not supported in this environment, so application appearance may be\
-              inconsistent with other platforms.
-              """);
+      Log.error("Nimbus LAF is not supported in this environment, so application appearance may be inconsistent with other platforms");
     }
 
     EventQueue.invokeLater(
             () -> {
-              var x = new PrimaryListController();
+              PrimaryListController x = new PrimaryListController();
             });
   }
 }

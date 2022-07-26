@@ -58,7 +58,7 @@ public class Dialog {
    * @return the JSON representation of the Dialog
    */
   public JsonObject serialize() {
-    var pageArray = Json.createArrayBuilder();
+    javax.json.JsonArrayBuilder pageArray = Json.createArrayBuilder();
     for (DialogPage currentPage : contents) {
       pageArray.add(currentPage.serialize());
     }

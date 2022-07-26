@@ -72,7 +72,7 @@ public class DialogPage {
   }
 
   public JsonObject serialize() {
-    var result = Json.createObjectBuilder()
+    javax.json.JsonObjectBuilder result = Json.createObjectBuilder()
             .add("txt", content)
         .add("canSkip", canSkip)
         .add("speaker", speaker);

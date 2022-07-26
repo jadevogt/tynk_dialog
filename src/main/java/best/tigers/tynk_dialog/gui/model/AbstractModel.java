@@ -20,7 +20,7 @@ public abstract class AbstractModel {
   }
 
   public void notifySubscribers() {
-    for (var observer : observers) {
+    for (Observer observer : observers) {
       observer.update();
     }
   }

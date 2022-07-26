@@ -18,8 +18,8 @@ public class DialogBuilder {
   void ParseJSON(JsonObject dialogData) throws DialogParseException {
     title = dialogData.getString("title");
     contents = new ArrayList<DialogPage>();
-    for (var currentPage : dialogData.getJsonArray("contents")) {
-      var pageBuilder = new DialogPageBuilder();
+    for (JsonValue currentPage : dialogData.getJsonArray("contents")) {
+      DialogPageBuilder pageBuilder = new DialogPageBuilder();
       if (currentPage.getValueType() != JsonValue.ValueType.OBJECT) {
         throw new DialogParseException("Received an unexpected type while processing "
                 + "dialog \"" + title + "\": " + currentPage.getValueType());

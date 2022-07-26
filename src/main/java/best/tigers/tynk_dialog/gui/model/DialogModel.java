@@ -24,7 +24,7 @@ public class DialogModel extends AbstractModel implements ListModel<DialogPageMo
     pages = new ArrayList<>();
     listDataListeners = new ArrayList<>();
     setTitle(dialog.getTitle());
-    for (var page : dialog.getPages()) {
+    for (DialogPage page : dialog.getPages()) {
       addPage(new DialogPageModel(page));
     }
   }
@@ -56,8 +56,8 @@ public class DialogModel extends AbstractModel implements ListModel<DialogPageMo
   }
 
   public void notifyListeners() {
-    var event = new ListDataEvent(pages, ListDataEvent.CONTENTS_CHANGED, 0, pages.size() - 1);
-    for (var listener : listDataListeners) {
+    ListDataEvent event = new ListDataEvent(pages, ListDataEvent.CONTENTS_CHANGED, 0, pages.size() - 1);
+    for (ListDataListener listener : listDataListeners) {
       listener.contentsChanged(event);
     }
     notifySubscribers();
@@ -96,8 +96,8 @@ public class DialogModel extends AbstractModel implements ListModel<DialogPageMo
   }
 
   public Dialog getDialog() {
-    var contents = new ArrayList<DialogPage>();
-    for (var page : pages) {
+    ArrayList<DialogPage> contents = new ArrayList<DialogPage>();
+    for (DialogPageModel page : pages) {
       contents.add(page.getDialogPage());
     }
     return new Dialog(title, contents);

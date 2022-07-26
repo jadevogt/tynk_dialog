@@ -15,12 +15,12 @@ public class DialogPageController {
     view = new DialogPageEditorView(model).init();
     view.makeTrans();
     view.attachSaveFunction(e -> {
-      var newSpeaker = view.getSpeaker();
-      var newContent = view.getContent();
-      var newBlip = view.getBlip();
-      var newStyle = view.getStyle();
-      var blipEnabled = view.getBlipEnabled();
-      var styleEnabled = view.getStyleEnabled();
+      String newSpeaker = view.getSpeaker();
+      String newContent = view.getContent();
+      String newBlip = view.getBlip();
+      String newStyle = view.getStyle();
+      boolean blipEnabled = view.getBlipEnabled();
+      boolean styleEnabled = view.getStyleEnabled();
       if (!model.getSpeaker().equals(newSpeaker)) {
         model.setSpeaker(newSpeaker);
       }

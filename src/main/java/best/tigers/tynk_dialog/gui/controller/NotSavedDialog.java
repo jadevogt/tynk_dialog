@@ -14,14 +14,14 @@ public class NotSavedDialog {
   public NotSavedDialog() {
     dialog = new JDialog();
     dialog.setModal(true);
-    var message = new JLabel("Your changes have not been saved to disk. What would you like to do?");
-    var cancelButton = new JButton("Cancel");
-    var saveButton = new JButton("Save");
-    var saveAsButton = new JButton("Save As");
-    var continueButton = new JButton("Continue without saving");
-    var mainPanel = new JPanel();
+    JLabel message = new JLabel("Your changes have not been saved to disk. What would you like to do?");
+    JButton cancelButton = new JButton("Cancel");
+    JButton saveButton = new JButton("Save");
+    JButton saveAsButton = new JButton("Save As");
+    JButton continueButton = new JButton("Continue without saving");
+    JPanel mainPanel = new JPanel();
     mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-    var buttonPanel = new JPanel();
+    JPanel buttonPanel = new JPanel();
     buttonPanel.add(cancelButton);
     buttonPanel.add(saveButton);
     buttonPanel.add(saveAsButton);

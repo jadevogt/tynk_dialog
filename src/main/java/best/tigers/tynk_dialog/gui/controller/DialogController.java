@@ -39,8 +39,8 @@ public class DialogController {
   }
 
   public void swapUp() {
-    var page = view.getSelectedPage();
-    var pageIndex = model.getPageIndex(page);
+    DialogPageModel page = view.getSelectedPage();
+    int pageIndex = model.getPageIndex(page);
     if (pageIndex > 0) {
       model.swapListItems(pageIndex, pageIndex - 1);
     }
@@ -48,8 +48,8 @@ public class DialogController {
   }
 
   public void swapDown() {
-    var page = view.getSelectedPage();
-    var pageIndex = model.getPageIndex(page);
+    DialogPageModel page = view.getSelectedPage();
+    int pageIndex = model.getPageIndex(page);
     if (pageIndex < (model.getPageCount() - 1)) {
       model.swapListItems(pageIndex, pageIndex + 1);
     }
@@ -57,18 +57,19 @@ public class DialogController {
   }
 
   public void saveTitle() {
-    var newTitle = view.getTitle();
+    String newTitle = view.getTitle();
     model.setTitle(newTitle);
   }
 
+
   public void addPage() {
-    var newModel = new DialogPageModel();
+    DialogPageModel newModel = new DialogPageModel();
     model.addPage(newModel);
     new DialogPageController(newModel, true);
   }
 
   public void editPage() {
-    var selectedModel = view.getSelectedModel();
+    DialogPageModel selectedModel = view.getSelectedModel();
     if (selectedModel != null) {
       new DialogPageController(view.getSelectedModel());
     }

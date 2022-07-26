@@ -29,11 +29,11 @@ public class PrimaryListView implements Observer {
     frame.setTitle("Tynk Dialog Editor - " + model.getPath());
     this.model = model;
     subscribe(this.model);
-    var panel = new JPanel();
+    JPanel panel = new JPanel();
     panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
     menuBar = new MenuBar(frame);
     dialogList = new JList<>(this.model);
-    var listPanel = new JScrollPane(dialogList);
+    JScrollPane listPanel = new JScrollPane(dialogList);
     dialogList.setCellRenderer(new DialogCellRenderer());
     listPanel.setMinimumSize(new Dimension(200, 200));
     toolBar = new JToolBar();
@@ -72,13 +72,13 @@ public class PrimaryListView implements Observer {
   }
 
   public void addMenuItem(ActionListener action, String shortText, String longText, MenuBar.Menu menu) {
-    var newItem = new JMenuItem();
+    JMenuItem newItem = new JMenuItem();
     newItem.addActionListener(action);
     newItem.setText(shortText);
     newItem.setToolTipText(longText);
     menuBar.addItem(menu, newItem);
     if (menu == MenuBar.Menu.EDIT) {
-      var toolButton = new JButton();
+      JButton toolButton = new JButton();
       toolButton.addActionListener(action);
       toolButton.setText(shortText.split(" ")[0]);
       toolBar.add(toolButton);
@@ -89,7 +89,7 @@ public class PrimaryListView implements Observer {
   public void update() {
     String modified = model.isModified() ? "- Not Saved" : "";
     frame.setTitle("Tynk Dialog Editor - " + model.getPath() + modified);
-    var selected = dialogList.getSelectedValue();
+    DialogController selected = dialogList.getSelectedValue();
     if (selected != null) {
       splitPane.setRightComponent(selected.getPanel());
     } else {
