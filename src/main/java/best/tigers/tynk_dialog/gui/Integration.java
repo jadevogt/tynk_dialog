@@ -13,14 +13,11 @@ public class Integration {
   public static final Dimension INTEGRATION_WINDOW_SIZE = new Dimension(300, 300);
   public static String APPLICATION_AUTHOR = "Jade Vogt @tigerstyping";
 
-  public Integration() {
+  public static void runIntegrations() {
+    System.setProperty("apple.awt.application.name", Integration.APPLICATION_NAME);
     var desktop = Desktop.getDesktop();
     desktop.setAboutHandler(new About());
     desktop.setPreferencesHandler(new Preferences());
-  }
-
-  public static void runIntegrations() {
-    System.setProperty("apple.awt.application.name", Integration.APPLICATION_NAME);
   }
 }
 
@@ -46,13 +43,13 @@ class About implements AboutHandler {
     layout.setAutoCreateGaps(true);
     layout.setAutoCreateContainerGaps(true);
     layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-            .addComponent(heading, 300, 300, 300)
-            .addComponent(version, 300, 300, 300));
+        .addComponent(heading, 300, 300, 300)
+        .addComponent(version, 300, 300, 300));
     layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-            .addGroup(layout.createSequentialGroup()
-                    .addComponent(heading)
-                    .addComponent(version)
-            ));
+        .addGroup(layout.createSequentialGroup()
+            .addComponent(heading)
+            .addComponent(version)
+        ));
     about.add(panel);
     panel.setMinimumSize(Integration.INTEGRATION_WINDOW_SIZE);
     panel.setMaximumSize(Integration.INTEGRATION_WINDOW_SIZE);

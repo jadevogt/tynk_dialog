@@ -2,7 +2,7 @@ package best.tigers.tynk_dialog;
 
 import best.tigers.tynk_dialog.game.Dialog;
 import best.tigers.tynk_dialog.gui.Integration;
-import best.tigers.tynk_dialog.gui.controller.DialogListViewController;
+import best.tigers.tynk_dialog.gui.controller.PrimaryListController;
 import best.tigers.tynk_dialog.util.DialogFile;
 import best.tigers.tynk_dialog.util.Log;
 
@@ -30,50 +30,8 @@ public class Main {
 
     EventQueue.invokeLater(
             () -> {
-              JFrame.setDefaultLookAndFeelDecorated(true);
-              var chooser = new JFileChooser();
-              //chooser.setDialogType(JFileChooser.FILES_ONLY);
-              //chooser.setApproveButtonText("Open File");
-              //chooser.setDialogTitle("Open a Dialog File");
-              chooser.setDialogType(JFileChooser.SAVE_DIALOG);
-              var jFilter = new JSONFilter();
-              var tFilter = new TextFilter();
-              chooser.addChoosableFileFilter(jFilter);
-              chooser.addChoosableFileFilter(tFilter);
-              chooser.showDialog(null, "Select or Create");
-              var path = chooser.getSelectedFile().getAbsolutePath();
-              var modeledFile = new DialogFile(path);
-              var theDialogs = new ArrayList<Dialog>();
-              try {
-                theDialogs = modeledFile.readFile();
-              } catch (Exception e) {
-                System.out.println("aaa");
-              }
-              var x = new DialogListViewController(theDialogs.get(0));
+              var x = new PrimaryListController();
             });
   }
 }
 
-class JSONFilter extends FileFilter {
-  @Override
-  public boolean accept(File f) {
-    return f.getName().toLowerCase().endsWith("json") || f.isDirectory();
-  }
-
-  @Override
-  public String getDescription() {
-    return "JSON (*.json, *.JSON)";
-  }
-}
-
-class TextFilter extends FileFilter {
-  @Override
-  public boolean accept(File f) {
-    return f.getName().toLowerCase().endsWith("txt") || f.isDirectory();
-  }
-
-  @Override
-  public String getDescription() {
-    return "Plain Text (*.txt, *.TXT)";
-  }
-}

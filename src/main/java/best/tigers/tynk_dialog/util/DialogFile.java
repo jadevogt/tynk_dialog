@@ -12,16 +12,31 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class DialogFile {
-  private final String filename;
+  final private static String SEP = System.getProperty("file.separator");
+  final private static Path DEFAULT_PATH = Path.of(System.getProperty("user.home") + SEP + "dialog.json");
+
+  private Path path;
+  private boolean customized = true;
   private final LinkedList<String> errors;
 
-  public DialogFile(String filename) {
-    this.errors = new LinkedList<String>();
-    this.filename = filename;
+  public DialogFile(Path path) {
+    errors = new LinkedList<>();
+    this.path = path;
+  }
+
+  public DialogFile(String stringPath) {
+    this(Path.of(stringPath));
+  }
+
+  public DialogFile() {
+    this(DEFAULT_PATH);
+    customized = false;
   }
 
   /**
@@ -33,7 +48,7 @@ public class DialogFile {
   public ArrayList<Dialog> readFile() throws DialogFileIOException {
     JsonReader x;
     try {
-      x = Json.createReader(new FileReader(filename));
+      x = Json.createReader(new FileReader(path.toFile()));
     } catch (FileNotFoundException notFound) {
       throw new DialogFileIOException("The dialog file couldn't be loaded: " + notFound);
     }
@@ -65,8 +80,8 @@ public class DialogFile {
     try {
       Log.info("""
               Attempting to save JSON file to disk: \
-              """ + filename);
-      writer = Json.createWriter(new FileWriter(filename));
+              """ + path);
+      writer = Json.createWriter(new FileWriter(path.toFile()));
     } catch (IOException ioe) {
       System.err.println(ioe.getLocalizedMessage());
       Log.error("""
@@ -107,5 +122,27 @@ public class DialogFile {
       returnValue.add(current);
     }
     return returnValue;
+  }
+
+  public boolean currentPathExists() {
+    return Files.exists(path);
+  }
+
+  public boolean  currentPathWritable() {
+    return Files.isWritable(path);
+  }
+
+  public boolean isCustomized() {
+    return customized;
+  }
+
+  public void setPath(Path newPath) {
+    this.path = newPath;
+    this.customized = true;
+  }
+
+  public void setPath(String newPath) {
+    this.path = Path.of(newPath);
+    this.customized = true;
   }
 }

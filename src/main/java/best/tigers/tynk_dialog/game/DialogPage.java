@@ -72,12 +72,20 @@ public class DialogPage {
   }
 
   public JsonObject serialize() {
-    return Json.createObjectBuilder()
-            .add("textbox", textStyle)
+    var result = Json.createObjectBuilder()
             .add("txt", content)
-            .add("speaker", speaker)
-            .add("blip", blip)
-            .add("canSkip", canSkip)
-            .build();
+        .add("canSkip", canSkip)
+        .add("speaker", speaker);
+    if (blip != null) {
+      result.add("blip", blip);
+    } else {
+      result.add("blip", -1);
+    }
+    if (textStyle != null) {
+            result.add("textbox", textStyle);
+    } else {
+      result.add("textbox", -1);
+    }
+    return result.build();
   }
 }

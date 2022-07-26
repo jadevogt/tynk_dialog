@@ -1,15 +1,15 @@
 package best.tigers.tynk_dialog.gui.view;
 
-import best.tigers.tynk_dialog.gui.model.Model;
+import best.tigers.tynk_dialog.gui.model.AbstractModel;
 
 public interface Observer {
   void update();
 
-  default void subscribe(Model model) {
+  default void subscribe(AbstractModel model) {
     model.attachSubscriber(this);
   }
 
-  default void unsubscribe(Model model) {
+  default void unsubscribe(AbstractModel model) {
     model.detachSubscriber(this);
   }
 }

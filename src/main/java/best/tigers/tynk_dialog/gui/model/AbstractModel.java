@@ -4,10 +4,10 @@ import best.tigers.tynk_dialog.gui.view.Observer;
 
 import java.util.ArrayList;
 
-public abstract class Model {
+public abstract class AbstractModel {
   private final ArrayList<Observer> observers;
 
-  public Model() {
+  public AbstractModel() {
     observers = new ArrayList<>();
   }
 

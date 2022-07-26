@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class Dialog {
   private static final String defaultTitle = "Untitled";
   private static int untitledDialogCount = 0;
-  private final String title;
+  private String title;
   private final ArrayList<DialogPage> contents;
 
   public Dialog(String title, ArrayList<DialogPage> contents) {
@@ -74,5 +74,13 @@ public class Dialog {
 
   public String toString() {
     return serialize().toString();
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String newTitle) {
+    title = newTitle;
   }
 }

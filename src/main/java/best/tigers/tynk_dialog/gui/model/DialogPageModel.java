@@ -1,13 +1,24 @@
 package best.tigers.tynk_dialog.gui.model;
 
 import best.tigers.tynk_dialog.game.DialogPage;
+import best.tigers.tynk_dialog.util.ParseUtils;
 
-public class DialogPageModel extends Model {
+import javax.json.JsonObject;
+
+public class DialogPageModel extends AbstractModel {
   private final DialogPage dialogPage;
+  private boolean blipEnabled = true;
+  private boolean styleEnabled = true;
 
   public DialogPageModel(DialogPage dialogPage) {
     super();
     this.dialogPage = dialogPage;
+    if (dialogPage.getBlip() == null) {
+      blipEnabled = false;
+    }
+    if (dialogPage.getTextBoxStyle() == null) {
+      styleEnabled = false;
+    }
   }
 
   public DialogPageModel() {
@@ -41,6 +52,22 @@ public class DialogPageModel extends Model {
     notifySubscribers();
   }
 
+  public void setBlipEnabled(boolean newState) {
+    blipEnabled = newState;
+    dialogPage.setBlip(null);
+  }
+  public boolean getBlipEnabled() {
+    return blipEnabled;
+  }
+
+  public void setStyleEnabled(boolean newState) {
+    styleEnabled = newState;
+    dialogPage.setTextBoxStyle(null);
+  }
+  public boolean getStyleEnabled() {
+    return styleEnabled;
+  }
+
   public String getTextBoxStyle() {
     return dialogPage.getTextBoxStyle();
   }
@@ -48,5 +75,13 @@ public class DialogPageModel extends Model {
   public void setTextBoxStyle(String newStyle) {
     dialogPage.setTextBoxStyle(newStyle);
     notifySubscribers();
+  }
+
+  public JsonObject asJson() {
+    return dialogPage.serialize();
+  }
+
+  public DialogPage getDialogPage() {
+    return dialogPage;
   }
 }
