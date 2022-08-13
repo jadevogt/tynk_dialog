@@ -7,6 +7,8 @@ import best.tigers.tynk_dialog.gui.view.components.DialogCellRenderer;
 import best.tigers.tynk_dialog.gui.view.components.MenuBar;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
@@ -21,7 +23,7 @@ public class PrimaryListView implements Observer {
   final private MenuBar menuBar;
   final private JToolBar toolBar;
 
-  final public static Dimension PREFERRED_SIZE = new Dimension(500, 300);
+  final public static Dimension PREFERRED_SIZE = new Dimension(600, 400);
 
   public PrimaryListView(PrimaryListModel model) {
     Integration.runIntegrations();
@@ -30,7 +32,7 @@ public class PrimaryListView implements Observer {
     this.model = model;
     subscribe(this.model);
     JPanel panel = new JPanel();
-    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    panel.setLayout(new BorderLayout());
     menuBar = new MenuBar(frame);
     dialogList = new JList<>(this.model);
     JScrollPane listPanel = new JScrollPane(dialogList);
@@ -39,15 +41,18 @@ public class PrimaryListView implements Observer {
     toolBar = new JToolBar();
     toolBar.setFloatable(false);
     toolBar.setMaximumSize(new Dimension(Short.MAX_VALUE, 150));
-    panel.add(listPanel);
-    panel.add(toolBar);
+    panel.add(listPanel, BorderLayout.CENTER);
+    panel.add(toolBar, BorderLayout.SOUTH);
     splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panel, new JPanel());
+    splitPane.setEnabled(false);
     frame.add(splitPane);
     frame.setPreferredSize(PREFERRED_SIZE);
+    frame.setMinimumSize(PREFERRED_SIZE);
     frame.pack();
     frame.setLocationRelativeTo(null);
     frame.setVisible(true);
     frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+    splitPane.revalidate();
 
 
 
@@ -87,7 +92,7 @@ public class PrimaryListView implements Observer {
 
   @Override
   public void update() {
-    String modified = model.isModified() ? "- Not Saved" : "";
+    String modified = model.isModified() ? " - Not Saved" : "";
     frame.setTitle("Tynk Dialog Editor - " + model.getPath() + modified);
     DialogController selected = dialogList.getSelectedValue();
     if (selected != null) {
@@ -96,6 +101,10 @@ public class PrimaryListView implements Observer {
       splitPane.remove(splitPane.getRightComponent());
       splitPane.setRightComponent(new JPanel());
     }
+  }
+
+  public JList<DialogController> getDialogList() {
+    return dialogList;
   }
 
   public void attachWindowEvent(WindowAdapter adapter) {

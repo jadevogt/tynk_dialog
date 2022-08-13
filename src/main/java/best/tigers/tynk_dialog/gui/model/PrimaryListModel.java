@@ -72,7 +72,10 @@ public class PrimaryListModel extends AbstractModel implements ListModel<DialogC
 
   @Override
   public DialogController getElementAt(int index) {
-    return dialogFiles.get(index);
+    if (index >= 0 && index <= dialogFiles.size() - 1)
+      return dialogFiles.get(index);
+    else
+      return null;
   }
 
   @Override

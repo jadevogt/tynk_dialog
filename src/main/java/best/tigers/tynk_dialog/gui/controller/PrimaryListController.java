@@ -135,7 +135,9 @@ public class PrimaryListController {
   public void removeCurrentDialog() {
     DialogController selected = view.currentSelection();
     if (selected != null) {
-      model.deleteDialog(selected);
+      DialogController currentSelection = selected;
+      view.getDialogList().setSelectedValue(selected, false);
+      model.deleteDialog(currentSelection);
     }
   }
 
