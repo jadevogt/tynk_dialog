@@ -58,6 +58,12 @@ public class DialogController {
     dpt.getColumnModel().getColumn(0).setPreferredWidth(20);
     dpt.getTableHeader().setResizingAllowed(true);
     dpt.getTableHeader().setReorderingAllowed(false);
+    view.getPanel().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK, true), "Ctrl+N released");
+    view.getPanel().getActionMap().put("Ctrl+N released", new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent ae) {
+        addPage();
+      }});
   }
 
   public JPanel getPanel() {

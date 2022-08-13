@@ -56,7 +56,7 @@ public class DialogPageEditorView implements Observer, DialogPageViewer {
     styleField.setColumns(20);
     styleCheck = new JCheckBox();
 
-    saveButton = new JButton("Save Changes");
+    saveButton = new JButton("Save Changes (Shift + Enter)");
 
     GroupLayout layout = new GroupLayout(panel);
     layout.setAutoCreateGaps(true);
@@ -124,6 +124,14 @@ public class DialogPageEditorView implements Observer, DialogPageViewer {
     frame.setVisible(true);
     update();
     return this;
+  }
+
+  public JPanel getPanel() {
+    return panel;
+  }
+
+  public JFrame getFrame() {
+    return frame;
   }
 
   @Override
