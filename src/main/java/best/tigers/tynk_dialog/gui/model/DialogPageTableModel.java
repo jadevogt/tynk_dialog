@@ -1,8 +1,6 @@
 package best.tigers.tynk_dialog.gui.model;
 
-import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 import java.util.ArrayList;
 import java.util.List;
 

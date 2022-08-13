@@ -1,8 +1,8 @@
 package best.tigers.tynk_dialog.gui.controller;
 
+import best.tigers.tynk_dialog.game.Dialog;
 import best.tigers.tynk_dialog.gui.controller.filters.JSONFilter;
 import best.tigers.tynk_dialog.gui.controller.filters.TextFilter;
-import best.tigers.tynk_dialog.game.Dialog;
 import best.tigers.tynk_dialog.gui.model.DialogModel;
 import best.tigers.tynk_dialog.gui.model.PrimaryListModel;
 import best.tigers.tynk_dialog.gui.view.PrimaryListView;

@@ -4,7 +4,6 @@ import best.tigers.tynk_dialog.game.Dialog;
 import best.tigers.tynk_dialog.game.DialogPage;
 import best.tigers.tynk_dialog.gui.view.Observer;
 
-import javax.json.JsonObject;
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;

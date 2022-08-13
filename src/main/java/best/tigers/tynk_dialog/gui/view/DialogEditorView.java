@@ -5,18 +5,11 @@ import best.tigers.tynk_dialog.gui.model.DialogModel;
 import best.tigers.tynk_dialog.gui.model.DialogPageModel;
 import best.tigers.tynk_dialog.gui.model.DialogPageTableModel;
 import best.tigers.tynk_dialog.gui.view.components.AutoResizingTable;
-import best.tigers.tynk_dialog.gui.view.components.DialogPageCellRenderer;
-import best.tigers.tynk_dialog.gui.view.components.Misc;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.Document;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.security.acl.Group;
 
 public class DialogEditorView implements DialogViewer, Observer {
   private static final Dimension PREFERRED_SIZE = new Dimension(300, 300);

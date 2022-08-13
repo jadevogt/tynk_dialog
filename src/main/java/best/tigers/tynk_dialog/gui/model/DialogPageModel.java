@@ -1,7 +1,6 @@
 package best.tigers.tynk_dialog.gui.model;
 
 import best.tigers.tynk_dialog.game.DialogPage;
-import best.tigers.tynk_dialog.util.ParseUtils;
 
 import javax.json.JsonObject;
 

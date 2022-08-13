@@ -8,7 +8,6 @@ import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
 public class PrimaryListModel extends AbstractModel implements ListModel<DialogController>, Observer {

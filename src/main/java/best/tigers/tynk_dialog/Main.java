@@ -1,18 +1,13 @@
 package best.tigers.tynk_dialog;
 
-import best.tigers.tynk_dialog.game.Dialog;
 import best.tigers.tynk_dialog.gui.Integration;
 import best.tigers.tynk_dialog.gui.controller.PrimaryListController;
-import best.tigers.tynk_dialog.util.DialogFile;
 import best.tigers.tynk_dialog.util.Log;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.awt.*;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 
 public class Main {
   public static void main(String... args) throws FileNotFoundException {

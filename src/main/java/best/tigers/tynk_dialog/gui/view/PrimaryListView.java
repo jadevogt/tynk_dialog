@@ -7,8 +7,6 @@ import best.tigers.tynk_dialog.gui.view.components.DialogCellRenderer;
 import best.tigers.tynk_dialog.gui.view.components.MenuBar;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
