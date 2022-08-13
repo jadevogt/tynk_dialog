@@ -1,5 +1,5 @@
 # Tynk Dialog Tool
-
+[![Build](https://github.com/jadevogt/tynk_dialog/actions/workflows/maven.yml/badge.svg)](https://github.com/jadevogt/tynk_dialog/actions/workflows/maven.yml)
 ## Overview
 This is an early development version of a tool that can be used to create, edit, and eventually preview dialog boxes for the upcoming game [Tynk! and the Final Phonorecord](https://tynkga.me/). 
 
