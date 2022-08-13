@@ -13,6 +13,7 @@ import java.util.Collections;
 
 public class DialogModel extends AbstractModel implements ListModel<DialogPageModel>, Observer {
   private final ArrayList<DialogPageModel> pages;
+  private DialogPageTableModel dptm;
   private final ArrayList<ListDataListener> listDataListeners;
   private String title;
 
@@ -22,6 +23,7 @@ public class DialogModel extends AbstractModel implements ListModel<DialogPageMo
 
   public DialogModel(Dialog dialog) {
     pages = new ArrayList<>();
+    dptm = new DialogPageTableModel(pages);
     listDataListeners = new ArrayList<>();
     setTitle(dialog.getTitle());
     for (DialogPage page : dialog.getPages()) {
@@ -38,6 +40,10 @@ public class DialogModel extends AbstractModel implements ListModel<DialogPageMo
   public void deletePage(DialogPageModel removedPage) {
     pages.remove(removedPage);
     notifyListeners();
+  }
+
+  public ArrayList<DialogPageModel> getPages() {
+    return pages;
   }
 
   @Override
@@ -60,6 +66,7 @@ public class DialogModel extends AbstractModel implements ListModel<DialogPageMo
     for (ListDataListener listener : listDataListeners) {
       listener.contentsChanged(event);
     }
+    dptm = new DialogPageTableModel(pages);
     notifySubscribers();
   }
 
@@ -83,7 +90,8 @@ public class DialogModel extends AbstractModel implements ListModel<DialogPageMo
   }
 
   public void swapListItems(int index1, int index2) {
-    Collections.swap(pages, index1, index2);
+    if (index2 < pages.size() && index1 >= 0)
+      Collections.swap(pages, index1, index2);
     notifyListeners();
   }
 
@@ -101,5 +109,9 @@ public class DialogModel extends AbstractModel implements ListModel<DialogPageMo
       contents.add(page.getDialogPage());
     }
     return new Dialog(title, contents);
+  }
+
+  public DialogPageTableModel getDptm() {
+    return dptm;
   }
 }
