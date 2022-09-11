@@ -28,3 +28,5 @@ This is an early development version of a tool that can be used to create, edit,
   * Preview sound blips
   * Drag and drop capability for rearranging dialog
   * Preview dialog in styled textbox without opening GameMaker
+### Screenshots
+![image](https://user-images.githubusercontent.com/89030899/189528166-79769f65-7576-483f-a1d2-9d916f1ad37c.png)
