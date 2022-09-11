@@ -35,13 +35,11 @@ public class DialogController {
       @Override
       public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 2) {
-          //int index = list.locationToIndex(e.getPoint());
           int index = dpt.rowAtPoint(e.getPoint());
-          System.out.println(index);
           if (index < 0) {
             addPage();
           } else {
-            new DialogPageController(model.getElementAt(index));
+            DialogPageController.editModel(model.getElementAt(index));
           }
         }
       }
@@ -100,17 +98,14 @@ public class DialogController {
 
   public void addPage() {
     DialogPageModel newModel = new DialogPageModel();
-    model.addPage(newModel);
-    new DialogPageController(newModel, true);
-    //view.getList().ensureIndexIsVisible(model.getSize() - 1);
-    //view.getList().setVisibleRowCount(model.getSize()-1);
+    model.addPage(DialogPageController.createModel());
     view.getList().revalidate();
   }
 
   public void editPage() {
     DialogPageModel selectedModel = view.getSelectedModel();
     if (selectedModel != null) {
-      new DialogPageController(view.getSelectedModel());
+      DialogPageController.editModel(selectedModel);
     } else {
       java.awt.Toolkit.getDefaultToolkit().beep();
     }
@@ -122,7 +117,6 @@ public class DialogController {
     } else {
       java.awt.Toolkit.getDefaultToolkit().beep();
     }
-    //view.getList().setVisibleRowCount(model.getSize()-1);
     view.getList().revalidate();
   }
 

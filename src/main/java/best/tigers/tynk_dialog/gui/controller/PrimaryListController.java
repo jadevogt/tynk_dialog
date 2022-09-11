@@ -16,8 +16,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.prefs.Preferences;
 
 public class PrimaryListController {
+  private Preferences prefs = Preferences.userRoot().node(this.getClass().getName());
   private PrimaryListModel model;
   private PrimaryListView view;
   private DialogFile fileHandle;
@@ -114,7 +116,7 @@ public class PrimaryListController {
     try {
       theDialogs = fileHandle.readFile();
     } catch (Exception e) {
-      System.out.println(e);
+      e.printStackTrace();
     }
     model = new PrimaryListModel(theDialogs, path);
     view.swapModel(model);
@@ -128,6 +130,9 @@ public class PrimaryListController {
 
   public void addDialog() {
     DialogModel newDialog = new DialogModel();
+    if (!view.getCurrentRoom().equals("")) {
+      newDialog.setTitle(view.getCurrentRoom());
+    }
     DialogController newPanel = new DialogController(newDialog);
     model.addDialog(newPanel);
   }
@@ -156,7 +161,7 @@ public class PrimaryListController {
         model.setModified(false);
         view.update();
       } catch (IOException e) {
-        System.out.println("IO ERROR");
+        e.printStackTrace();
       }
     }
     else {
@@ -169,5 +174,10 @@ public class PrimaryListController {
     Log.info("Setting path to " + newPath + "...");
     fileHandle.setPath(newPath);
     saveInPlace();
+  }
+
+  public static void launch() {
+    var primaryController = new PrimaryListController();
+    return;
   }
 }

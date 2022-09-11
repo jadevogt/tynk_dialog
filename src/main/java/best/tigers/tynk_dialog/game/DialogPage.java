@@ -20,11 +20,11 @@ public class DialogPage {
   }
 
   public DialogPage(String speaker) {
-    this(speaker, "-", null, null, true);
+    this(speaker, "", null, null, true);
   }
 
   public DialogPage() {
-    this("Unnamed Character");
+    this("");
   }
 
   public String getSpeaker() {

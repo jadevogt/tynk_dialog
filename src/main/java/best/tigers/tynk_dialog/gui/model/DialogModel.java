@@ -88,6 +88,10 @@ public class DialogModel extends AbstractModel implements ListModel<DialogPageMo
     notifySubscribers();
   }
 
+  public void setTitleSuppressed(String newTitle) {
+    title = newTitle;
+  }
+
   public void swapListItems(int index1, int index2) {
     if (index2 < pages.size() && index1 >= 0)
       Collections.swap(pages, index1, index2);

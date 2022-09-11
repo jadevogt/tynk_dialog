@@ -1,6 +1,6 @@
 package best.tigers.tynk_dialog.gui.view;
 
-import best.tigers.tynk_dialog.gui.Integration;
+import best.tigers.tynk_dialog.gui.Assets;
 import best.tigers.tynk_dialog.gui.controller.DialogController;
 import best.tigers.tynk_dialog.gui.model.PrimaryListModel;
 import best.tigers.tynk_dialog.gui.view.components.DialogCellRenderer;
@@ -20,11 +20,12 @@ public class PrimaryListView implements Observer {
   final private JList<DialogController> dialogList;
   final private MenuBar menuBar;
   final private JToolBar toolBar;
+  final private JTextField currentRoom;
 
   final public static Dimension PREFERRED_SIZE = new Dimension(600, 400);
 
   public PrimaryListView(PrimaryListModel model) {
-    Integration.runIntegrations();
+    Assets.runIntegrations();
     frame = new JFrame();
     frame.setTitle("Tynk Dialog Editor - " + model.getPath());
     this.model = model;
@@ -40,6 +41,13 @@ public class PrimaryListView implements Observer {
     toolBar.setFloatable(false);
     toolBar.setMaximumSize(new Dimension(Short.MAX_VALUE, 150));
     panel.add(listPanel, BorderLayout.CENTER);
+
+    var roomSubPanel = new JPanel();
+    roomSubPanel.setLayout(new BorderLayout());
+    roomSubPanel.add(new JLabel(" Room:  "), BorderLayout.WEST);
+    currentRoom = new JTextField();
+    roomSubPanel.add(currentRoom, BorderLayout.CENTER);
+    panel.add(roomSubPanel, BorderLayout.NORTH);
     panel.add(toolBar, BorderLayout.SOUTH);
     splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panel, new JPanel());
     splitPane.setEnabled(false);
@@ -99,6 +107,10 @@ public class PrimaryListView implements Observer {
       splitPane.remove(splitPane.getRightComponent());
       splitPane.setRightComponent(new JPanel());
     }
+  }
+
+  public String getCurrentRoom() {
+    return currentRoom.getText();
   }
 
   public JList<DialogController> getDialogList() {

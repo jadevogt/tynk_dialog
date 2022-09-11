@@ -1,6 +1,6 @@
 package best.tigers.tynk_dialog.gui.view;
 
-import best.tigers.tynk_dialog.gui.Integration;
+import best.tigers.tynk_dialog.gui.Assets;
 import best.tigers.tynk_dialog.gui.model.DialogModel;
 import best.tigers.tynk_dialog.gui.model.DialogPageModel;
 import best.tigers.tynk_dialog.gui.model.DialogPageTableModel;
@@ -8,22 +8,19 @@ import best.tigers.tynk_dialog.gui.view.components.AutoResizingTable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.awt.event.*;
 
 public class DialogEditorView implements DialogViewer, Observer {
   private static final Dimension PREFERRED_SIZE = new Dimension(300, 300);
   private static final Dimension MAXIMUM_SIZE = new Dimension(500, Short.MAX_VALUE);
 
   private final JToolBar editorToolBar;
-  //private final JList<DialogPageModel> pageList;
   private final AutoResizingTable pageList;
   private final JTextField titleField;
   private final DialogModel model;
   protected final JPanel panel;
 
   public DialogEditorView(DialogModel model) {
-    Integration.runIntegrations();
     this.model = model;
     this.pageList = new AutoResizingTable();
     pageList.setModel(model.getDptm());
@@ -34,53 +31,15 @@ public class DialogEditorView implements DialogViewer, Observer {
     titleField = new JTextField();
     titleField.setColumns(20);
 
-/*    JPanel listPanel = new JPanel();
-    listPanel.setMinimumSize(new Dimension(0, 0));
-    listPanel.setBorder(Misc.getBorder("Manage Pages"));*/
     editorToolBar = new JToolBar("Editor Commands", SwingConstants.HORIZONTAL);
     editorToolBar.setFloatable(false);
-    //pageList = new JList<>(this.model);
-    //pageList.setVisibleRowCount(0);
     pageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     pageList.setDragEnabled(true);
     pageList.setDropMode(DropMode.ON_OR_INSERT);
-    //pageList.setCellRenderer(new DialogPageCellRenderer());
-    //pageList.setLayoutOrientation(JList.VERTICAL);
     JPanel titleControls = new JPanel();
     JScrollPane pageScrollPane = new JScrollPane(pageList);
     pageScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-/*
-    GroupLayout listLayout = new GroupLayout(listPanel);
-    listLayout.setAutoCreateGaps(true);
-    listLayout.setAutoCreateContainerGaps(true);
-    listLayout.setHorizontalGroup(
-        listLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(editorToolBar, 0, Short.MAX_VALUE, Short.MAX_VALUE)
-            .addComponent(pageScrollPane, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE));
-    listLayout.setVerticalGroup(
-        listLayout.createSequentialGroup()
-            .addComponent(editorToolBar, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-            .addComponent(pageScrollPane, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE));
-    listPanel.setLayout(listLayout);
 
-    GroupLayout layout = new GroupLayout(panel);
-    layout.setAutoCreateGaps(true);
-    layout.setAutoCreateContainerGaps(true);
-    layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-        .addGroup(layout.createSequentialGroup()
-            .addComponent(titleLabel)
-            .addComponent(titleField))
-        .addComponent(listPanel, 0, Short.MAX_VALUE, Short.MAX_VALUE)
-        );
-    layout.setVerticalGroup(layout.createSequentialGroup()
-        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-            .addComponent(titleLabel, GroupLayout.PREFERRED_SIZE, -1, -1)
-            .addComponent(titleField, GroupLayout.PREFERRED_SIZE, -1, -1))
-        .addComponent(listPanel, 0, Short.MAX_VALUE, Short.MAX_VALUE)
-        );
-    panel.setLayout(layout);
-
- */
     panel.setLayout(new BorderLayout());
     titleControls.add(titleLabel);
     titleControls.add(titleField);
@@ -98,11 +57,6 @@ public class DialogEditorView implements DialogViewer, Observer {
     update();
     return this;
   }
-/*
-  public JList<DialogPageModel> getList() {
-    return pageList;
-  }
-*/
   public JTable getList() {
     return pageList;
   }
@@ -129,10 +83,16 @@ public class DialogEditorView implements DialogViewer, Observer {
         super.focusLost(e);
       }
     });
+    titleField.addMouseMotionListener(new MouseMotionAdapter() {
+      @Override
+      public void mouseMoved(MouseEvent e) {
+        SwingUtilities.invokeLater(runner);
+        super.mouseMoved(e);
+      }
+    });
   }
 
   public DialogPageModel getSelectedPage() {
-    //return pageList.getSelectedValue();
     return model.getDptm().getPageAt(pageList.getSelectedRow());
   }
 
@@ -143,7 +103,6 @@ public class DialogEditorView implements DialogViewer, Observer {
   }
 
   public void selectPage(int index) {
-    //pageList.setSelectedIndex(index);
     try {
       pageList.setRowSelectionInterval(index, index);
     } catch (IllegalArgumentException e) {
@@ -152,7 +111,6 @@ public class DialogEditorView implements DialogViewer, Observer {
   }
 
   public DialogPageModel getSelectedModel() {
-    //return pageList.getSelectedValue();
     return getSelectedPage();
   }
 

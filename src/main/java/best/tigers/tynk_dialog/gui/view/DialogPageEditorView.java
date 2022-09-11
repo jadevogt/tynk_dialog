@@ -1,10 +1,16 @@
 package best.tigers.tynk_dialog.gui.view;
 
-import best.tigers.tynk_dialog.gui.Integration;
+import best.tigers.tynk_dialog.game.Constants;
+import best.tigers.tynk_dialog.gui.Assets;
 import best.tigers.tynk_dialog.gui.model.DialogPageModel;
+import best.tigers.tynk_dialog.gui.text.HarlowTMLEditorKit;
 
 import javax.swing.*;
+import javax.swing.text.DefaultEditorKit;
+import javax.swing.text.StyledEditorKit;
+import javax.swing.text.TextAction;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -12,93 +18,105 @@ import java.awt.event.WindowEvent;
 import static java.awt.event.WindowEvent.WINDOW_CLOSING;
 
 public class DialogPageEditorView implements Observer, DialogPageViewer {
-  final private static Dimension PREFERRED_SIZE = new Dimension(300, 400);
+  //final private static Dimension PREFERRED_SIZE = new Dimension(300, 400);
 
   private final DialogPageModel model;
   private final JPanel panel;
   private final JFrame frame;
+
+  private final JComboBox<String> characterComboBox;
+  private final JLabel characterLabel;
   private final JTextField characterField;
-  private final JTextArea contentField;
+
+  private final JLabel contentLabel;
+  private final JEditorPane contentField;
+  private final JToolBar contentToolbar;
+
   private final JButton saveButton;
+
   private final JCheckBox blipCheck;
-  private final JTextArea blipField;
+
+  private final JLabel blipLabel;
+  private final JTextField blipField;
+
   private final JCheckBox styleCheck;
-  private final JTextArea styleField;
+
+  private final JLabel styleLabel;
+  private final JTextField styleField;
+  private final Font font = Assets.getInstance().getFont();
 
   public DialogPageEditorView(DialogPageModel model) {
-    Integration.runIntegrations();
     this.model = model;
     panel = new JPanel();
     frame = new JFrame();
 
-    JLabel characterLabel = new JLabel("Character");
-    characterLabel.setHorizontalAlignment(JLabel.LEFT);
-    characterField = new JTextField();
-    characterField.setColumns(20);
+    characterLabel = createLabel("Character");
+    characterComboBox = new JComboBox<String>();
+    characterField = createField();
 
-    JScrollPane scroller = new JScrollPane();
-    JLabel contentLabel = new JLabel("Content");
-    contentLabel.setHorizontalAlignment(JLabel.LEFT);
-    contentField = new JTextArea();
-    contentField.setColumns(20);
-    contentField.setLineWrap(true);
-    contentField.setRows(4);
+    contentLabel = new JLabel("Content");
+    contentField = createContentField();
+    contentToolbar = createContentToolbar();
 
-    JLabel blipLabel = new JLabel("Blip");
-    blipLabel.setHorizontalAlignment(JLabel.LEFT);
-    blipField = new JTextArea();
-    blipField.setColumns(20);
+    blipLabel = createLabel("Blip");
+    blipField = createField();
     blipCheck = new JCheckBox();
 
-    JLabel styleLabel = new JLabel("Textbox");
-    styleLabel.setHorizontalAlignment(JLabel.LEFT);
-    styleField = new JTextArea();
-    styleField.setColumns(20);
+    styleLabel = createLabel("Textbox");
+    styleField = createField();
     styleCheck = new JCheckBox();
 
     saveButton = new JButton("Save Changes (Shift + Enter)");
+    saveButton.addActionListener(e -> frame.dispatchEvent(new WindowEvent(frame, WINDOW_CLOSING)));
+    panel.setLayout(setupLayout());
+    frame.setJMenuBar(createContentMenubar());
+    frame.add(panel);
+  }
 
+  private GroupLayout setupLayout() {
     GroupLayout layout = new GroupLayout(panel);
     layout.setAutoCreateGaps(true);
     layout.setAutoCreateContainerGaps(true);
     layout.setHorizontalGroup(
-        layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                    .addComponent(characterLabel)
-                    .addComponent(contentLabel)
-                    .addComponent(blipLabel)
-                    .addComponent(styleLabel))
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(characterField)
-                    .addComponent(contentField, GroupLayout.Alignment.CENTER, 0, contentField.getPreferredSize().width, Short.MAX_VALUE)
-                    .addComponent(blipField)
-                    .addComponent(styleField))
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(blipCheck)
-                    .addComponent(styleCheck)))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(saveButton)));
+            layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                    .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                    .addComponent(characterLabel)
+                                    .addComponent(contentLabel)
+                                    .addComponent(blipLabel)
+                                    .addComponent(styleLabel))
+                            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                    .addComponent(characterField)
+                                    .addComponent(contentToolbar)
+                                    .addComponent(contentField, GroupLayout.Alignment.CENTER, contentField.getPreferredSize().width, contentField.getPreferredSize().width, contentField.getPreferredSize().width)
+                                    .addComponent(blipField)
+                                    .addComponent(styleField))
+                            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                    .addComponent(blipCheck)
+                                    .addComponent(styleCheck)))
+                    .addGroup(layout.createSequentialGroup()
+                            .addComponent(saveButton)));
     layout.setVerticalGroup(
-        layout.createSequentialGroup()
-            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                .addComponent(characterLabel)
-                .addComponent(characterField, GroupLayout.Alignment.CENTER, characterField.getPreferredSize().height, characterField.getPreferredSize().height, characterField.getPreferredSize().height))
-            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                .addComponent(contentLabel)
-                .addComponent(contentField, GroupLayout.Alignment.CENTER, 100, 100, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                .addComponent(blipCheck)
-                .addComponent(blipLabel)
-                .addComponent(blipField, blipField.getPreferredSize().height, blipField.getPreferredSize().height, blipField.getPreferredSize().height))
-            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                .addComponent(styleCheck)
-                .addComponent(styleLabel)
-                .addComponent(styleField, styleField.getPreferredSize().height, styleField.getPreferredSize().height, styleField.getPreferredSize().height))
-            .addComponent(saveButton)
+            layout.createSequentialGroup()
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                            .addComponent(characterLabel)
+                            .addComponent(characterField, GroupLayout.Alignment.CENTER, characterField.getPreferredSize().height, characterField.getPreferredSize().height, characterField.getPreferredSize().height))
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                            .addComponent(contentToolbar))
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                            .addComponent(contentLabel)
+                            .addComponent(contentField, GroupLayout.Alignment.CENTER, contentField.getPreferredSize().height, contentField.getPreferredSize().height, contentField.getPreferredSize().height))
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                            .addComponent(blipCheck)
+                            .addComponent(blipLabel)
+                            .addComponent(blipField, blipField.getPreferredSize().height, blipField.getPreferredSize().height, blipField.getPreferredSize().height))
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                            .addComponent(styleCheck)
+                            .addComponent(styleLabel)
+                            .addComponent(styleField, styleField.getPreferredSize().height, styleField.getPreferredSize().height, styleField.getPreferredSize().height))
+                    .addComponent(saveButton)
     );
-    panel.setLayout(layout);
-    frame.add(panel);
+    return layout;
   }
 
   public DialogPageEditorView init() {
@@ -116,12 +134,10 @@ public class DialogPageEditorView implements Observer, DialogPageViewer {
     styleCheck.addActionListener(e -> {
       styleField.setEnabled(styleCheck.isSelected());
     });
-    panel.setPreferredSize(PREFERRED_SIZE);
-    frame.setPreferredSize(PREFERRED_SIZE);
     frame.setTitle("DialogPage Editor (" + model.getSpeaker() + ")");
-    frame.pack();
     frame.setLocationRelativeTo(null);
     frame.setVisible(true);
+    frame.pack();
     update();
     return this;
   }
@@ -146,6 +162,7 @@ public class DialogPageEditorView implements Observer, DialogPageViewer {
     setBlip(model.getBlip());
     setStyle(model.getTextBoxStyle());
   }
+
 
   public void attachSaveFunction(ActionListener al) {
     saveButton.addActionListener(al);
@@ -207,7 +224,82 @@ public class DialogPageEditorView implements Observer, DialogPageViewer {
     return styleCheck.isSelected();
   }
 
-  public void makeTrans() {
-    saveButton.addActionListener(e -> frame.dispatchEvent(new WindowEvent(frame, WINDOW_CLOSING)));
+  protected JEditorPane createContentField() {
+    var field = new JEditorPane();
+    field.setMargin(new Insets(0, 0, 0, 0));
+    field.setFont(font);
+    field.setBackground(Constants.TextColor.BACKGROUND.toAWT());
+    field.setContentType("text/harlowtml");
+    field.setPreferredSize(new Dimension(500, 100));
+    return field;
   }
+
+  protected JEditorPane getContentField() {
+    return contentField;
+  }
+
+  protected JToolBar createContentToolbar() {
+    var toolbar = new JToolBar();
+    var tb = getContentField();
+    toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.TYNK_RED_TEXT));
+    toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.TYNK_YELLOW_TEXT));
+    toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.TYNK_BLUE_TEXT));
+    toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.TYNK_GREEN_TEXT));
+    toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.TYNK_WHITE_TEXT));
+    toolbar.setFloatable(false);
+    return toolbar;
+  }
+
+  protected JMenuBar createContentMenubar() {
+    var menubar = new JMenuBar();
+    var tb = getContentField();
+    var editMenu = new JMenu("Edit");
+    var colorMenu = new JMenu("Colors");
+    var behaviorMenu = new JMenu("Behaviors");
+
+    if (tb.getEditorKit() instanceof HarlowTMLEditorKit kit) {
+      kit.getColorActions().forEach(action -> colorMenu.add(action));
+      kit.getBehaviorActions().forEach(action -> behaviorMenu.add(action));
+      behaviorMenu.add(kit.getClearBehaviorAction());
+      var delay = new JMenuItem(new AbstractAction() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          var magnitude = Integer.valueOf(JOptionPane.showInputDialog(frame, "Please enter a delay amount"));
+          kit.AddTimeDelay(tb, magnitude);
+        }
+      });
+      delay.setText("Delay...");
+      editMenu.add(delay);
+    }
+
+    var cut = new DefaultEditorKit.CutAction();
+    cut.putValue(Action.NAME, "Cut");
+    editMenu.add(cut);
+
+    var copy = new DefaultEditorKit.CopyAction();
+    copy.putValue(Action.NAME, "Copy");
+    editMenu.add(copy);
+
+    var paste = new DefaultEditorKit.PasteAction();
+    paste.putValue(Action.NAME, "Paste");
+    editMenu.add(paste);
+
+    menubar.add(editMenu);
+    menubar.add(colorMenu);
+    menubar.add(behaviorMenu);
+    return menubar;
+  }
+
+  protected JTextField createField() {
+    var field = new JTextField();
+    field.setColumns(40);
+    return field;
+  }
+
+  protected JLabel createLabel(String text) {
+    var label = new JLabel(text);
+    label.setHorizontalAlignment(JLabel.LEFT);
+    return label;
+  }
+
 }
