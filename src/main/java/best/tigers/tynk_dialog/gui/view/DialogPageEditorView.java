@@ -1,30 +1,40 @@
 package best.tigers.tynk_dialog.gui.view;
 
+import static java.awt.event.WindowEvent.WINDOW_CLOSING;
+
 import best.tigers.tynk_dialog.game.Constants;
 import best.tigers.tynk_dialog.gui.Assets;
 import best.tigers.tynk_dialog.gui.model.DialogPageModel;
 import best.tigers.tynk_dialog.gui.text.HarlowTMLEditorKit;
-
-import javax.swing.*;
-import javax.swing.text.DefaultEditorKit;
-import javax.swing.text.StyledEditorKit;
-import javax.swing.text.TextAction;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+import javax.swing.text.DefaultEditorKit;
 
-import static java.awt.event.WindowEvent.WINDOW_CLOSING;
-
-public class DialogPageEditorView implements Observer, DialogPageViewer {
-  //final private static Dimension PREFERRED_SIZE = new Dimension(300, 400);
+public class DialogPageEditorView implements TObserver, DialogPageViewer {
 
   private final DialogPageModel model;
   private final JPanel panel;
   private final JFrame frame;
 
-  private final JComboBox<String> characterComboBox;
   private final JLabel characterLabel;
   private final JTextField characterField;
 
@@ -51,7 +61,6 @@ public class DialogPageEditorView implements Observer, DialogPageViewer {
     frame = new JFrame();
 
     characterLabel = createLabel("Character");
-    characterComboBox = new JComboBox<String>();
     characterField = createField();
 
     contentLabel = new JLabel("Content");
@@ -128,13 +137,9 @@ public class DialogPageEditorView implements Observer, DialogPageViewer {
         super.windowClosing(e);
       }
     });
-    blipCheck.addActionListener(e -> {
-      blipField.setEnabled(blipCheck.isSelected());
-    });
-    styleCheck.addActionListener(e -> {
-      styleField.setEnabled(styleCheck.isSelected());
-    });
-    frame.setTitle("DialogPage Editor (" + model.getSpeaker() + ")");
+    blipCheck.addActionListener(e -> blipField.setEnabled(blipCheck.isSelected()));
+    styleCheck.addActionListener(e -> styleField.setEnabled(styleCheck.isSelected()));
+    frame.setTitle("DialogPage Editor (" + model.getSpeaker() + ')');
     frame.setLocationRelativeTo(null);
     frame.setVisible(true);
     frame.pack();
@@ -197,13 +202,13 @@ public class DialogPageEditorView implements Observer, DialogPageViewer {
   }
 
   @Override
-  public void setBlip(String newBlip) {
-    blipField.setText(newBlip);
+  public String getBlip() {
+    return blipField.getText();
   }
 
   @Override
-  public String getBlip() {
-    return blipField.getText();
+  public void setBlip(String newBlip) {
+    blipField.setText(newBlip);
   }
 
   public boolean getBlipEnabled() {
@@ -211,13 +216,13 @@ public class DialogPageEditorView implements Observer, DialogPageViewer {
   }
 
   @Override
-  public void setStyle(String newStyle) {
-    styleField.setText(newStyle);
+  public String getStyle() {
+    return styleField.getText();
   }
 
   @Override
-  public String getStyle() {
-    return styleField.getText();
+  public void setStyle(String newStyle) {
+    styleField.setText(newStyle);
   }
 
   public boolean getStyleEnabled() {
@@ -245,7 +250,9 @@ public class DialogPageEditorView implements Observer, DialogPageViewer {
     toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.TYNK_YELLOW_TEXT));
     toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.TYNK_BLUE_TEXT));
     toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.TYNK_GREEN_TEXT));
-    toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.TYNK_WHITE_TEXT));
+    toolbar.add(tb.getActionMap().get("Delay5"));
+    toolbar.add(tb.getActionMap().get("Delay15"));
+    toolbar.add(tb.getActionMap().get("Delay60"));
     toolbar.setFloatable(false);
     return toolbar;
   }
@@ -258,19 +265,21 @@ public class DialogPageEditorView implements Observer, DialogPageViewer {
     var behaviorMenu = new JMenu("Behaviors");
 
     if (tb.getEditorKit() instanceof HarlowTMLEditorKit kit) {
-      kit.getColorActions().forEach(action -> colorMenu.add(action));
-      kit.getBehaviorActions().forEach(action -> behaviorMenu.add(action));
+      kit.getColorActions().forEach(colorMenu::add);
+      kit.getBehaviorActions().forEach(behaviorMenu::add);
       behaviorMenu.add(kit.getClearBehaviorAction());
       var delay = new JMenuItem(new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
-          var magnitude = Integer.valueOf(JOptionPane.showInputDialog(frame, "Please enter a delay amount"));
-          kit.AddTimeDelay(tb, magnitude);
+          int magnitude = CommonDialogs.IntegerDialog.promptForInteger();
+          HarlowTMLEditorKit.addTimeDelay(tb, magnitude);
         }
       });
       delay.setText("Delay...");
       editMenu.add(delay);
     }
+
+
 
     var cut = new DefaultEditorKit.CutAction();
     cut.putValue(Action.NAME, "Cut");

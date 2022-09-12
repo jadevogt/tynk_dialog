@@ -3,17 +3,15 @@ package best.tigers.tynk_dialog.util;
 import best.tigers.tynk_dialog.exceptions.DialogParseException;
 import best.tigers.tynk_dialog.game.Dialog;
 import best.tigers.tynk_dialog.game.DialogPage;
-
+import java.util.ArrayList;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
-import java.util.ArrayList;
 
 public class DialogBuilder {
   private String title;
   private ArrayList<DialogPage> contents;
 
-  public DialogBuilder() {
-  }
+  public DialogBuilder() {}
 
   void ParseJSON(JsonObject dialogData) throws DialogParseException {
     title = dialogData.getString("title");
@@ -21,8 +19,12 @@ public class DialogBuilder {
     for (JsonValue currentPage : dialogData.getJsonArray("contents")) {
       DialogPageBuilder pageBuilder = new DialogPageBuilder();
       if (currentPage.getValueType() != JsonValue.ValueType.OBJECT) {
-        throw new DialogParseException("Received an unexpected type while processing "
-                + "dialog \"" + title + "\": " + currentPage.getValueType());
+        throw new DialogParseException(
+            "Received an unexpected type while processing "
+                + "dialog \""
+                + title
+                + "\": "
+                + currentPage.getValueType());
       }
       pageBuilder.ParseJSON(currentPage.asJsonObject());
       contents.add(pageBuilder.build());
@@ -41,8 +43,7 @@ class DialogPageBuilder {
   private String blip;
   private boolean canSkip;
 
-  public DialogPageBuilder() {
-  }
+  public DialogPageBuilder() {}
 
   public boolean verify() {
     return content != null && speaker != null;

@@ -1,27 +1,58 @@
 package best.tigers.tynk_dialog.gui.text;
 
-import javax.swing.*;
-import javax.swing.event.CaretEvent;
-
 import best.tigers.tynk_dialog.game.Constants;
-import org.apache.commons.lang3.StringUtils;
-
-import javax.swing.text.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Stream;
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.JEditorPane;
+import javax.swing.JOptionPane;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.IconView;
+import javax.swing.text.JTextComponent;
+import javax.swing.text.Position;
+import javax.swing.text.StyledEditorKit;
+import javax.swing.text.View;
+import javax.swing.text.ViewFactory;
+import org.apache.commons.lang3.StringUtils;
 
 public class HarlowTMLEditorKit extends StyledEditorKit {
+    public static final String TYNK_RED_TEXT = "Red";
+    public static final String TYNK_YELLOW_TEXT = "Yellow";
+    public static final String TYNK_GREEN_TEXT = "Green";
+    public static final String TYNK_BLUE_TEXT = "Blue";
+    public static final String TYNK_WHITE_TEXT = "White";
+    public static final Action[] defaultActions = {
+            new TynkColorAction(Constants.TextColor.RED),
+            new TynkColorAction(Constants.TextColor.YELLOW),
+            new TynkColorAction(Constants.TextColor.GREEN),
+            new TynkColorAction(Constants.TextColor.BLUE),
+            new TynkColorAction(Constants.TextColor.WHITE),
+            new TynkBehaviorAction(Constants.Behavior.WAVE),
+            new TynkBehaviorAction(Constants.Behavior.QUAKE),
+            new ClearTynkBehaviorAction(),
+            new TynkDelayAction(5),
+            new TynkDelayAction(15),
+            new TynkDelayAction(60),
+    };
     private MouseMotionListener listener;
     private MouseListener clickListener;
     private Cursor oldCursor;
     private Boolean showInvisibles = true;
-
     public HarlowTMLEditorKit() {
         listener=new MouseMotionAdapter() {
             public void mouseMoved(MouseEvent e) {
@@ -81,11 +112,62 @@ public class HarlowTMLEditorKit extends StyledEditorKit {
         return new HarlowTMLViewFactory();
     }
 
-    public static final String TYNK_RED_TEXT = "Red";
-    public static final String TYNK_YELLOW_TEXT = "Yellow";
-    public static final String TYNK_GREEN_TEXT = "Green";
-    public static final String TYNK_BLUE_TEXT = "Blue";
-    public static final String TYNK_WHITE_TEXT = "White";
+
+
+    public static void addTimeDelay(JTextComponent e, int delayMagnitude) {
+        if (e instanceof JEditorPane editor) {
+            var document = editor.getDocument();
+            if (document instanceof HarlowTMLDocument doc) {
+                doc.insertTimeDelay(e.getSelectionStart(), delayMagnitude);
+            }
+        }
+    }
+
+    public Stream<Action> getColorActions() {
+        return Arrays.stream(defaultActions).filter((action -> action instanceof TynkColorAction));
+    }
+
+    public Stream<Action> getBehaviorActions() {
+        return Arrays.stream(defaultActions).filter((action -> action instanceof TynkBehaviorAction));
+    }
+
+    public Action getClearBehaviorAction() {
+        return new ClearTynkBehaviorAction();
+    }
+
+    @Override
+    public Action[] getActions() {
+        return StyledTextAction.augmentList(super.getActions(), defaultActions);
+    }
+
+    public void read(Reader in, Document doc, int pos) throws IOException, BadLocationException {
+        var reader = new HarlowTMLReader(doc, pos, in);
+        reader.read();
+    }
+
+    public Object clone() {
+        return new HarlowTMLEditorKit();
+    }
+
+    public void write(Writer out, Document doc, int pos, int len)
+            throws IOException, BadLocationException {
+        var writer = new HarlowTMLWriter();
+        writer.write(doc, pos, len, out);
+    }
+
+    public void install(JEditorPane c) {
+        super.install(c);
+        c.addMouseMotionListener(listener);
+        c.addMouseListener(clickListener);
+        //c.addMouseMotionListener(lstMoveCollapse);
+    }
+
+    public void deinstall(JEditorPane c) {
+        c.removeMouseMotionListener(listener);
+        //c.removeMouseMotionListener(lstMoveCollapse);
+        c.removeMouseListener(clickListener);
+        super.deinstall(c);
+    }
 
     static class TynkColorIcon implements Icon {
         private Constants.TextColor color;
@@ -158,69 +240,17 @@ public class HarlowTMLEditorKit extends StyledEditorKit {
         }
     }
 
-    public void AddTimeDelay(JTextComponent e, int delayMagnitude) {
-        if (e instanceof JEditorPane editor) {
-            var document = editor.getDocument();
-            if (document instanceof HarlowTMLDocument doc) {
-                doc.insertTimeDelay(e.getSelectionStart(), delayMagnitude);
-            }
+    public static class TynkDelayAction extends StyledTextAction {
+        private int delayMagnitude;
+        public TynkDelayAction(int delayMagnitude) {
+            super("Delay" + String.valueOf(delayMagnitude));
+            this.delayMagnitude = delayMagnitude;
         }
-    }
 
-    public Stream<Action> getColorActions() {
-        return Arrays.stream(defaultActions).filter((action -> action instanceof TynkColorAction));
-    }
-
-    public Stream<Action> getBehaviorActions() {
-        return Arrays.stream(defaultActions).filter((action -> action instanceof TynkBehaviorAction));
-    }
-
-    public Action getClearBehaviorAction() {
-        return new ClearTynkBehaviorAction();
-    }
-
-    public static final Action[] defaultActions = {
-            new TynkColorAction(Constants.TextColor.RED),
-            new TynkColorAction(Constants.TextColor.YELLOW),
-            new TynkColorAction(Constants.TextColor.GREEN),
-            new TynkColorAction(Constants.TextColor.BLUE),
-            new TynkColorAction(Constants.TextColor.WHITE),
-            new TynkBehaviorAction(Constants.Behavior.WAVE),
-            new TynkBehaviorAction(Constants.Behavior.QUAKE),
-            new ClearTynkBehaviorAction(),
-    };
-
-    public Action[] getActions() {
-        return StyledTextAction.augmentList(super.getActions(), defaultActions);
-    }
-
-
-    public void read(Reader in, Document doc, int pos) throws IOException, BadLocationException {
-        var reader = new HarlowTMLReader(doc, pos, in);
-        reader.read();
-    }
-
-    public Object clone() {
-        return new HarlowTMLEditorKit();
-    }
-
-    public void write(Writer out, Document doc, int pos, int len)
-            throws IOException, BadLocationException {
-        var writer = new HarlowTMLWriter();
-        writer.write(doc, pos, len, out);
-    }
-
-    public void install(JEditorPane c) {
-        super.install(c);
-        c.addMouseMotionListener(listener);
-        c.addMouseListener(clickListener);
-        //c.addMouseMotionListener(lstMoveCollapse);
-    }
-    public void deinstall(JEditorPane c) {
-        c.removeMouseMotionListener(listener);
-        //c.removeMouseMotionListener(lstMoveCollapse);
-        c.removeMouseListener(clickListener);
-        super.deinstall(c);
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            HarlowTMLEditorKit.addTimeDelay(getTextComponent(e), delayMagnitude);
+        }
     }
 
 }

@@ -2,7 +2,7 @@ package best.tigers.tynk_dialog.gui.view;
 
 import best.tigers.tynk_dialog.gui.model.AbstractModel;
 
-public interface Observer {
+public interface TObserver {
   void update();
 
   default void subscribe(AbstractModel model) {

@@ -1,8 +1,8 @@
 package best.tigers.tynk_dialog.game;
 
+import java.util.ArrayList;
 import javax.json.Json;
 import javax.json.JsonObject;
-import java.util.ArrayList;
 
 /**
  * Represents what the internal documentation refers to as a "Dialog File," essentially a titled
@@ -13,8 +13,8 @@ import java.util.ArrayList;
 public class Dialog {
   private static final String defaultTitle = "Untitled";
   private static int untitledDialogCount = 0;
-  private String title;
   private final ArrayList<DialogPage> contents;
+  private String title;
 
   public Dialog(String title, ArrayList<DialogPage> contents) {
     this.title = title;
@@ -36,8 +36,7 @@ public class Dialog {
    * multiple untitled dialogs being created in the same session.
    */
   public Dialog() {
-    String suffix =
-            Dialog.untitledDialogCount > 0 ? " " + Dialog.untitledDialogCount : "";
+    String suffix = Dialog.untitledDialogCount > 0 ? " " + Dialog.untitledDialogCount : "";
     title = defaultTitle + suffix;
     contents = new ArrayList<DialogPage>();
     Dialog.untitledDialogCount += 1;
@@ -63,9 +62,9 @@ public class Dialog {
       pageArray.add(currentPage.serialize());
     }
     return Json.createObjectBuilder()
-            .add("title", this.title)
-            .add("contents", pageArray.build())
-            .build();
+        .add("title", this.title)
+        .add("contents", pageArray.build())
+        .build();
   }
 
   public ArrayList<DialogPage> getPages() {

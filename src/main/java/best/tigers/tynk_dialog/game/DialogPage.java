@@ -11,7 +11,7 @@ public class DialogPage {
   private boolean canSkip;
 
   public DialogPage(
-          String speaker, String content, String textStyle, String blip, boolean canSkip) {
+      String speaker, String content, String textStyle, String blip, boolean canSkip) {
     this.content = content;
     this.speaker = speaker;
     this.textStyle = textStyle;
@@ -72,17 +72,18 @@ public class DialogPage {
   }
 
   public JsonObject serialize() {
-    javax.json.JsonObjectBuilder result = Json.createObjectBuilder()
+    javax.json.JsonObjectBuilder result =
+        Json.createObjectBuilder()
             .add("txt", content)
-        .add("canSkip", canSkip)
-        .add("speaker", speaker);
+            .add("canSkip", canSkip)
+            .add("speaker", speaker);
     if (blip != null) {
       result.add("blip", blip);
     } else {
       result.add("blip", -1);
     }
     if (textStyle != null) {
-            result.add("textbox", textStyle);
+      result.add("textbox", textStyle);
     } else {
       result.add("textbox", -1);
     }

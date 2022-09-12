@@ -1,28 +1,38 @@
 package best.tigers.tynk_dialog.gui.view;
 
-import best.tigers.tynk_dialog.gui.Assets;
 import best.tigers.tynk_dialog.gui.model.DialogModel;
 import best.tigers.tynk_dialog.gui.model.DialogPageModel;
 import best.tigers.tynk_dialog.gui.model.DialogPageTableModel;
 import best.tigers.tynk_dialog.gui.view.components.AutoResizingTable;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import javax.swing.Action;
+import javax.swing.DropMode;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-
-public class DialogEditorView implements DialogViewer, Observer {
-  private static final Dimension PREFERRED_SIZE = new Dimension(300, 300);
-  private static final Dimension MAXIMUM_SIZE = new Dimension(500, Short.MAX_VALUE);
-
+public class DialogEditorView implements DialogViewer, TObserver {
+  protected final JPanel panel;
   private final JToolBar editorToolBar;
   private final AutoResizingTable pageList;
   private final JTextField titleField;
   private final DialogModel model;
-  protected final JPanel panel;
 
   public DialogEditorView(DialogModel model) {
     this.model = model;
-    this.pageList = new AutoResizingTable();
+    pageList = new AutoResizingTable();
     pageList.setModel(model.getDptm());
     panel = new JPanel();
     panel.setMinimumSize(new Dimension(0, 0));
@@ -57,6 +67,7 @@ public class DialogEditorView implements DialogViewer, Observer {
     update();
     return this;
   }
+
   public JTable getList() {
     return pageList;
   }
@@ -71,35 +82,39 @@ public class DialogEditorView implements DialogViewer, Observer {
     pageList.validate();
   }
 
+  @Override
   public String getTitle() {
     return titleField.getText();
   }
 
-  public void attachFocusListener(Runnable runner) {
-    titleField.addFocusListener(new FocusAdapter() {
-      @Override
-      public void focusLost(FocusEvent e) {
-        SwingUtilities.invokeLater(runner);
-        super.focusLost(e);
-      }
-    });
-    titleField.addMouseMotionListener(new MouseMotionAdapter() {
-      @Override
-      public void mouseMoved(MouseEvent e) {
-        SwingUtilities.invokeLater(runner);
-        super.mouseMoved(e);
-      }
-    });
-  }
-
-  public DialogPageModel getSelectedPage() {
-    return model.getDptm().getPageAt(pageList.getSelectedRow());
-  }
-
+  @Override
   public void setTitle(String newTitle) {
     if (!newTitle.equals(titleField.getText())) {
       titleField.setText(newTitle);
     }
+  }
+
+  public void attachFocusListener(Runnable runner) {
+    titleField.addFocusListener(
+        new FocusAdapter() {
+          @Override
+          public void focusLost(FocusEvent e) {
+            SwingUtilities.invokeLater(runner);
+            super.focusLost(e);
+          }
+        });
+    titleField.addMouseMotionListener(
+        new MouseMotionAdapter() {
+          @Override
+          public void mouseMoved(MouseEvent e) {
+            SwingUtilities.invokeLater(runner);
+            super.mouseMoved(e);
+          }
+        });
+  }
+
+  public DialogPageModel getSelectedPage() {
+    return model.getDptm().getPageAt(pageList.getSelectedRow());
   }
 
   public void selectPage(int index) {
@@ -122,6 +137,4 @@ public class DialogEditorView implements DialogViewer, Observer {
     editorToolBar.add(action);
     return this;
   }
-
 }
-

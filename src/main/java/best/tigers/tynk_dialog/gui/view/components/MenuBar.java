@@ -1,17 +1,15 @@
 package best.tigers.tynk_dialog.gui.view.components;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 
 public class MenuBar {
   private final JMenuBar menuBar;
   private final JMenu fileMenu;
   private final JMenu editMenu;
   private final JMenu helpMenu;
-  public enum Menu {
-    FILE,
-    EDIT,
-    HELP
-  }
 
   public MenuBar(JFrame frame) {
     menuBar = new JMenuBar();
@@ -20,7 +18,7 @@ public class MenuBar {
     helpMenu = new JMenu("Help");
     menuBar.add(fileMenu);
     menuBar.add(editMenu);
-    //menuBar.add(helpMenu);
+    // menuBar.add(helpMenu);
     frame.setJMenuBar(menuBar);
   }
 
@@ -48,5 +46,11 @@ public class MenuBar {
 
   public void addHelpItem(JMenuItem item) {
     helpMenu.add(item);
+  }
+
+  public enum Menu {
+    FILE,
+    EDIT,
+    HELP
   }
 }

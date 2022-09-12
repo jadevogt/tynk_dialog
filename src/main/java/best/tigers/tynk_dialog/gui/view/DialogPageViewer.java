@@ -9,8 +9,11 @@ public interface DialogPageViewer {
 
   public void setContent(String newContent);
 
-  public void setBlip(String newBlip);
   public String getBlip();
-  public void setStyle(String newStyle);
+
+  public void setBlip(String newBlip);
+
   public String getStyle();
+
+  public void setStyle(String newStyle);
 }

@@ -2,18 +2,17 @@ package best.tigers.tynk_dialog.gui.model;
 
 import best.tigers.tynk_dialog.game.Dialog;
 import best.tigers.tynk_dialog.game.DialogPage;
-import best.tigers.tynk_dialog.gui.view.Observer;
-
-import javax.swing.*;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
+import best.tigers.tynk_dialog.gui.view.TObserver;
 import java.util.ArrayList;
 import java.util.Collections;
+import javax.swing.ListModel;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 
-public class DialogModel extends AbstractModel implements ListModel<DialogPageModel>, Observer {
+public class DialogModel extends AbstractModel implements ListModel<DialogPageModel>, TObserver {
   private final ArrayList<DialogPageModel> pages;
-  private DialogPageTableModel dptm;
   private final ArrayList<ListDataListener> listDataListeners;
+  private DialogPageTableModel dptm;
   private String title;
 
   public DialogModel() {
@@ -61,7 +60,8 @@ public class DialogModel extends AbstractModel implements ListModel<DialogPageMo
   }
 
   public void notifyListeners() {
-    ListDataEvent event = new ListDataEvent(pages, ListDataEvent.CONTENTS_CHANGED, 0, pages.size() - 1);
+    ListDataEvent event =
+        new ListDataEvent(pages, ListDataEvent.CONTENTS_CHANGED, 0, pages.size() - 1);
     for (ListDataListener listener : listDataListeners) {
       listener.contentsChanged(event);
     }
@@ -93,8 +93,7 @@ public class DialogModel extends AbstractModel implements ListModel<DialogPageMo
   }
 
   public void swapListItems(int index1, int index2) {
-    if (index2 < pages.size() && index1 >= 0)
-      Collections.swap(pages, index1, index2);
+    if (index2 < pages.size() && index1 >= 0) Collections.swap(pages, index1, index2);
     notifyListeners();
   }
 

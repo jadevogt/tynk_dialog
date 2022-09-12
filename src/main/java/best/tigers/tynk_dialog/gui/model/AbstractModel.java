@@ -1,27 +1,26 @@
 package best.tigers.tynk_dialog.gui.model;
 
-import best.tigers.tynk_dialog.gui.view.Observer;
-
+import best.tigers.tynk_dialog.gui.view.TObserver;
 import java.util.ArrayList;
 
 public abstract class AbstractModel {
-  private final ArrayList<Observer> observers;
+  private final ArrayList<TObserver> TObservers;
 
   public AbstractModel() {
-    observers = new ArrayList<>();
+    TObservers = new ArrayList<>();
   }
 
-  public void attachSubscriber(Observer observer) {
-    observers.add(observer);
+  public void attachSubscriber(TObserver TObserver) {
+    TObservers.add(TObserver);
   }
 
-  public void detachSubscriber(Observer observer) {
-    observers.remove(observer);
+  public void detachSubscriber(TObserver TObserver) {
+    TObservers.remove(TObserver);
   }
 
   public void notifySubscribers() {
-    for (Observer observer : observers) {
-      observer.update();
+    for (TObserver TObserver : TObservers) {
+      TObserver.update();
     }
   }
 }
