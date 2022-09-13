@@ -44,8 +44,8 @@ public class HarlowTMLReader {
         for (var token : tokens) {
             if (token instanceof HarlowTMLTagToken tagToken) {
                 switch (tagToken.getType()) {
-                    case OPEN, CLOSE -> {changeAttributesBasedOnTag(tagToken);}
-                    case ENTITY -> {insertEntityBasedOnTag(tagToken);}
+                    case OPEN, CLOSE -> changeAttributesBasedOnTag(tagToken);
+                    case ENTITY -> insertEntityBasedOnTag(tagToken);
                 }
             } else if (token instanceof HarlowTMLCharacterToken charToken) {
                 doc.insertString(position++, charToken.getContent(), tagStack.peek());
@@ -77,15 +77,11 @@ public class HarlowTMLReader {
         assert (attribs != null);
         var tagName = tag.getTagName().toLowerCase();
             switch (tagName) {
-            case "c", "color", "colour" -> {
+            case "c", "color", "colour" ->
                 StyleConstants.setForeground(attribs, Constants.TextColor.fromString(value).toAWT());
-            }
-            case "b", "behavior", "behaviour" -> {
+            case "b", "behavior", "behaviour" ->
                 attribs.addAttribute(HarlowTMLDocument.BEHAVIOR_ATTRIBUTE_NAME, Constants.Behavior.fromString(value));
-            }
-            default -> {
-                throw new IllegalStateException("Invalid tag \"%s\" in document".formatted(tagName));
-            }
+            default -> throw new IllegalStateException("Invalid tag \"%s\" in document".formatted(tagName));
         }
     }
 }

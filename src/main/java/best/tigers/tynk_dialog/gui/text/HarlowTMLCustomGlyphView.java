@@ -32,8 +32,8 @@ public class HarlowTMLCustomGlyphView extends GlyphView {
       selections = new byte[viewPosCount];
       return;
     }
-    for (int i = 0; i < viewPosCount; selections[i++] = 0)
-      ;
+    for (int i = 0; i < viewPosCount; selections[i++] = 0) {
+    }
   }
 
   @Override
@@ -81,8 +81,7 @@ public class HarlowTMLCustomGlyphView extends GlyphView {
         if (h.length != 0) {
           boolean initialized = false;
           int viewSelectionCount = 0;
-          for (int i = 0; i < h.length; i++) {
-            Highlighter.Highlight highlight = h[i];
+          for (Highlighter.Highlight highlight : h) {
             int hStart = highlight.getStartOffset();
             int hEnd = highlight.getEndOffset();
             if (hStart > p1 || hEnd < p0) {
@@ -120,14 +119,18 @@ public class HarlowTMLCustomGlyphView extends GlyphView {
             int viewLen = p1 - p0;
             while (curPos++ < viewLen) {
               // searching for the next selection start
-              while (curPos < viewLen && selections[curPos] == 0) curPos++;
+              while (curPos < viewLen && selections[curPos] == 0) {
+                curPos++;
+              }
               if (startPos != curPos) {
                 // paint unselected text
                 paintTextInColor(g, a, fg, p0 + startPos, p0 + curPos);
               }
               int checkSum = 0;
               // searching for next start position of unselected text
-              while (curPos < viewLen && (checkSum += selections[curPos]) != 0) curPos++;
+              while (curPos < viewLen && (checkSum += selections[curPos]) != 0) {
+                curPos++;
+              }
               startPos = curPos;
             }
             paintedText = true;
@@ -135,7 +138,9 @@ public class HarlowTMLCustomGlyphView extends GlyphView {
         }
       }
     }
-    if (!paintedText) paintTextInColor(g, a, fg, p0, p1);
+    if (!paintedText) {
+      paintTextInColor(g, a, fg, p0, p1);
+    }
   }
 
   final void paintTextInColor(Graphics g, Shape a, Color c, int startPosition, int endPosition) {

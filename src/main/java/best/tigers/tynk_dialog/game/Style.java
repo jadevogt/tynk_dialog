@@ -11,7 +11,7 @@ public class Style {
   }
 
   public Style() {
-    this.name = null;
+    name = null;
   }
 
   @Override

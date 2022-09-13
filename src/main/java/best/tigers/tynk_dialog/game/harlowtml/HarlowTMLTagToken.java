@@ -25,25 +25,26 @@ public class HarlowTMLTagToken extends HarlowTMLToken {
   }
 
   public void setTagValue(String value) {
-    this.tagValue = value;
+    tagValue = value;
   }
 
   public String getTagName() {
-    return this.tagName;
+    return tagName;
   }
 
   public void setTagName(String tagName) {
     this.tagName = tagName;
   }
 
+  @Override
   public String toString() {
     return "<HarlowTML Token | name: TagToken | tag: "
         + tagName
         + " | type: "
-        + this.tagType.toString()
+        + tagType.toString()
         + " | value: "
-        + this.tagValue
-        + ">";
+        + tagValue
+        + '>';
   }
 
   public TagType getType() {
@@ -53,7 +54,7 @@ public class HarlowTMLTagToken extends HarlowTMLToken {
       case "time":
         return TagType.ENTITY;
       default:
-        return this.tagType;
+        return tagType;
     }
   }
 

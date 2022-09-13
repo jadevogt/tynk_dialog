@@ -9,6 +9,7 @@ import java.awt.Shape;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Enumeration;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -92,24 +93,19 @@ public class HarlowTMLDocument extends DefaultStyledDocument {
       var strLongestLine =
           Arrays.stream(stringLines)
               .max(
-                  (String line1, String line2) -> {
-                    return line1.length() - line2.length();
-                  });
+                  Comparator.comparingInt(String::length));
       if ((currentElement.getEndOffset() - currentElement.getStartOffset() < (45 + timerCount)
               && (!(str.contains("\n"))
                   || (!(str.equals("\n"))
                       && stringLines.length <= (4 - paragraphCount)
                       && strLongestLine
-                              .orElseGet(
-                                  () -> {
-                                    return "";
-                                  })
+                              .orElse(
+                                  "")
                               .length()
                           <= (45 + timerCount))))
           || (str.equals("\n") && paragraphCount <= 3)) {
         super.insertString(offs, str, a);
       } else {
-        return;
       }
     } catch (BadLocationException e) {
       e.printStackTrace();
@@ -132,11 +128,12 @@ public class HarlowTMLDocument extends DefaultStyledDocument {
   }
 
   static class TimeDelayView extends BoxView {
-    public TimeDelayView(Element elem) {
+    TimeDelayView(Element elem) {
       super(elem, X_AXIS);
       setSize(5, 5);
     }
 
+    @Override
     public void paint(Graphics g, Shape a) {
       var boundaries = a.getBounds();
       Graphics2D g2 = (Graphics2D) g;
@@ -158,7 +155,7 @@ public class HarlowTMLDocument extends DefaultStyledDocument {
   }
 
   static class LineView extends ParagraphView {
-    public LineView(Element element) {
+    LineView(Element element) {
       super(element);
     }
   }
@@ -173,7 +170,7 @@ public class HarlowTMLDocument extends DefaultStyledDocument {
      * @param offs1 The end offset &gt;= offs0
      * @since 1.4
      */
-    public HarlowTMLEntityElement(Element parent, AttributeSet a, int offs0, int offs1) {
+    HarlowTMLEntityElement(Element parent, AttributeSet a, int offs0, int offs1) {
       super(parent, a, offs0, offs1);
     }
 

@@ -15,7 +15,8 @@ public class HarlowTMLToken {
     this.name = name;
   }
 
+  @Override
   public String toString() {
-    return "<HarlowTML Token | name: " + this.name + ">";
+    return "<HarlowTML Token | name: " + name + '>';
   }
 }

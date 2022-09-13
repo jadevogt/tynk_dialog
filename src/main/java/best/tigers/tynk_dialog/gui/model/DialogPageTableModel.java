@@ -6,11 +6,11 @@ import javax.swing.table.AbstractTableModel;
 
 public class DialogPageTableModel extends AbstractTableModel {
 
-  private List<DialogPageModel> pages;
+  private final List<DialogPageModel> pages;
 
   public DialogPageTableModel(List<DialogPageModel> pages) {
 
-    this.pages = new ArrayList<DialogPageModel>(pages);
+    this.pages = new ArrayList<>(pages);
   }
 
   @Override
@@ -24,14 +24,12 @@ public class DialogPageTableModel extends AbstractTableModel {
   }
 
   @Override
-  public String getColumnName(int columnIndex) {
-    switch (columnIndex) {
-      case 0:
-        return "Character";
-      case 1:
-        return "Text";
-    }
-    return "ERROR";
+  public String getColumnName(int column) {
+    return switch (column) {
+      case 0 -> "Character";
+      case 1 -> "Text";
+      default -> throw new IllegalStateException("Unexpected value: " + column);
+    };
   }
 
   @Override
@@ -46,6 +44,8 @@ public class DialogPageTableModel extends AbstractTableModel {
       case 1:
         value = page.getContent();
         break;
+      default:
+        throw new IllegalStateException("Unexpected value: " + columnIndex);
     }
 
     return value;
@@ -74,9 +74,9 @@ public class DialogPageTableModel extends AbstractTableModel {
    * @return DialogPageModel
    */
   public DialogPageModel getPageAt(int row) {
-    if (row >= 0 && row < pages.size()) return pages.get(row);
-    else {
-      return null;
+    if (row >= 0 && row < pages.size()) {
+      return pages.get(row);
     }
+    return null;
   }
 }

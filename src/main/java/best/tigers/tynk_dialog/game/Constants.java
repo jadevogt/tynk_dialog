@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.util.Arrays;
 
 public final class Constants {
-  public final int textBoxLength = 45;
-  public final int textBoxHeight = 4;
+  public static final int textBoxLength = 45;
+  public static final int textBoxHeight = 4;
 
   private Constants() {}
 
@@ -28,15 +28,15 @@ public final class Constants {
     }
 
     public String getBehaviorValue() {
-      return this.behaviorValue;
+      return behaviorValue;
     }
 
     public String getBehaviorName() {
-      return this.behaviorName;
+      return behaviorName;
     }
 
     public String asTag() {
-      return "<b=" + this.behaviorValue + ">";
+      return "<b=" + behaviorValue + '>';
     }
   }
 
@@ -80,7 +80,7 @@ public final class Constants {
     }
 
     public String asTag() {
-      return "<c=" + getGameName() + ">";
+      return "<c=" + getGameName() + '>';
     }
   }
 }

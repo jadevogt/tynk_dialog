@@ -3,8 +3,8 @@ package best.tigers.tynk_dialog.gui.text;
 import java.awt.Color;
 import java.util.HashMap;
 
-class HarlowTMLAttributeMappings {
-  private static HashMap<String, Color> colorHashMap = new HashMap<>();
+final class HarlowTMLAttributeMappings {
+  private static final HashMap<String, Color> colorHashMap = new HashMap<>();
 
   static {
     colorHashMap.put("red", Color.red);
@@ -17,8 +17,7 @@ class HarlowTMLAttributeMappings {
     Color out = colorHashMap.get(input);
     if (out == null) {
       return Color.white;
-    } else {
-      return out;
     }
+    return out;
   }
 }

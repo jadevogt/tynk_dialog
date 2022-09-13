@@ -15,6 +15,7 @@ public class HarlowTMLLabelView extends LabelView {
     super(elem);
   }
 
+  @Override
   public void paint(Graphics g, Shape allocation) {
     super.paint(g, allocation);
     if (getAttributes().getAttribute(HarlowTMLDocument.ElementNameAttribute) != null
@@ -22,15 +23,14 @@ public class HarlowTMLLabelView extends LabelView {
             .getAttribute(HarlowTMLDocument.ElementNameAttribute)
             .equals(HarlowTMLDocument.DELAY_ELEMENT_NAME)) {
       System.out.println("h");
-      // paintDelayIndicator(g, allocation, (int)
-      // getAttributes().getAttribute(HarlowTMLDocument.DELAY_MAGNITUDE_NAME));
     }
-    if (getAttributes().getAttribute(HarlowTMLDocument.BEHAVIOR_ATTRIBUTE_NAME) != null)
+    if (getAttributes().getAttribute(HarlowTMLDocument.BEHAVIOR_ATTRIBUTE_NAME) != null) {
       paintBehaviorIndicator(
           g,
           allocation,
           (Constants.Behavior)
               getAttributes().getAttribute(HarlowTMLDocument.BEHAVIOR_ATTRIBUTE_NAME));
+    }
   }
 
   public void paintDelayIndicator(Graphics g, Shape a, int delayMagnitude) {

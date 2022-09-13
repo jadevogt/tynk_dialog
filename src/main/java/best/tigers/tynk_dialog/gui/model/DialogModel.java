@@ -93,7 +93,9 @@ public class DialogModel extends AbstractModel implements ListModel<DialogPageMo
   }
 
   public void swapListItems(int index1, int index2) {
-    if (index2 < pages.size() && index1 >= 0) Collections.swap(pages, index1, index2);
+    if (index2 < pages.size() && index1 >= 0) {
+      Collections.swap(pages, index1, index2);
+    }
     notifyListeners();
   }
 
@@ -106,7 +108,7 @@ public class DialogModel extends AbstractModel implements ListModel<DialogPageMo
   }
 
   public Dialog getDialog() {
-    ArrayList<DialogPage> contents = new ArrayList<DialogPage>();
+    ArrayList<DialogPage> contents = new ArrayList<>();
     for (DialogPageModel page : pages) {
       contents.add(page.getDialogPage());
     }

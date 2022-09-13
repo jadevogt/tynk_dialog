@@ -11,7 +11,7 @@ public class Blip {
   }
 
   public Blip() {
-    this.name = null;
+    name = null;
   }
 
   @Override
@@ -21,7 +21,7 @@ public class Blip {
 
   public JsonValue serialize() {
     if (java.util.Objects.nonNull(name)) {
-      return Json.createValue(this.name);
+      return Json.createValue(name);
     }
     return Json.createValue(-1);
   }

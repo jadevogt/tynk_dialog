@@ -16,9 +16,7 @@ import javax.swing.text.View;
 
 public class HarlowTMLEntityView extends View {
   static BufferedImage image;
-  private ImageObserver imageObserver;
-  private View parent;
-  private Container container;
+  private final ImageObserver imageObserver;
 
   public HarlowTMLEntityView(Element elem) {
     super(elem);
@@ -30,16 +28,15 @@ public class HarlowTMLEntityView extends View {
     imageObserver = new DummyObserver();
   }
 
+  @Override
   public void setParent(View parent) {
     View oldParent = getParent();
     super.setParent(parent);
-    container = (parent != null) ? getContainer() : null;
+    Container container = (parent != null) ? getContainer() : null;
   }
 
   @Override
   public float getPreferredSpan(int axis) {
-    // return image.getWidth(imageObserver);
-    // return image.getHeight(imageObserver);
     return 10;
   }
 
@@ -53,7 +50,7 @@ public class HarlowTMLEntityView extends View {
   }
 
   @Override
-  public Shape modelToView(int pos, Shape a, Position.Bias b) throws BadLocationException {
+  public Shape modelToView(int pos, Shape a, Position.Bias b) {
     int p0 = getStartOffset();
     int p1 = getEndOffset();
     if ((pos >= p0) && (pos <= p1)) {
@@ -78,7 +75,7 @@ public class HarlowTMLEntityView extends View {
     return getEndOffset();
   }
 
-  class DummyObserver implements ImageObserver {
+  static class DummyObserver implements ImageObserver {
     @Override
     public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
       return false;

@@ -6,20 +6,20 @@ import java.io.Reader;
 import java.util.ArrayList;
 
 public class HarlowTMLTokenizer {
-  private Reader input;
+  private final Reader input;
   private char[] ch;
   private int currentCharacter;
   private State currentState;
-  private int currentPosition;
+  private final int currentPosition;
   private HarlowTMLTagToken currentTag;
-  private ArrayList<HarlowTMLToken> tokens;
+  private final ArrayList<HarlowTMLToken> tokens;
 
   public HarlowTMLTokenizer(Reader input) throws IOException {
     this.input = input;
-    this.currentCharacter = input.read();
-    this.currentState = State.DATA;
-    this.currentPosition = 0;
-    this.tokens = new ArrayList<>();
+    currentCharacter = input.read();
+    currentState = State.DATA;
+    currentPosition = 0;
+    tokens = new ArrayList<>();
   }
 
   public ArrayList<HarlowTMLToken> tokenize() throws TokenizerException {
@@ -47,7 +47,6 @@ public class HarlowTMLTokenizer {
           break;
       }
     } catch (IOException e) {
-      return;
     }
   }
 
@@ -59,10 +58,10 @@ public class HarlowTMLTokenizer {
   }
 
   public void setState(State newState) {
-    this.currentState = newState;
+    currentState = newState;
   }
 
-  public char consume() throws IOException {
+  public char consume() throws IOException, EOFException {
     int temp = currentCharacter;
     if (temp == -1) {
       throw new EOFException("End of input reached");
@@ -71,7 +70,7 @@ public class HarlowTMLTokenizer {
     return (char) temp;
   }
 
-  public void data() throws TokenizerException, IOException {
+  public void data() throws TokenizerException, IOException, EOFException {
     var c = consume();
     switch (c) {
       case '<':
@@ -83,7 +82,7 @@ public class HarlowTMLTokenizer {
     proceed();
   }
 
-  public void tagOpen() throws TokenizerException, IOException {
+  public void tagOpen() throws TokenizerException, IOException, EOFException {
     var c = getch();
     switch (c) {
       case '/':
@@ -102,7 +101,7 @@ public class HarlowTMLTokenizer {
     proceed();
   }
 
-  public void endTagOpen() throws TokenizerException, IOException {
+  public void endTagOpen() throws TokenizerException, EOFException {
     var c = getch();
     switch (c) {
       case '>':
@@ -116,7 +115,7 @@ public class HarlowTMLTokenizer {
     proceed();
   }
 
-  public void tagName() throws TokenizerException, IOException {
+  public void tagName() throws TokenizerException, IOException, EOFException {
     char c = consume();
     switch (c) {
       case '=':
@@ -136,7 +135,7 @@ public class HarlowTMLTokenizer {
     proceed();
   }
 
-  public void tagValue() throws TokenizerException, IOException {
+  public void tagValue() throws TokenizerException, IOException, EOFException {
     var c = consume();
     switch (c) {
       case '=':
@@ -161,8 +160,8 @@ public class HarlowTMLTokenizer {
     TAG_VALUE
   }
 
-  public class TokenizerException extends Throwable {
-    private String cause;
+  public class TokenizerException extends Exception {
+    private final String cause;
 
     public TokenizerException(String cause) {
       super();
@@ -174,7 +173,7 @@ public class HarlowTMLTokenizer {
       return ("Error while tokenizing tag at position #"
           + Integer.valueOf(currentPosition).toString()
           + ": "
-          + this.cause);
+          + cause);
     }
   }
 }

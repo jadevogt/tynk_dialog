@@ -21,15 +21,15 @@ public class Assets {
   public static final String APPLICATION_NAME = "Tynk Dialog Editor";
   public static final String APPLICATION_VERSION = "0.0.1";
   public static final Dimension INTEGRATION_WINDOW_SIZE = new Dimension(300, 300);
-  public static String APPLICATION_AUTHOR = "Jade Vogt @tigerstyping";
-  private static Assets singleInstance = null;
-  private Font terminus;
+  public static final String APPLICATION_AUTHOR = "Jade Vogt @tigerstyping";
+  private static Assets singleInstance;
+  private final Font terminus;
   private BufferedImage timer;
 
   private Assets() {
     ClassLoader classLoader = getClass().getClassLoader();
     File file = new File(classLoader.getResource("terminus.ttf").getFile());
-    terminus = new Font("Terminus (TTF)", 0, 20);
+    terminus = new Font("Terminus (TTF)", Font.PLAIN, 20);
     try {
       GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
       ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, file));

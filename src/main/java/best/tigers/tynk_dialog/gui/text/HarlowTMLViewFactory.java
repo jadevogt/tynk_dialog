@@ -10,20 +10,27 @@ import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 
 public class HarlowTMLViewFactory implements ViewFactory {
+  @Override
   public View create(Element elem) {
     String kind = elem.getName();
     if (kind != null) {
-      if (kind.equals(AbstractDocument.ContentElementName)) {
-        return new HarlowTMLLabelView(elem);
-      } else if (kind.equals(AbstractDocument.ParagraphElementName)) {
+      switch (kind) {
+        case AbstractDocument.ContentElementName:
+          return new HarlowTMLLabelView(elem);
+      }
+      if (kind.equals(AbstractDocument.ParagraphElementName)) {
         return new HarlowTMLDocument.LineView(elem);
-      } else if (kind.equals(AbstractDocument.SectionElementName)) {
+      }
+      if (kind.equals(AbstractDocument.SectionElementName)) {
         return new BoxView(elem, View.Y_AXIS);
-      } else if (kind.equals(StyleConstants.ComponentElementName)) {
+      }
+      if (kind.equals(StyleConstants.ComponentElementName)) {
         return new ComponentView(elem);
-      } else if (kind.equals(StyleConstants.IconElementName)) {
+      }
+      if (kind.equals(StyleConstants.IconElementName)) {
         return new IconView(elem);
-      } else if (kind.equals(HarlowTMLDocument.DELAY_ELEMENT_NAME)) {
+      }
+      if (kind.equals(HarlowTMLDocument.DELAY_ELEMENT_NAME)) {
         return new HarlowTMLEntityView(elem);
         // return new HarlowTMLLabelView(elem);
       }

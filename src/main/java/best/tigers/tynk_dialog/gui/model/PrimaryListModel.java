@@ -28,6 +28,7 @@ public class PrimaryListModel extends AbstractModel
   }
 
   public PrimaryListModel(ArrayList<Dialog> dialogs, String path) {
+    super();
     this.path = path;
     dialogFiles = new ArrayList<>();
     listDataListeners = new ArrayList<>();
@@ -50,7 +51,7 @@ public class PrimaryListModel extends AbstractModel
   }
 
   public void setPath(String newPath) {
-    this.path = newPath;
+    path = newPath;
   }
 
   public void addDialog(DialogController newDialog) {
@@ -71,8 +72,10 @@ public class PrimaryListModel extends AbstractModel
 
   @Override
   public DialogController getElementAt(int index) {
-    if (index >= 0 && index <= dialogFiles.size() - 1) return dialogFiles.get(index);
-    else return null;
+    if (index >= 0 && index <= dialogFiles.size() - 1) {
+      return dialogFiles.get(index);
+    }
+    return null;
   }
 
   @Override
@@ -107,7 +110,7 @@ public class PrimaryListModel extends AbstractModel
   }
 
   public ArrayList<Dialog> getContent() {
-    ArrayList<Dialog> contents = new ArrayList<Dialog>();
+    ArrayList<Dialog> contents = new ArrayList<>();
     for (DialogController currentDialog : dialogFiles) {
       contents.add(currentDialog.getModel().getDialog());
     }

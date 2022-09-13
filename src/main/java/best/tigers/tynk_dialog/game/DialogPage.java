@@ -59,6 +59,7 @@ public class DialogPage {
     textStyle = newStyle;
   }
 
+  @Override
   public String toString() {
     return speaker + " SAYS: \n" + content + "\nWITH SOUND " + blip;
   }

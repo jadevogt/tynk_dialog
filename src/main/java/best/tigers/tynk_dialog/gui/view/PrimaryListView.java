@@ -1,6 +1,5 @@
 package best.tigers.tynk_dialog.gui.view;
 
-import best.tigers.tynk_dialog.gui.Assets;
 import best.tigers.tynk_dialog.gui.controller.DialogController;
 import best.tigers.tynk_dialog.gui.model.PrimaryListModel;
 import best.tigers.tynk_dialog.gui.view.components.DialogCellRenderer;
@@ -100,12 +99,7 @@ public class PrimaryListView implements TObserver {
 
   private void setupSelectionListener() {
     dialogList.addListSelectionListener(
-            new ListSelectionListener() {
-              @Override
-              public void valueChanged(ListSelectionEvent e) {
-                update();
-              }
-            });
+        e -> update());
   }
 
   public void swapModel(PrimaryListModel model) {
@@ -168,8 +162,7 @@ public class PrimaryListView implements TObserver {
               "Hold on--",
               JOptionPane.YES_NO_CANCEL_OPTION,
               JOptionPane.WARNING_MESSAGE);
-    } else {
-      return 1;
     }
+    return 1;
   }
 }

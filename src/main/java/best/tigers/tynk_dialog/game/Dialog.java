@@ -12,7 +12,7 @@ import javax.json.JsonObject;
  */
 public class Dialog {
   private static final String defaultTitle = "Untitled";
-  private static int untitledDialogCount = 0;
+  private static int untitledDialogCount;
   private final ArrayList<DialogPage> contents;
   private String title;
 
@@ -28,7 +28,7 @@ public class Dialog {
    */
   public Dialog(String title) {
     this.title = title;
-    contents = new ArrayList<DialogPage>();
+    contents = new ArrayList<>();
   }
 
   /**
@@ -38,7 +38,7 @@ public class Dialog {
   public Dialog() {
     String suffix = Dialog.untitledDialogCount > 0 ? " " + Dialog.untitledDialogCount : "";
     title = defaultTitle + suffix;
-    contents = new ArrayList<DialogPage>();
+    contents = new ArrayList<>();
     Dialog.untitledDialogCount += 1;
   }
 
@@ -62,7 +62,7 @@ public class Dialog {
       pageArray.add(currentPage.serialize());
     }
     return Json.createObjectBuilder()
-        .add("title", this.title)
+        .add("title", title)
         .add("contents", pageArray.build())
         .build();
   }
@@ -71,6 +71,7 @@ public class Dialog {
     return contents;
   }
 
+  @Override
   public String toString() {
     return serialize().toString();
   }

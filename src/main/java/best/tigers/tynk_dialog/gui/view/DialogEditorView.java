@@ -2,12 +2,26 @@ package best.tigers.tynk_dialog.gui.view;
 
 import best.tigers.tynk_dialog.gui.model.DialogModel;
 import best.tigers.tynk_dialog.gui.model.DialogPageModel;
-import best.tigers.tynk_dialog.gui.model.DialogPageTableModel;
 import best.tigers.tynk_dialog.gui.view.components.AutoResizingTable;
 import java.awt.BorderLayout;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.Arrays;
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 public class DialogEditorView implements ShortcutSupport, DialogViewer, TObserver {
   private final JPanel panel;
@@ -131,10 +145,6 @@ public class DialogEditorView implements ShortcutSupport, DialogViewer, TObserve
 
   public DialogPageModel getSelectedModel() {
     return getSelectedPage();
-  }
-
-  public DialogPageTableModel getDptm() {
-    return model.getDptm();
   }
 
   public void addEditorActions(Action... actions) {

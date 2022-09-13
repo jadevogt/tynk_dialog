@@ -1,17 +1,14 @@
 package best.tigers.tynk_dialog.gui.controller;
 
-import best.tigers.tynk_dialog.game.DialogPage;
 import best.tigers.tynk_dialog.gui.model.DialogModel;
 import best.tigers.tynk_dialog.gui.model.DialogPageModel;
 import best.tigers.tynk_dialog.gui.view.DialogEditorView;
-import best.tigers.tynk_dialog.gui.view.components.AutoResizingTable;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JPanel;
@@ -117,7 +114,7 @@ public class DialogController {
     var newView = newController.getView();
     newView.attachContinueAction(() -> {
       newController.saveAndExit();
-      this.duplicateAndEditPage(newModel);
+      duplicateAndEditPage(newModel);
     });
     revalidateTable();
   }
@@ -141,7 +138,7 @@ public class DialogController {
     var newView = newController.getView();
     newView.attachContinueAction(() -> {
       newController.saveAndExit();
-      this.duplicateAndEditPage(newModel);
+      duplicateAndEditPage(newModel);
     });
     newView.getContentField().requestFocus();
     revalidateTable();
@@ -154,7 +151,7 @@ public class DialogController {
       var newView = newController.getView();
       newView.attachContinueAction(() -> {
         newController.saveAndExit();
-        this.duplicateAndEditPage(selectedModel);
+        duplicateAndEditPage(selectedModel);
       });
     } else {
       java.awt.Toolkit.getDefaultToolkit().beep();
@@ -174,12 +171,13 @@ public class DialogController {
     view.getTable().revalidate();
   }
 
+  @Override
   public String toString() {
-    return this.model.getTitle();
+    return model.getTitle();
   }
 
   class AddAction extends AbstractAction {
-    public AddAction() {
+    AddAction() {
       putValue(Action.NAME, "Add");
       putValue(Action.SHORT_DESCRIPTION, "Create a new page and open it in the editor");
     }
@@ -191,7 +189,7 @@ public class DialogController {
   }
 
   class EditAction extends AbstractAction {
-    public EditAction() {
+    EditAction() {
       putValue(Action.NAME, "Edit");
       putValue(Action.SHORT_DESCRIPTION, "Open this page in the editor");
     }
@@ -203,7 +201,7 @@ public class DialogController {
   }
 
   class DeleteAction extends AbstractAction {
-    public DeleteAction() {
+    DeleteAction() {
       putValue(Action.NAME, "Remove");
       putValue(Action.SHORT_DESCRIPTION, "Delete the selected page");
     }
@@ -215,22 +213,24 @@ public class DialogController {
   }
 
   class SwapUpAction extends AbstractAction {
-    public SwapUpAction() {
+    SwapUpAction() {
       putValue(Action.NAME, "Up");
       putValue(Action.SHORT_DESCRIPTION, "Move the selected page up one spot");
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
       swapUp();
     }
   }
 
   class SwapDownAction extends AbstractAction {
-    public SwapDownAction() {
+    SwapDownAction() {
       putValue(Action.NAME, "Down");
       putValue(Action.SHORT_DESCRIPTION, "Move the selected page down one spot");
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
       swapDown();
     }

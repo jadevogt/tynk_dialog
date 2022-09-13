@@ -1,10 +1,7 @@
 package best.tigers.tynk_dialog.gui.view;
 
-import static java.awt.event.WindowEvent.WINDOW_CLOSING;
-
 import best.tigers.tynk_dialog.game.Constants;
 import best.tigers.tynk_dialog.gui.Assets;
-import best.tigers.tynk_dialog.gui.controller.DialogController;
 import best.tigers.tynk_dialog.gui.model.DialogPageModel;
 import best.tigers.tynk_dialog.gui.text.HarlowTMLEditorKit;
 import best.tigers.tynk_dialog.gui.view.components.IntegerDialog;
@@ -155,7 +152,7 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer, Shortc
 
   @Override
   public void update() {
-    frame.setTitle("DialogPage Editor (" + model.getSpeaker() + ")");
+    frame.setTitle("DialogPage Editor (" + model.getSpeaker() + ')');
     blipField.setEnabled(model.getBlipEnabled());
     styleField.setEnabled(model.getStyleEnabled());
     blipCheck.setSelected(model.getBlipEnabled());

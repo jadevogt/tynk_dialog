@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class NotSavedDialog {
-  private JDialog dialog;
+  private final JDialog dialog;
 
   public NotSavedDialog() {
     dialog = new JDialog();

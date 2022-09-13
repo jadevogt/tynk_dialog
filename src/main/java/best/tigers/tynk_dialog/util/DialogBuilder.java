@@ -15,7 +15,7 @@ public class DialogBuilder {
 
   void ParseJSON(JsonObject dialogData) throws DialogParseException {
     title = dialogData.getString("title");
-    contents = new ArrayList<DialogPage>();
+    contents = new ArrayList<>();
     for (JsonValue currentPage : dialogData.getJsonArray("contents")) {
       DialogPageBuilder pageBuilder = new DialogPageBuilder();
       if (currentPage.getValueType() != JsonValue.ValueType.OBJECT) {
@@ -43,20 +43,16 @@ class DialogPageBuilder {
   private String blip;
   private boolean canSkip;
 
-  public DialogPageBuilder() {}
+  DialogPageBuilder() {}
 
   public boolean verify() {
     return content != null && speaker != null;
   }
 
   public void ParseJSON(JsonObject dialogPageData) throws DialogParseException {
-    try {
-      content = dialogPageData.getString("txt");
-      speaker = dialogPageData.getString("speaker");
-      canSkip = dialogPageData.getBoolean("canSkip");
-    } catch (ClassCastException cce) {
-      throw new DialogParseException("Invalid DialogPage data: " + dialogPageData);
-    }
+    content = dialogPageData.getString("txt");
+    speaker = dialogPageData.getString("speaker");
+    canSkip = dialogPageData.getBoolean("canSkip");
     textBoxStyle = ParseUtils.getNullableTynkValue(dialogPageData.get("textbox")).orElse(null);
     blip = ParseUtils.getNullableTynkValue(dialogPageData.get("blip")).orElse(null);
   }

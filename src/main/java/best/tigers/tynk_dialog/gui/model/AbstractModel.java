@@ -4,22 +4,22 @@ import best.tigers.tynk_dialog.gui.view.TObserver;
 import java.util.ArrayList;
 
 public abstract class AbstractModel {
-  private final ArrayList<TObserver> TObservers;
+  private final ArrayList<TObserver> tObservers;
 
-  public AbstractModel() {
-    TObservers = new ArrayList<>();
+  protected AbstractModel() {
+    tObservers = new ArrayList<>();
   }
 
   public void attachSubscriber(TObserver TObserver) {
-    TObservers.add(TObserver);
+    tObservers.add(TObserver);
   }
 
   public void detachSubscriber(TObserver TObserver) {
-    TObservers.remove(TObserver);
+    tObservers.remove(TObserver);
   }
 
   public void notifySubscribers() {
-    for (TObserver TObserver : TObservers) {
+    for (TObserver TObserver : tObservers) {
       TObserver.update();
     }
   }

@@ -10,7 +10,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
-import java.security.Key;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -123,7 +122,7 @@ public class IntegerDialog {
       @Override
       public void actionPerformed(ActionEvent e) {
         var valueString = intField.getText();
-        if (valueString != null && !valueString.equals("") && Integer.parseInt(valueString) > 0) {
+        if (valueString != null && !valueString.isEmpty() && Integer.parseInt(valueString) > 0) {
           setValue(Integer.parseInt(valueString));
           closeDialog();
         } else {

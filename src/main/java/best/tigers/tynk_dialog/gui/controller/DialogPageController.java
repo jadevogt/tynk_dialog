@@ -7,7 +7,6 @@ import best.tigers.tynk_dialog.gui.view.DialogPageEditorView;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
-import java.security.Key;
 import javax.swing.KeyStroke;
 
 import static java.awt.event.WindowEvent.WINDOW_CLOSING;

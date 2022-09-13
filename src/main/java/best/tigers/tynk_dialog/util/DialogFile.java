@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import javax.json.Json;
@@ -40,10 +41,10 @@ public class DialogFile {
    * @return ArrayList of Dialog objects representing the file contents
    * @throws DialogFileIOException Errors encountered while reading / writing file from / to disk
    */
-  public ArrayList<Dialog> readFile() throws DialogFileIOException {
+  public ArrayList<Dialog> readFile() throws IOException {
     JsonReader x;
     try {
-      x = Json.createReader(new FileReader(path));
+      x = Json.createReader(new FileReader(path, StandardCharsets.UTF_8));
     } catch (FileNotFoundException notFound) {
       throw new DialogFileIOException("The dialog file couldn't be loaded: " + notFound);
     }
@@ -54,7 +55,7 @@ public class DialogFile {
               + "but this looks like "
               + jsonData.getValueType());
     }
-    ArrayList<Dialog> dialog = new ArrayList<Dialog>();
+    ArrayList<Dialog> dialog = new ArrayList<>();
     for (JsonValue item : jsonData.asJsonArray()) {
       DialogBuilder dialogBuilder = new DialogBuilder();
       try {
@@ -72,11 +73,11 @@ public class DialogFile {
    *
    * @param dialogData data to be written
    */
-  public void writeFile(ArrayList<Dialog> dialogData) throws DialogFileIOException {
+  public void writeFile(ArrayList<Dialog> dialogData) {
     JsonWriter writer = null;
     try {
       Log.info("Attempting to save JSON file to disk: " + path);
-      writer = Json.createWriter(new FileWriter(path));
+      writer = Json.createWriter(new FileWriter(path, StandardCharsets.UTF_8));
     } catch (IOException ioe) {
       System.err.println(ioe.getLocalizedMessage());
       Log.error(
@@ -106,7 +107,7 @@ public class DialogFile {
    * @return ArrayList of error strings
    */
   public ArrayList<String> fetchErrors() {
-    ArrayList<String> returnValue = new ArrayList<String>();
+    ArrayList<String> returnValue = new ArrayList<>();
     while (!errors.isEmpty()) {
       String current = errors.remove();
       returnValue.add(current);
@@ -119,7 +120,7 @@ public class DialogFile {
   }
 
   public void setPath(String newPath) {
-    this.path = newPath;
-    this.customized = true;
+    path = newPath;
+    customized = true;
   }
 }

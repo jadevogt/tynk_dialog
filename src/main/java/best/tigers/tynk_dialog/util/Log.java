@@ -2,7 +2,7 @@ package best.tigers.tynk_dialog.util;
 
 import java.util.logging.Logger;
 
-public class Log {
+public final class Log {
   private static final Logger logger =
       java.util.logging.Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 

@@ -3,7 +3,6 @@ package best.tigers.tynk_dialog.gui.controller;
 import best.tigers.tynk_dialog.game.Dialog;
 import best.tigers.tynk_dialog.gui.controller.filters.JSONFilter;
 import best.tigers.tynk_dialog.gui.controller.filters.TextFilter;
-import best.tigers.tynk_dialog.gui.model.DialogModel;
 import best.tigers.tynk_dialog.gui.model.PrimaryListModel;
 import best.tigers.tynk_dialog.gui.view.PrimaryListView;
 import best.tigers.tynk_dialog.gui.view.components.MenuBar;
@@ -18,10 +17,10 @@ import java.util.prefs.Preferences;
 import javax.swing.JFileChooser;
 
 public class PrimaryListController {
-  private Preferences prefs = Preferences.userRoot().node(this.getClass().getName());
+  private final Preferences prefs = Preferences.userRoot().node(getClass().getName());
   private PrimaryListModel model;
-  private PrimaryListView view;
-  private DialogFile fileHandle;
+  private final PrimaryListView view;
+  private final DialogFile fileHandle;
 
   public PrimaryListController(ArrayList<Dialog> dialogFiles) {
     model = new PrimaryListModel(dialogFiles);
@@ -68,18 +67,20 @@ public class PrimaryListController {
 
   public static void launch() {
     var primaryController = new PrimaryListController();
-    return;
   }
 
   public void exitOperation() {
     int response = view.prompt();
     switch (response) {
+      // falls through
       case 0:
         saveInPlace();
       case 1:
         break;
       case 2:
         return;
+      default:
+        throw new IllegalStateException("Unexpected value: " + response);
     }
     System.exit(0);
   }
@@ -87,12 +88,15 @@ public class PrimaryListController {
   public void newFile() {
     int response = view.prompt();
     switch (response) {
+      // falls through
       case 0:
         saveInPlace();
       case 1:
         break;
       case 2:
         return;
+      default:
+        throw new IllegalStateException("Unexpected value: " + response);
     }
     model = new PrimaryListModel();
     view.swapModel(model);
@@ -117,7 +121,7 @@ public class PrimaryListController {
     // fileHandle = new DialogFile(path);
     String path = selectFile();
     fileHandle.setPath(path);
-    ArrayList<Dialog> theDialogs = new ArrayList<Dialog>();
+    ArrayList<Dialog> theDialogs = new ArrayList<>();
     try {
       theDialogs = fileHandle.readFile();
     } catch (Exception e) {
@@ -136,7 +140,7 @@ public class PrimaryListController {
 
   public void addDialog() {
     var newPanel = DialogController.newModel();
-    if (!view.getCurrentRoom().equals("")) {
+    if (!view.getCurrentRoom().isEmpty()) {
       newPanel.getModel().setTitle(view.getCurrentRoom());
     }
     model.addDialog(newPanel);
@@ -160,13 +164,9 @@ public class PrimaryListController {
 
   public void saveInPlace() {
     if (fileHandle.isCustomized()) {
-      try {
-        fileHandle.writeFile(model.getContent());
-        model.setModified(false);
-        view.update();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
+      fileHandle.writeFile(model.getContent());
+      model.setModified(false);
+      view.update();
     } else {
       saveAs();
     }

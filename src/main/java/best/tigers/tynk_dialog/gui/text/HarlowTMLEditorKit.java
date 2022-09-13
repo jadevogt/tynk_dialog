@@ -5,13 +5,24 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.stream.Stream;
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.JEditorPane;
+import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.IconView;
@@ -48,12 +59,13 @@ public class HarlowTMLEditorKit extends StyledEditorKit {
             DELAY_ACTION_FIFTEEN,
             DELAY_ACTION_SIXTY,
     };
-    private MouseMotionListener listener;
-    private MouseListener clickListener;
+    private final MouseMotionListener listener;
+    private final MouseListener clickListener;
     private Cursor oldCursor;
-    private Boolean showInvisibles = true;
+    private static final Boolean showInvisibles = true;
     public HarlowTMLEditorKit() {
         listener=new MouseMotionAdapter() {
+            @Override
             public void mouseMoved(MouseEvent e) {
                 JEditorPane src=(JEditorPane)e.getSource();
                 int pos=src.viewToModel2D(e.getPoint());
@@ -107,6 +119,7 @@ public class HarlowTMLEditorKit extends StyledEditorKit {
         return new HarlowTMLDocument();
     }
 
+    @Override
     public ViewFactory getViewFactory() {
         return new HarlowTMLViewFactory();
     }
@@ -139,21 +152,25 @@ public class HarlowTMLEditorKit extends StyledEditorKit {
         return StyledTextAction.augmentList(super.getActions(), defaultActions);
     }
 
+    @Override
     public void read(Reader in, Document doc, int pos) throws IOException, BadLocationException {
         var reader = new HarlowTMLReader(doc, pos, in);
         reader.read();
     }
 
+    @Override
     public Object clone() {
         return new HarlowTMLEditorKit();
     }
 
+    @Override
     public void write(Writer out, Document doc, int pos, int len)
             throws IOException, BadLocationException {
         var writer = new HarlowTMLWriter();
-        writer.write(doc, pos, len, out);
+        HarlowTMLWriter.write(doc, pos, len, out);
     }
 
+    @Override
     public void install(JEditorPane c) {
         super.install(c);
         c.addMouseMotionListener(listener);
@@ -161,6 +178,7 @@ public class HarlowTMLEditorKit extends StyledEditorKit {
         //c.addMouseMotionListener(lstMoveCollapse);
     }
 
+    @Override
     public void deinstall(JEditorPane c) {
         c.removeMouseMotionListener(listener);
         //c.removeMouseMotionListener(lstMoveCollapse);
@@ -169,9 +187,9 @@ public class HarlowTMLEditorKit extends StyledEditorKit {
     }
 
     static class TynkColorIcon implements Icon {
-        private Constants.TextColor color;
-        private Dimension size;
-        public TynkColorIcon(Dimension size, Constants.TextColor color) {
+        private final Constants.TextColor color;
+        private final Dimension size;
+        TynkColorIcon(Dimension size, Constants.TextColor color) {
             this.color = color;
             this.size = size;
         }
@@ -199,8 +217,8 @@ public class HarlowTMLEditorKit extends StyledEditorKit {
         public TynkColorAction(Constants.TextColor tynkColor, KeyStroke shortcutKey) {
             super(StringUtils.capitalize(tynkColor.getGameName()), tynkColor.toAWT());
             this.shortcutKey = shortcutKey;
-            this.keyMapName = tynkColor.getGameName() + "keyboardShortcut";
-            putValue(Action.SHORT_DESCRIPTION, "Make the selected text " + tynkColor.getGameName() + ".");
+            keyMapName = tynkColor.getGameName() + "keyboardShortcut";
+            putValue(Action.SHORT_DESCRIPTION, "Make the selected text " + tynkColor.getGameName() + '.');
             putValue(Action.SMALL_ICON, new TynkColorIcon(new Dimension(16, 16), tynkColor));
             putValue(Action.LARGE_ICON_KEY, new TynkColorIcon(new Dimension(32, 16), tynkColor));
         }
@@ -233,13 +251,13 @@ public class HarlowTMLEditorKit extends StyledEditorKit {
     }
 
     public static class TynkBehaviorAction extends StyledTextAction {
-        private Constants.Behavior tynkBehavior;
-        private KeyStroke shortcutKey;
-        private String keyMapName;
+        private final Constants.Behavior tynkBehavior;
+        private final KeyStroke shortcutKey;
+        private final String keyMapName;
         public TynkBehaviorAction(Constants.Behavior tynkBehavior, KeyStroke shortcutKey) {
             super(tynkBehavior.getBehaviorName());
             this.shortcutKey =  shortcutKey;
-            this.keyMapName = tynkBehavior.getBehaviorName() + "keyboardShortcut";
+            keyMapName = tynkBehavior.getBehaviorName() + "keyboardShortcut";
             this.tynkBehavior = tynkBehavior;
         }
 
@@ -264,9 +282,9 @@ public class HarlowTMLEditorKit extends StyledEditorKit {
     }
 
     public static class TynkDelayAction extends StyledTextAction {
-        private int delayMagnitude;
+        private final int delayMagnitude;
         public TynkDelayAction(int delayMagnitude) {
-            super("Wait " + String.valueOf(delayMagnitude));
+            super("Wait " + delayMagnitude);
             this.delayMagnitude = delayMagnitude;
         }
 

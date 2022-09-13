@@ -9,7 +9,7 @@ import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.StyleConstants;
 
-public class HarlowTMLWriter {
+public final class HarlowTMLWriter {
 
   public static void write(Document doc, int start, int len, Writer out)
       throws IOException, BadLocationException {
@@ -37,9 +37,9 @@ public class HarlowTMLWriter {
       throws IOException, BadLocationException {
     if (text.getAttributes().getAttribute(HarlowTMLDocument.DELAY_MAGNITUDE_NAME) != null
         && text.getName().equals("icon")) {
-      int delay_magnitude =
+      int delayMagnitude =
           (int) text.getAttributes().getAttribute(HarlowTMLDocument.DELAY_MAGNITUDE_NAME);
-      out.write("<t=" + String.valueOf(delay_magnitude) + ">");
+      out.write("<t=" + delayMagnitude + '>');
       return;
     }
     var color = StyleConstants.getForeground(text.getAttributes());
@@ -47,17 +47,17 @@ public class HarlowTMLWriter {
         (Constants.Behavior)
             text.getAttributes().getAttribute(HarlowTMLDocument.BEHAVIOR_ATTRIBUTE_NAME);
     boolean specifiedColor = false;
-    boolean specifiedBehavior = false;
     if (Arrays.stream(Constants.TextColor.values())
         .anyMatch(
-            (c) -> {
-              boolean isGameColor = c.toAWT().equals(color);
-              boolean isNotDefault = !(c.equals(Constants.TextColor.WHITE));
+            (textColor) -> {
+              boolean isGameColor = textColor.toAWT().equals(color);
+              boolean isNotDefault = !(textColor.equals(Constants.TextColor.WHITE));
               return isGameColor && isNotDefault;
             })) {
       out.write(Constants.TextColor.fromAWT(color).asTag());
       specifiedColor = true;
     }
+    boolean specifiedBehavior = false;
     if (behavior != null) {
       out.write(behavior.asTag());
       specifiedBehavior = true;
