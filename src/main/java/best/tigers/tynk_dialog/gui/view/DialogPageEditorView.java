@@ -4,6 +4,7 @@ import static java.awt.event.WindowEvent.WINDOW_CLOSING;
 
 import best.tigers.tynk_dialog.game.Constants;
 import best.tigers.tynk_dialog.gui.Assets;
+import best.tigers.tynk_dialog.gui.controller.DialogController;
 import best.tigers.tynk_dialog.gui.model.DialogPageModel;
 import best.tigers.tynk_dialog.gui.text.HarlowTMLEditorKit;
 import best.tigers.tynk_dialog.gui.view.components.IntegerDialog;
@@ -11,10 +12,7 @@ import best.tigers.tynk_dialog.gui.view.components.IntegerDialog;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.text.DefaultEditorKit;
 
@@ -32,6 +30,7 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer, Shortc
   private final JToolBar contentToolbar;
 
   private final JButton saveButton;
+  private final JButton createAnotherButton;
 
   private final JCheckBox blipCheck;
 
@@ -65,9 +64,16 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer, Shortc
     styleCheck = new JCheckBox();
 
     saveButton = new JButton("Save Changes (Shift + Enter)");
+    createAnotherButton = new JButton("Make Next Textbox (Ctrl + Enter)");
     panel.setLayout(setupLayout());
     frame.setJMenuBar(createContentMenubar());
     frame.add(panel);
+  }
+
+  public static DialogPageEditorView fromModelProceeding(DialogPageModel model) {
+    var newView = new DialogPageEditorView(model);
+    newView.getContentField().requestFocus();
+    return newView;
   }
 
   private GroupLayout setupLayout() {
@@ -92,7 +98,8 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer, Shortc
                                     .addComponent(blipCheck)
                                     .addComponent(styleCheck)))
                     .addGroup(layout.createSequentialGroup()
-                            .addComponent(saveButton)));
+                            .addComponent(saveButton)
+                            .addComponent(createAnotherButton)));
     layout.setVerticalGroup(
             layout.createSequentialGroup()
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
@@ -111,7 +118,10 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer, Shortc
                             .addComponent(styleCheck)
                             .addComponent(styleLabel)
                             .addComponent(styleField, styleField.getPreferredSize().height, styleField.getPreferredSize().height, styleField.getPreferredSize().height))
-                    .addComponent(saveButton)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                            .addComponent(saveButton)
+                            .addComponent(createAnotherButton)
+                    )
     );
     return layout;
   }
@@ -333,5 +343,16 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer, Shortc
       }
     };
     saveButton.addActionListener(actionInstance);
+  }
+
+  public void attachContinueAction(Runnable action) {
+    var actionInstance = new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        action.run();
+      }
+    };
+    createAnotherButton.addActionListener(actionInstance);
+    attachKeyboardShortcut(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK, true), "Ctrl+Enter released", actionInstance);
   }
 }

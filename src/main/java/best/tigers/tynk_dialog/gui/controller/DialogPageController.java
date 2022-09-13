@@ -21,6 +21,15 @@ public class DialogPageController {
     view = new DialogPageEditorView(model).init();
   }
 
+  private DialogPageController(DialogPageModel model, boolean proceeding) {
+    this.model = model;
+    view = DialogPageEditorView.fromModelProceeding(model).init();
+  }
+
+  public DialogPageEditorView getView() {
+    return view;
+  }
+
   private void setupViewShortcuts() {
     var enterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK, true);
     var enterMapKey = "Shift+Enter released";
@@ -89,6 +98,12 @@ public class DialogPageController {
 
   public static DialogPageController fromModel(DialogPageModel model) {
     var controller = new DialogPageController(model);
+    controller.setupViewShortcuts();
+    return controller;
+  }
+
+  public static DialogPageController fromModelProceeding(DialogPageModel model) {
+    var controller = new DialogPageController(model, true);
     controller.setupViewShortcuts();
     return controller;
   }

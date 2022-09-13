@@ -1,5 +1,6 @@
 package best.tigers.tynk_dialog.gui.controller;
 
+import best.tigers.tynk_dialog.game.DialogPage;
 import best.tigers.tynk_dialog.gui.model.DialogModel;
 import best.tigers.tynk_dialog.gui.model.DialogPageModel;
 import best.tigers.tynk_dialog.gui.view.DialogEditorView;
@@ -69,7 +70,7 @@ public class DialogController {
           addPage();
           return;
         }
-        DialogPageController.editModel(model.getElementAt(index));
+        editPage();
       }
     };
   }
@@ -110,14 +111,51 @@ public class DialogController {
   }
 
   public void addPage() {
-    model.addPage(DialogPageController.createModel());
+    var newModel = new DialogPageModel();
+    model.addPage(newModel);
+    var newController = DialogPageController.fromModel(newModel);
+    var newView = newController.getView();
+    newView.attachContinueAction(() -> {
+      newController.saveAndExit();
+      this.duplicateAndEditPage(newModel);
+    });
+    revalidateTable();
+  }
+
+  public void duplicateAndEditPage(DialogPageModel oldModel) {
+    var newModel = new DialogPageModel();
+    newModel.setSpeaker(oldModel.getSpeaker());
+    newModel.setBlip(oldModel.getBlip());
+    newModel.setBlipEnabled(oldModel.getBlipEnabled());
+    newModel.setStyleEnabled(oldModel.getStyleEnabled());
+    newModel.setTextBoxStyle(oldModel.getTextBoxStyle());
+    model.addPage(newModel);
+    var oldIndex = model.getPageIndex(oldModel);
+    var newIndex = model.getPageIndex(newModel);
+    while (newIndex > oldIndex + 1) {
+      System.out.println(newIndex);
+      System.out.println(oldIndex);
+      model.swapListItems(newIndex--, newIndex);
+    }
+    var newController = DialogPageController.fromModelProceeding(newModel);
+    var newView = newController.getView();
+    newView.attachContinueAction(() -> {
+      newController.saveAndExit();
+      this.duplicateAndEditPage(newModel);
+    });
+    newView.getContentField().requestFocus();
     revalidateTable();
   }
 
   public void editPage() {
     var selectedModel = view.getSelectedModel();
     if (selectedModel != null) {
-      DialogPageController.editModel(selectedModel);
+      var newController = DialogPageController.fromModel(selectedModel);
+      var newView = newController.getView();
+      newView.attachContinueAction(() -> {
+        newController.saveAndExit();
+        this.duplicateAndEditPage(selectedModel);
+      });
     } else {
       java.awt.Toolkit.getDefaultToolkit().beep();
     }
