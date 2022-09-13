@@ -38,10 +38,7 @@ public class HarlowTMLEntityView extends View {
 
   @Override
   public float getPreferredSpan(int axis) {
-    if (axis == X_AXIS) {
-      // return image.getWidth(imageObserver);
-      return 10;
-    }
+    // return image.getWidth(imageObserver);
     // return image.getHeight(imageObserver);
     return 10;
   }

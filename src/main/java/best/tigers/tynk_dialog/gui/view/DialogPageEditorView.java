@@ -6,6 +6,8 @@ import best.tigers.tynk_dialog.game.Constants;
 import best.tigers.tynk_dialog.gui.Assets;
 import best.tigers.tynk_dialog.gui.model.DialogPageModel;
 import best.tigers.tynk_dialog.gui.text.HarlowTMLEditorKit;
+import best.tigers.tynk_dialog.gui.view.components.IntegerDialog;
+
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
@@ -13,23 +15,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.GroupLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JEditorPane;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
+import javax.swing.*;
 import javax.swing.text.DefaultEditorKit;
 
-public class DialogPageEditorView implements TObserver, DialogPageViewer {
+public class DialogPageEditorView implements TObserver, DialogPageViewer, ShortcutSupport {
 
   private final DialogPageModel model;
   private final JPanel panel;
@@ -76,7 +65,6 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer {
     styleCheck = new JCheckBox();
 
     saveButton = new JButton("Save Changes (Shift + Enter)");
-    saveButton.addActionListener(e -> frame.dispatchEvent(new WindowEvent(frame, WINDOW_CLOSING)));
     panel.setLayout(setupLayout());
     frame.setJMenuBar(createContentMenubar());
     frame.add(panel);
@@ -169,10 +157,6 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer {
   }
 
 
-  public void attachSaveFunction(ActionListener al) {
-    saveButton.addActionListener(al);
-  }
-
   public void attachBlipCheckFunction(ActionListener al) {
     blipCheck.addActionListener(al);
   }
@@ -229,18 +213,24 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer {
     return styleCheck.isSelected();
   }
 
-  protected JEditorPane createContentField() {
+  private JEditorPane createContentField() {
     var field = new JEditorPane();
     field.setMargin(new Insets(0, 0, 0, 0));
     field.setFont(font);
+    field.setForeground(Constants.TextColor.WHITE.toAWT());
     field.setBackground(Constants.TextColor.BACKGROUND.toAWT());
     field.setContentType("text/harlowtml");
     field.setPreferredSize(new Dimension(500, 100));
     return field;
   }
 
-  protected JEditorPane getContentField() {
+  public JEditorPane getContentField() {
     return contentField;
+  }
+
+  public HarlowTMLEditorKit getEditorKit() {
+    var kit = contentField.getEditorKit();
+    return (HarlowTMLEditorKit) kit;
   }
 
   protected JToolBar createContentToolbar() {
@@ -250,9 +240,11 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer {
     toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.TYNK_YELLOW_TEXT));
     toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.TYNK_BLUE_TEXT));
     toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.TYNK_GREEN_TEXT));
-    toolbar.add(tb.getActionMap().get("Delay5"));
-    toolbar.add(tb.getActionMap().get("Delay15"));
-    toolbar.add(tb.getActionMap().get("Delay60"));
+    toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.TYNK_GREY_TEXT));
+    toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.TYNK_WHITE_TEXT));
+    toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.DELAY_ACTION_FIVE));
+    toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.DELAY_ACTION_FIFTEEN));
+    toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.DELAY_ACTION_SIXTY));
     toolbar.setFloatable(false);
     return toolbar;
   }
@@ -271,7 +263,7 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer {
       var delay = new JMenuItem(new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
-          int magnitude = CommonDialogs.IntegerDialog.promptForInteger();
+          int magnitude = IntegerDialog.promptForInteger();
           HarlowTMLEditorKit.addTimeDelay(tb, magnitude);
         }
       });
@@ -311,4 +303,35 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer {
     return label;
   }
 
+  @Override
+  public void attachFunctionalKeyboardShortcut(KeyStroke keyStroke, String actionMapKey, Runnable action) {
+    var inputMap = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+    inputMap.put(keyStroke, actionMapKey);
+    var actionMap = panel.getActionMap();
+    var actionInstance = new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        action.run();
+      }
+    };
+    actionMap.put(actionMapKey, actionInstance);
+  }
+
+  @Override
+  public void attachKeyboardShortcut(KeyStroke keyStroke, String actionMapKey, AbstractAction action) {
+    var inputMap = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+    inputMap.put(keyStroke, actionMapKey);
+    var actionMap = panel.getActionMap();
+    actionMap.put(actionMapKey, action);
+  }
+
+  public void attachSaveAction(Runnable action) {
+    var actionInstance = new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        action.run();
+      }
+    };
+    saveButton.addActionListener(actionInstance);
+  }
 }

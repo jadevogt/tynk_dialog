@@ -5,70 +5,74 @@ import best.tigers.tynk_dialog.gui.model.DialogPageModel;
 import best.tigers.tynk_dialog.gui.model.DialogPageTableModel;
 import best.tigers.tynk_dialog.gui.view.components.AutoResizingTable;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-import javax.swing.Action;
-import javax.swing.DropMode;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
-import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
+import java.awt.event.*;
+import java.util.Arrays;
+import javax.swing.*;
 
-public class DialogEditorView implements DialogViewer, TObserver {
-  protected final JPanel panel;
+public class DialogEditorView implements ShortcutSupport, DialogViewer, TObserver {
+  private final JPanel panel;
   private final JToolBar editorToolBar;
   private final AutoResizingTable pageList;
   private final JTextField titleField;
   private final DialogModel model;
 
-  public DialogEditorView(DialogModel model) {
+  private DialogEditorView(DialogModel model) {
     this.model = model;
-    pageList = new AutoResizingTable();
-    pageList.setModel(model.getDptm());
+    pageList = AutoResizingTable.fromDialogPageModel(model);
     panel = new JPanel();
-    panel.setMinimumSize(new Dimension(0, 0));
-
-    JLabel titleLabel = new JLabel("Title");
     titleField = new JTextField();
-    titleField.setColumns(20);
+    editorToolBar = new JToolBar();
+  }
 
-    editorToolBar = new JToolBar("Editor Commands", SwingConstants.HORIZONTAL);
-    editorToolBar.setFloatable(false);
-    pageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    pageList.setDragEnabled(true);
-    pageList.setDropMode(DropMode.ON_OR_INSERT);
-    JPanel titleControls = new JPanel();
-    JScrollPane pageScrollPane = new JScrollPane(pageList);
-    pageScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+  public static DialogEditorView fromModel(DialogModel model) {
+    var view = new DialogEditorView(model);
+    view.buildView();
+    view.subscribeToModel();
+    return view;
+  }
+
+  private void buildView() {
+    setupToolBar();
+    var titleControls = setupTitlePanel();
+    var pageScrollPane = setupScrollPane();
 
     panel.setLayout(new BorderLayout());
-    titleControls.add(titleLabel);
-    titleControls.add(titleField);
     panel.add(titleControls, BorderLayout.NORTH);
     panel.add(editorToolBar, BorderLayout.SOUTH);
     panel.add(pageScrollPane, BorderLayout.CENTER);
+  }
+
+  private JScrollPane setupScrollPane() {
+    var scrollPane = new JScrollPane(pageList);
+    scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+    return scrollPane;
+  }
+
+  private void setupToolBar() {
+   editorToolBar.setName("Editor Commands");
+   editorToolBar.setOrientation(SwingConstants.HORIZONTAL);
+   editorToolBar.setFloatable(false);
+  }
+
+  private JPanel setupTitlePanel() {
+    var titleControls = new JPanel();
+    var titleLabel = new JLabel("Title");
+    titleField.setColumns(20);
+    titleControls.add(titleLabel);
+    titleControls.add(titleField);
+    return titleControls;
   }
 
   public JPanel getPanel() {
     return panel;
   }
 
-  public DialogEditorView init() {
+  public void subscribeToModel() {
     model.attachSubscriber(this);
     update();
-    return this;
   }
 
-  public JTable getList() {
+  public AutoResizingTable getTable() {
     return pageList;
   }
 
@@ -133,8 +137,28 @@ public class DialogEditorView implements DialogViewer, TObserver {
     return model.getDptm();
   }
 
-  public DialogEditorView addEditorAction(Action action, String longName) {
-    editorToolBar.add(action);
-    return this;
+  public void addEditorActions(Action... actions) {
+    Arrays.stream(actions).forEach(editorToolBar::add);
+  }
+
+  @Override
+  public void attachFunctionalKeyboardShortcut(KeyStroke keyStroke, String actionMapKey, Runnable action) {
+    var inputMap = panel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+    inputMap.put(keyStroke, actionMapKey);
+    var actionMap = panel.getActionMap();
+    var actionInstance = new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        action.run();
+      }
+    };
+    actionMap.put(actionMapKey, actionInstance);
+  }
+    @Override
+    public void attachKeyboardShortcut(KeyStroke keyStroke, String actionMapKey, AbstractAction action) {
+    var inputMap = panel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+    inputMap.put(keyStroke, actionMapKey);
+    var actionMap = panel.getActionMap();
+    actionMap.put(actionMapKey, action);
   }
 }

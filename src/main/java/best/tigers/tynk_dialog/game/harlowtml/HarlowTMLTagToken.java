@@ -2,7 +2,7 @@ package best.tigers.tynk_dialog.game.harlowtml;
 
 public class HarlowTMLTagToken extends HarlowTMLToken {
   private String tagName;
-  private TagType tagType;
+  private final TagType tagType;
   private String tagValue;
 
   public HarlowTMLTagToken(String tagName, TagType tagType, String tagValue) {

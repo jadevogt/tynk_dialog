@@ -33,7 +33,7 @@ public class PrimaryListModel extends AbstractModel
     listDataListeners = new ArrayList<>();
     for (Dialog dialog : dialogs) {
       DialogModel dialogModel = new DialogModel(dialog);
-      addDialog(new DialogController(dialogModel));
+      addDialog(DialogController.fromModel(dialogModel));
     }
   }
 

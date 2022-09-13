@@ -42,7 +42,8 @@ public final class Constants {
 
   public enum TextColor {
     WHITE("white", "#F2E9DC"),
-    GREEN("green", "#3F612D"),
+    GREEN("green", "#4eb569"),
+    GREY("grey", "#888888"),
     RED("red", "#FF5A5F"),
     BLUE("blue", "#6DD3CE"),
     YELLOW("yellow", "#FFCC00"),

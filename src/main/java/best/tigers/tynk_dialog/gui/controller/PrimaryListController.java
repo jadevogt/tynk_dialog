@@ -25,7 +25,7 @@ public class PrimaryListController {
 
   public PrimaryListController(ArrayList<Dialog> dialogFiles) {
     model = new PrimaryListModel(dialogFiles);
-    view = new PrimaryListView(model);
+    view = PrimaryListView.fromModel(model);
     fileHandle = new DialogFile();
     addMenuItem(
         e -> addDialog(),
@@ -135,20 +135,18 @@ public class PrimaryListController {
   }
 
   public void addDialog() {
-    DialogModel newDialog = new DialogModel();
+    var newPanel = DialogController.newModel();
     if (!view.getCurrentRoom().equals("")) {
-      newDialog.setTitle(view.getCurrentRoom());
+      newPanel.getModel().setTitle(view.getCurrentRoom());
     }
-    DialogController newPanel = new DialogController(newDialog);
     model.addDialog(newPanel);
   }
 
   public void removeCurrentDialog() {
     DialogController selected = view.currentSelection();
     if (selected != null) {
-      DialogController currentSelection = selected;
       view.getDialogList().setSelectedValue(selected, false);
-      model.deleteDialog(currentSelection);
+      model.deleteDialog(selected);
     }
   }
 
