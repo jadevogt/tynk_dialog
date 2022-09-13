@@ -3,22 +3,26 @@ package best.tigers.tynk_dialog.util;
 import best.tigers.tynk_dialog.exceptions.DialogFileIOException;
 import best.tigers.tynk_dialog.exceptions.DialogParseException;
 import best.tigers.tynk_dialog.game.Dialog;
-
-import javax.json.*;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonReader;
+import javax.json.JsonStructure;
+import javax.json.JsonValue;
+import javax.json.JsonWriter;
 
 public class DialogFile {
-  final private static String SEP = System.getProperty("file.separator");
-  final private static String DEFAULT_PATH = System.getProperty("user.home") + SEP + "dialog.json";
-
+  private static final String SEP = System.getProperty("file.separator");
+  private static final String DEFAULT_PATH = System.getProperty("user.home") + SEP + "dialog.json";
+  private final LinkedList<String> errors;
   private String path;
   private boolean customized = true;
-  private final LinkedList<String> errors;
 
   public DialogFile(String path) {
     errors = new LinkedList<>();
@@ -45,8 +49,10 @@ public class DialogFile {
     }
     JsonStructure jsonData = x.read();
     if (jsonData.getValueType() != JsonValue.ValueType.ARRAY) {
-      throw new DialogFileIOException("The JSON file's data must be presented as an array, " +
-              "but this looks like " + jsonData.getValueType());
+      throw new DialogFileIOException(
+          "The JSON file's data must be presented as an array, "
+              + "but this looks like "
+              + jsonData.getValueType());
     }
     ArrayList<Dialog> dialog = new ArrayList<Dialog>();
     for (JsonValue item : jsonData.asJsonArray()) {
@@ -73,7 +79,8 @@ public class DialogFile {
       writer = Json.createWriter(new FileWriter(path));
     } catch (IOException ioe) {
       System.err.println(ioe.getLocalizedMessage());
-      Log.error("(FATAL) IOException encountered while trying to save file " + ioe.getLocalizedMessage());
+      Log.error(
+          "(FATAL) IOException encountered while trying to save file " + ioe.getLocalizedMessage());
       System.exit(1);
     }
     Log.info("Successfully opened file, writing data...");

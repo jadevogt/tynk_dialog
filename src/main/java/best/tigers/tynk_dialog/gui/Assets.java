@@ -1,15 +1,21 @@
 package best.tigers.tynk_dialog.gui;
 
 import best.tigers.tynk_dialog.util.Log;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.text.DefaultEditorKit;
-import java.awt.*;
+import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
+import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.InputMap;
+import javax.swing.KeyStroke;
+import javax.swing.UIManager;
+import javax.swing.text.DefaultEditorKit;
 
 public class Assets {
   public static final String APPLICATION_NAME = "Tynk Dialog Editor";
@@ -23,20 +29,15 @@ public class Assets {
   private Assets() {
     ClassLoader classLoader = getClass().getClassLoader();
     File file = new File(classLoader.getResource("terminus.ttf").getFile());
-    terminus = new Font ("Terminus (TTF)", 0, 20);
+    terminus = new Font("Terminus (TTF)", 0, 20);
     try {
-      GraphicsEnvironment ge =
-              GraphicsEnvironment.getLocalGraphicsEnvironment();
+      GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
       ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, file));
       BufferedImage timer = ImageIO.read(classLoader.getResource("timer.png").openStream());
       System.out.println(timer.getWidth());
     } catch (IOException | FontFormatException e) {
       e.printStackTrace();
     }
-  }
-
-  public Image getTimer() {
-    return timer;
   }
 
   public static Assets getInstance() {
@@ -46,15 +47,18 @@ public class Assets {
     return singleInstance;
   }
 
-  public Font getFont() {
-    return terminus;
-  }
-
   private static void addOSXKeyStrokes(InputMap inputMap) {
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK), DefaultEditorKit.selectAllAction);
+    inputMap.put(
+        KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK),
+        DefaultEditorKit.copyAction);
+    inputMap.put(
+        KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
+    inputMap.put(
+        KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK),
+        DefaultEditorKit.pasteAction);
+    inputMap.put(
+        KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK),
+        DefaultEditorKit.selectAllAction);
   }
 
   public static void runIntegrations() {
@@ -73,6 +77,13 @@ public class Assets {
       addOSXKeyStrokes((InputMap) UIManager.get("Table.ancestorInputMap"));
       addOSXKeyStrokes((InputMap) UIManager.get("Tree.focusInputMap"));
     }
+  }
 
+  public Image getTimer() {
+    return timer;
+  }
+
+  public Font getFont() {
+    return terminus;
   }
 }

@@ -1,8 +1,7 @@
 package best.tigers.tynk_dialog.exceptions;
 
 public class DialogParseException extends Exception {
-  public DialogParseException() {
-  }
+  public DialogParseException() {}
 
   public DialogParseException(String message) {
     super(message);
@@ -16,4 +15,3 @@ public class DialogParseException extends Exception {
     super(message, cause);
   }
 }
-

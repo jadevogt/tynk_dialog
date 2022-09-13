@@ -2,18 +2,18 @@ package best.tigers.tynk_dialog.gui.model;
 
 import best.tigers.tynk_dialog.game.Dialog;
 import best.tigers.tynk_dialog.gui.controller.DialogController;
-import best.tigers.tynk_dialog.gui.view.Observer;
-
-import javax.swing.*;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
+import best.tigers.tynk_dialog.gui.view.TObserver;
 import java.util.ArrayList;
 import java.util.Collections;
+import javax.swing.ListModel;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 
-public class PrimaryListModel extends AbstractModel implements ListModel<DialogController>, Observer {
+public class PrimaryListModel extends AbstractModel
+    implements ListModel<DialogController>, TObserver {
+  private static final String BLANK_PATH = "(New file)";
   private final ArrayList<DialogController> dialogFiles;
   private final ArrayList<ListDataListener> listDataListeners;
-  final private static String BLANK_PATH = "(New file)";
   private String title;
   private String path;
   private boolean modified;
@@ -23,8 +23,18 @@ public class PrimaryListModel extends AbstractModel implements ListModel<DialogC
   }
 
   public PrimaryListModel(ArrayList<Dialog> dialogs) {
-    this (new ArrayList<>(), BLANK_PATH);
+    this(new ArrayList<>(), BLANK_PATH);
     modified = false;
+  }
+
+  public PrimaryListModel(ArrayList<Dialog> dialogs, String path) {
+    this.path = path;
+    dialogFiles = new ArrayList<>();
+    listDataListeners = new ArrayList<>();
+    for (Dialog dialog : dialogs) {
+      DialogModel dialogModel = new DialogModel(dialog);
+      addDialog(DialogController.fromModel(dialogModel));
+    }
   }
 
   public boolean isModified() {
@@ -35,22 +45,12 @@ public class PrimaryListModel extends AbstractModel implements ListModel<DialogC
     this.modified = modified;
   }
 
-  public void setPath(String newPath) {
-    this.path = newPath;
-  }
-
   public String getPath() {
     return path;
   }
 
-  public PrimaryListModel(ArrayList<Dialog> dialogs, String path) {
-    this.path = path;
-    dialogFiles = new ArrayList<>();
-    listDataListeners = new ArrayList<>();
-    for (Dialog dialog : dialogs) {
-      DialogModel dialogModel = new DialogModel(dialog);
-      addDialog(new DialogController(dialogModel));
-    }
+  public void setPath(String newPath) {
+    this.path = newPath;
   }
 
   public void addDialog(DialogController newDialog) {
@@ -71,10 +71,8 @@ public class PrimaryListModel extends AbstractModel implements ListModel<DialogC
 
   @Override
   public DialogController getElementAt(int index) {
-    if (index >= 0 && index <= dialogFiles.size() - 1)
-      return dialogFiles.get(index);
-    else
-      return null;
+    if (index >= 0 && index <= dialogFiles.size() - 1) return dialogFiles.get(index);
+    else return null;
   }
 
   @Override
@@ -84,7 +82,8 @@ public class PrimaryListModel extends AbstractModel implements ListModel<DialogC
 
   public void notifyListeners() {
     modified = true;
-    ListDataEvent event = new ListDataEvent(dialogFiles, ListDataEvent.CONTENTS_CHANGED, 0, dialogFiles.size() - 1);
+    ListDataEvent event =
+        new ListDataEvent(dialogFiles, ListDataEvent.CONTENTS_CHANGED, 0, dialogFiles.size() - 1);
     for (ListDataListener listener : listDataListeners) {
       listener.contentsChanged(event);
     }

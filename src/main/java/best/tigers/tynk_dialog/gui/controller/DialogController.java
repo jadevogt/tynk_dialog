@@ -1,67 +1,78 @@
 package best.tigers.tynk_dialog.gui.controller;
 
+import best.tigers.tynk_dialog.game.DialogPage;
 import best.tigers.tynk_dialog.gui.model.DialogModel;
 import best.tigers.tynk_dialog.gui.model.DialogPageModel;
-import best.tigers.tynk_dialog.gui.model.DialogPageTableModel;
 import best.tigers.tynk_dialog.gui.view.DialogEditorView;
+import best.tigers.tynk_dialog.gui.view.components.AutoResizingTable;
 
-import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.KeyStroke;
 
 public class DialogController {
   private final DialogEditorView view;
   private final DialogModel model;
-  private final Runnable runner;
 
-  public DialogController(DialogModel model) {
+  private DialogController(DialogModel model) {
     this.model = model;
-    runner = new Runnable() {
-      public void run() {
-        saveTitle();
-      }
-    };
-    view = new DialogEditorView(model)
-        .addEditorAction(new EditAction(), "Edit page...")
-        .addEditorAction(new AddAction(), "Add page...")
-        .addEditorAction(new DeleteAction(), "Delete page")
-        .addEditorAction(new SwapUpAction(), "Move up")
-        .addEditorAction(new SwapDownAction(), "Move down")
-        .init();
-    view.attachFocusListener(runner);
-    //JList<DialogPageModel> list = view.getList();
-    DialogPageTableModel list = view.getDptm();
-    JTable dpt = view.getList();
-    MouseListener doubleClickAdapter = new MouseAdapter() {
+    view = DialogEditorView.fromModel(model);
+  }
+
+  public static DialogController fromModel(DialogModel model) {
+    var controller = new DialogController(model);
+    controller.initDialogController();
+    return controller;
+  }
+
+  public static DialogController newModel() {
+    return DialogController.fromModel(new DialogModel());
+  }
+
+  private void initDialogController() {
+    // Setup view and shortcuts
+    var ctrlN = KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK, true);
+    var ctrlNKey = "Ctrl+N released";
+    view.attachFunctionalKeyboardShortcut(ctrlN, ctrlNKey, this::addPage);
+    view.addEditorActions(new EditAction(), new AddAction(), new DeleteAction(), new SwapUpAction(), new SwapDownAction());
+    view.attachFocusListener(this::saveTitle);
+
+    var table = view.getTable();
+    table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+    var doubleClickAdapter = buildDoubleClickAdapter();
+    table.addMouseListener(doubleClickAdapter);
+    var enterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+    var enterMapKey = "Enter";
+    table.attachFunctionalKeyboardShortcut(enterKey, enterMapKey, this::editPage);
+  }
+
+
+  MouseAdapter buildDoubleClickAdapter() {
+    return new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
-        if (e.getClickCount() == 2) {
-          int index = dpt.rowAtPoint(e.getPoint());
-          if (index < 0) {
-            addPage();
-          } else {
-            DialogPageController.editModel(model.getElementAt(index));
-          }
+        // escape if this isn't a double click
+        if (e.getClickCount() != 2) {
+          return;
         }
-      }
-    };
-    dpt.addMouseListener(doubleClickAdapter);
-    dpt.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "Enter");
-    dpt.getActionMap().put("Enter", new AbstractAction() {
-      @Override
-      public void actionPerformed(ActionEvent ae) {
+        var table = view.getTable();
+        int index = table.rowAtPoint(e.getPoint());
+        // add a new page if the user clicked outside the rows
+        if (index < 0) {
+          addPage();
+          return;
+        }
         editPage();
       }
-    });
-    dpt.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-    dpt.getColumnModel().getColumn(0).setPreferredWidth(20);
-    dpt.getTableHeader().setResizingAllowed(true);
-    dpt.getTableHeader().setReorderingAllowed(false);
-    view.getPanel().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK, true), "Ctrl+N released");
-    view.getPanel().getActionMap().put("Ctrl+N released", new AbstractAction() {
-      @Override
-      public void actionPerformed(ActionEvent ae) {
-        addPage();
-      }});
+    };
   }
 
   public JPanel getPanel() {
@@ -73,39 +84,78 @@ public class DialogController {
   }
 
   public void swapUp() {
-    DialogPageModel page = view.getSelectedPage();
+    var page = view.getSelectedPage();
     int pageIndex = model.getPageIndex(page);
-    if (pageIndex > 0) {
-      model.swapListItems(pageIndex, pageIndex - 1);
+    // escape if we're at the top or if no page is selected
+    if (pageIndex <= 0) {
+      return;
     }
+    model.swapListItems(pageIndex, pageIndex - 1);
     view.selectPage(pageIndex - 1);
   }
 
   public void swapDown() {
-    DialogPageModel page = view.getSelectedPage();
+    var page = view.getSelectedPage();
     int pageIndex = model.getPageIndex(page);
-    if (pageIndex < (model.getPageCount() - 1)) {
-      model.swapListItems(pageIndex, pageIndex + 1);
+    // escape if we're at the bottom or if no page is selected
+    if (pageIndex >= model.getPageCount() - 1 || pageIndex < 0) {
+      return;
     }
+    model.swapListItems(pageIndex, pageIndex + 1);
     view.selectPage(pageIndex + 1);
   }
 
   public void saveTitle() {
-    String newTitle = view.getTitle();
+    var newTitle = view.getTitle();
     model.setTitle(newTitle);
   }
 
-
   public void addPage() {
-    DialogPageModel newModel = new DialogPageModel();
-    model.addPage(DialogPageController.createModel());
-    view.getList().revalidate();
+    var newModel = new DialogPageModel();
+    model.addPage(newModel);
+    var newController = DialogPageController.fromModel(newModel);
+    var newView = newController.getView();
+    newView.attachContinueAction(() -> {
+      newController.saveAndExit();
+      this.duplicateAndEditPage(newModel);
+    });
+    revalidateTable();
+  }
+
+  public void duplicateAndEditPage(DialogPageModel oldModel) {
+    var newModel = new DialogPageModel();
+    newModel.setSpeaker(oldModel.getSpeaker());
+    newModel.setBlip(oldModel.getBlip());
+    newModel.setBlipEnabled(oldModel.getBlipEnabled());
+    newModel.setStyleEnabled(oldModel.getStyleEnabled());
+    newModel.setTextBoxStyle(oldModel.getTextBoxStyle());
+    model.addPage(newModel);
+    var oldIndex = model.getPageIndex(oldModel);
+    var newIndex = model.getPageIndex(newModel);
+    while (newIndex > oldIndex + 1) {
+      System.out.println(newIndex);
+      System.out.println(oldIndex);
+      model.swapListItems(newIndex--, newIndex);
+    }
+    var newController = DialogPageController.fromModelProceeding(newModel);
+    var newView = newController.getView();
+    newView.attachContinueAction(() -> {
+      newController.saveAndExit();
+      this.duplicateAndEditPage(newModel);
+    });
+    newView.getContentField().requestFocus();
+    revalidateTable();
   }
 
   public void editPage() {
-    DialogPageModel selectedModel = view.getSelectedModel();
+    var selectedModel = view.getSelectedModel();
     if (selectedModel != null) {
-      DialogPageController.editModel(selectedModel);
+      var newController = DialogPageController.fromModel(selectedModel);
+      var newView = newController.getView();
+      newView.attachContinueAction(() -> {
+        newController.saveAndExit();
+        this.duplicateAndEditPage(selectedModel);
+      });
     } else {
       java.awt.Toolkit.getDefaultToolkit().beep();
     }
@@ -117,19 +167,15 @@ public class DialogController {
     } else {
       java.awt.Toolkit.getDefaultToolkit().beep();
     }
-    view.getList().revalidate();
+    revalidateTable();
   }
 
-  class SaveAction extends AbstractAction {
-    public SaveAction() {
-      putValue(Action.NAME, "Save Changes");
-      putValue(Action.SHORT_DESCRIPTION, "Save the changes made to this dialog file's title");
-    }
+  private void revalidateTable() {
+    view.getTable().revalidate();
+  }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-      saveTitle();
-    }
+  public String toString() {
+    return this.model.getTitle();
   }
 
   class AddAction extends AbstractAction {
@@ -174,7 +220,9 @@ public class DialogController {
       putValue(Action.SHORT_DESCRIPTION, "Move the selected page up one spot");
     }
 
-    public void actionPerformed(ActionEvent e) {swapUp();}
+    public void actionPerformed(ActionEvent e) {
+      swapUp();
+    }
   }
 
   class SwapDownAction extends AbstractAction {
@@ -183,10 +231,8 @@ public class DialogController {
       putValue(Action.SHORT_DESCRIPTION, "Move the selected page down one spot");
     }
 
-    public void actionPerformed(ActionEvent e) {swapDown();}
-  }
-
-  public String toString() {
-    return this.model.getTitle();
+    public void actionPerformed(ActionEvent e) {
+      swapDown();
+    }
   }
 }

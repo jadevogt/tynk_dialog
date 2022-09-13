@@ -1,26 +1,31 @@
 package best.tigers.tynk_dialog.gui.view.components;
 
 import best.tigers.tynk_dialog.gui.controller.DialogController;
-
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Component;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
 import javax.swing.border.EmptyBorder;
-import java.awt.*;
 
 public class DialogCellRenderer extends JLabel implements ListCellRenderer<DialogController> {
   @Override
-  public Component getListCellRendererComponent(JList<? extends DialogController> list, DialogController value, int index, boolean isSelected, boolean cellHasFocus) {
+  public Component getListCellRendererComponent(
+      JList<? extends DialogController> list,
+      DialogController value,
+      int index,
+      boolean isSelected,
+      boolean cellHasFocus) {
     setText(value.getModel().getTitle());
 
     Color background;
     Color foreground;
-    setBorder(new EmptyBorder(5,5,5,5));
+    setBorder(new EmptyBorder(5, 5, 5, 5));
 
     // check if this cell represents the current DnD drop location
     setOpaque(true);
     JList.DropLocation dropLocation = list.getDropLocation();
-    if (dropLocation != null
-        && !dropLocation.isInsert()
-        && dropLocation.getIndex() == index) {
+    if (dropLocation != null && !dropLocation.isInsert() && dropLocation.getIndex() == index) {
 
       background = Color.BLUE;
       foreground = Color.WHITE;

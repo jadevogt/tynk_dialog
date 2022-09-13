@@ -3,7 +3,8 @@ package best.tigers.tynk_dialog.util;
 import java.util.logging.Logger;
 
 public class Log {
-  final private static Logger logger = java.util.logging.Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+  private static final Logger logger =
+      java.util.logging.Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
   public static void info(String logMessage) {
     logger.info(logMessage);

@@ -1,7 +1,6 @@
 package best.tigers.tynk_dialog.gui.model;
 
 import best.tigers.tynk_dialog.game.DialogPage;
-
 import javax.json.JsonObject;
 
 public class DialogPageModel extends AbstractModel {
@@ -51,20 +50,22 @@ public class DialogPageModel extends AbstractModel {
     notifySubscribers();
   }
 
+  public boolean getBlipEnabled() {
+    return blipEnabled;
+  }
+
   public void setBlipEnabled(boolean newState) {
     blipEnabled = newState;
     dialogPage.setBlip(null);
   }
-  public boolean getBlipEnabled() {
-    return blipEnabled;
+
+  public boolean getStyleEnabled() {
+    return styleEnabled;
   }
 
   public void setStyleEnabled(boolean newState) {
     styleEnabled = newState;
     dialogPage.setTextBoxStyle(null);
-  }
-  public boolean getStyleEnabled() {
-    return styleEnabled;
   }
 
   public String getTextBoxStyle() {

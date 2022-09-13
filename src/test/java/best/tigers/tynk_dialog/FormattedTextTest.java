@@ -5,6 +5,5 @@ import org.junit.jupiter.api.Test;
 class FormattedTextTest {
 
   @Test
-  void testToString() {
-  }
+  void testToString() {}
 }

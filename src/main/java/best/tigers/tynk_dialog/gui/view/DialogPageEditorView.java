@@ -1,30 +1,27 @@
 package best.tigers.tynk_dialog.gui.view;
 
-import best.tigers.tynk_dialog.game.Constants;
-import best.tigers.tynk_dialog.gui.Assets;
-import best.tigers.tynk_dialog.gui.model.DialogPageModel;
-import best.tigers.tynk_dialog.gui.text.HarlowTMLEditorKit;
-
-import javax.swing.*;
-import javax.swing.text.DefaultEditorKit;
-import javax.swing.text.StyledEditorKit;
-import javax.swing.text.TextAction;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
 import static java.awt.event.WindowEvent.WINDOW_CLOSING;
 
-public class DialogPageEditorView implements Observer, DialogPageViewer {
-  //final private static Dimension PREFERRED_SIZE = new Dimension(300, 400);
+import best.tigers.tynk_dialog.game.Constants;
+import best.tigers.tynk_dialog.gui.Assets;
+import best.tigers.tynk_dialog.gui.controller.DialogController;
+import best.tigers.tynk_dialog.gui.model.DialogPageModel;
+import best.tigers.tynk_dialog.gui.text.HarlowTMLEditorKit;
+import best.tigers.tynk_dialog.gui.view.components.IntegerDialog;
+
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Insets;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.text.DefaultEditorKit;
+
+public class DialogPageEditorView implements TObserver, DialogPageViewer, ShortcutSupport {
 
   private final DialogPageModel model;
   private final JPanel panel;
   private final JFrame frame;
 
-  private final JComboBox<String> characterComboBox;
   private final JLabel characterLabel;
   private final JTextField characterField;
 
@@ -33,6 +30,7 @@ public class DialogPageEditorView implements Observer, DialogPageViewer {
   private final JToolBar contentToolbar;
 
   private final JButton saveButton;
+  private final JButton createAnotherButton;
 
   private final JCheckBox blipCheck;
 
@@ -51,7 +49,6 @@ public class DialogPageEditorView implements Observer, DialogPageViewer {
     frame = new JFrame();
 
     characterLabel = createLabel("Character");
-    characterComboBox = new JComboBox<String>();
     characterField = createField();
 
     contentLabel = new JLabel("Content");
@@ -67,10 +64,16 @@ public class DialogPageEditorView implements Observer, DialogPageViewer {
     styleCheck = new JCheckBox();
 
     saveButton = new JButton("Save Changes (Shift + Enter)");
-    saveButton.addActionListener(e -> frame.dispatchEvent(new WindowEvent(frame, WINDOW_CLOSING)));
+    createAnotherButton = new JButton("Make Next Textbox (Ctrl + Enter)");
     panel.setLayout(setupLayout());
     frame.setJMenuBar(createContentMenubar());
     frame.add(panel);
+  }
+
+  public static DialogPageEditorView fromModelProceeding(DialogPageModel model) {
+    var newView = new DialogPageEditorView(model);
+    newView.getContentField().requestFocus();
+    return newView;
   }
 
   private GroupLayout setupLayout() {
@@ -95,7 +98,8 @@ public class DialogPageEditorView implements Observer, DialogPageViewer {
                                     .addComponent(blipCheck)
                                     .addComponent(styleCheck)))
                     .addGroup(layout.createSequentialGroup()
-                            .addComponent(saveButton)));
+                            .addComponent(saveButton)
+                            .addComponent(createAnotherButton)));
     layout.setVerticalGroup(
             layout.createSequentialGroup()
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
@@ -114,7 +118,10 @@ public class DialogPageEditorView implements Observer, DialogPageViewer {
                             .addComponent(styleCheck)
                             .addComponent(styleLabel)
                             .addComponent(styleField, styleField.getPreferredSize().height, styleField.getPreferredSize().height, styleField.getPreferredSize().height))
-                    .addComponent(saveButton)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                            .addComponent(saveButton)
+                            .addComponent(createAnotherButton)
+                    )
     );
     return layout;
   }
@@ -128,13 +135,9 @@ public class DialogPageEditorView implements Observer, DialogPageViewer {
         super.windowClosing(e);
       }
     });
-    blipCheck.addActionListener(e -> {
-      blipField.setEnabled(blipCheck.isSelected());
-    });
-    styleCheck.addActionListener(e -> {
-      styleField.setEnabled(styleCheck.isSelected());
-    });
-    frame.setTitle("DialogPage Editor (" + model.getSpeaker() + ")");
+    blipCheck.addActionListener(e -> blipField.setEnabled(blipCheck.isSelected()));
+    styleCheck.addActionListener(e -> styleField.setEnabled(styleCheck.isSelected()));
+    frame.setTitle("DialogPage Editor (" + model.getSpeaker() + ')');
     frame.setLocationRelativeTo(null);
     frame.setVisible(true);
     frame.pack();
@@ -163,10 +166,6 @@ public class DialogPageEditorView implements Observer, DialogPageViewer {
     setStyle(model.getTextBoxStyle());
   }
 
-
-  public void attachSaveFunction(ActionListener al) {
-    saveButton.addActionListener(al);
-  }
 
   public void attachBlipCheckFunction(ActionListener al) {
     blipCheck.addActionListener(al);
@@ -197,13 +196,13 @@ public class DialogPageEditorView implements Observer, DialogPageViewer {
   }
 
   @Override
-  public void setBlip(String newBlip) {
-    blipField.setText(newBlip);
+  public String getBlip() {
+    return blipField.getText();
   }
 
   @Override
-  public String getBlip() {
-    return blipField.getText();
+  public void setBlip(String newBlip) {
+    blipField.setText(newBlip);
   }
 
   public boolean getBlipEnabled() {
@@ -211,31 +210,37 @@ public class DialogPageEditorView implements Observer, DialogPageViewer {
   }
 
   @Override
-  public void setStyle(String newStyle) {
-    styleField.setText(newStyle);
+  public String getStyle() {
+    return styleField.getText();
   }
 
   @Override
-  public String getStyle() {
-    return styleField.getText();
+  public void setStyle(String newStyle) {
+    styleField.setText(newStyle);
   }
 
   public boolean getStyleEnabled() {
     return styleCheck.isSelected();
   }
 
-  protected JEditorPane createContentField() {
+  private JEditorPane createContentField() {
     var field = new JEditorPane();
     field.setMargin(new Insets(0, 0, 0, 0));
     field.setFont(font);
+    field.setForeground(Constants.TextColor.WHITE.toAWT());
     field.setBackground(Constants.TextColor.BACKGROUND.toAWT());
     field.setContentType("text/harlowtml");
     field.setPreferredSize(new Dimension(500, 100));
     return field;
   }
 
-  protected JEditorPane getContentField() {
+  public JEditorPane getContentField() {
     return contentField;
+  }
+
+  public HarlowTMLEditorKit getEditorKit() {
+    var kit = contentField.getEditorKit();
+    return (HarlowTMLEditorKit) kit;
   }
 
   protected JToolBar createContentToolbar() {
@@ -245,7 +250,11 @@ public class DialogPageEditorView implements Observer, DialogPageViewer {
     toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.TYNK_YELLOW_TEXT));
     toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.TYNK_BLUE_TEXT));
     toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.TYNK_GREEN_TEXT));
+    toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.TYNK_GREY_TEXT));
     toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.TYNK_WHITE_TEXT));
+    toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.DELAY_ACTION_FIVE));
+    toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.DELAY_ACTION_FIFTEEN));
+    toolbar.add(tb.getActionMap().get(HarlowTMLEditorKit.DELAY_ACTION_SIXTY));
     toolbar.setFloatable(false);
     return toolbar;
   }
@@ -258,19 +267,21 @@ public class DialogPageEditorView implements Observer, DialogPageViewer {
     var behaviorMenu = new JMenu("Behaviors");
 
     if (tb.getEditorKit() instanceof HarlowTMLEditorKit kit) {
-      kit.getColorActions().forEach(action -> colorMenu.add(action));
-      kit.getBehaviorActions().forEach(action -> behaviorMenu.add(action));
+      kit.getColorActions().forEach(colorMenu::add);
+      kit.getBehaviorActions().forEach(behaviorMenu::add);
       behaviorMenu.add(kit.getClearBehaviorAction());
       var delay = new JMenuItem(new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
-          var magnitude = Integer.valueOf(JOptionPane.showInputDialog(frame, "Please enter a delay amount"));
-          kit.AddTimeDelay(tb, magnitude);
+          int magnitude = IntegerDialog.promptForInteger();
+          HarlowTMLEditorKit.addTimeDelay(tb, magnitude);
         }
       });
       delay.setText("Delay...");
       editMenu.add(delay);
     }
+
+
 
     var cut = new DefaultEditorKit.CutAction();
     cut.putValue(Action.NAME, "Cut");
@@ -302,4 +313,46 @@ public class DialogPageEditorView implements Observer, DialogPageViewer {
     return label;
   }
 
+  @Override
+  public void attachFunctionalKeyboardShortcut(KeyStroke keyStroke, String actionMapKey, Runnable action) {
+    var inputMap = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+    inputMap.put(keyStroke, actionMapKey);
+    var actionMap = panel.getActionMap();
+    var actionInstance = new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        action.run();
+      }
+    };
+    actionMap.put(actionMapKey, actionInstance);
+  }
+
+  @Override
+  public void attachKeyboardShortcut(KeyStroke keyStroke, String actionMapKey, AbstractAction action) {
+    var inputMap = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+    inputMap.put(keyStroke, actionMapKey);
+    var actionMap = panel.getActionMap();
+    actionMap.put(actionMapKey, action);
+  }
+
+  public void attachSaveAction(Runnable action) {
+    var actionInstance = new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        action.run();
+      }
+    };
+    saveButton.addActionListener(actionInstance);
+  }
+
+  public void attachContinueAction(Runnable action) {
+    var actionInstance = new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        action.run();
+      }
+    };
+    createAnotherButton.addActionListener(actionInstance);
+    attachKeyboardShortcut(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK, true), "Ctrl+Enter released", actionInstance);
+  }
 }

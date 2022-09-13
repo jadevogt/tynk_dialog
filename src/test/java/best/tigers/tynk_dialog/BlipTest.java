@@ -10,6 +10,5 @@ class BlipTest {
   }
 
   @Test
-  void serialize() {
-  }
+  void serialize() {}
 }

@@ -9,14 +9,13 @@ import best.tigers.tynk_dialog.gui.view.PrimaryListView;
 import best.tigers.tynk_dialog.gui.view.components.MenuBar;
 import best.tigers.tynk_dialog.util.DialogFile;
 import best.tigers.tynk_dialog.util.Log;
-
-import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.prefs.Preferences;
+import javax.swing.JFileChooser;
 
 public class PrimaryListController {
   private Preferences prefs = Preferences.userRoot().node(this.getClass().getName());
@@ -26,45 +25,51 @@ public class PrimaryListController {
 
   public PrimaryListController(ArrayList<Dialog> dialogFiles) {
     model = new PrimaryListModel(dialogFiles);
-    view = new PrimaryListView(model);
+    view = PrimaryListView.fromModel(model);
     fileHandle = new DialogFile();
-    addMenuItem(e -> addDialog(),
+    addMenuItem(
+        e -> addDialog(),
         "Add DialogFile",
         "Adds a DialogFile to the list, which may be populated with individual Pages",
-        MenuBar.Menu.EDIT
-    );
-    addMenuItem(e -> removeCurrentDialog(),
+        MenuBar.Menu.EDIT);
+    addMenuItem(
+        e -> removeCurrentDialog(),
         "Remove selected DialogFile",
         "Removes the DialogFile that is highlighted in the list on the left",
-        MenuBar.Menu.EDIT
-    );
-    addMenuItem(e -> newFile(),
+        MenuBar.Menu.EDIT);
+    addMenuItem(
+        e -> newFile(),
         "New file",
         "Creates a new JSON dialog file for editing",
         MenuBar.Menu.FILE);
-    addMenuItem(e -> openFile(),
+    addMenuItem(
+        e -> openFile(),
         "Open file",
         "Open a JSON dialog file from disk for editing",
         MenuBar.Menu.FILE);
-    addMenuItem(e -> saveInPlace(),
-        "Save",
-        "Save the current file in place",
-        MenuBar.Menu.FILE);
-    addMenuItem(e -> saveAs(),
+    addMenuItem(e -> saveInPlace(), "Save", "Save the current file in place", MenuBar.Menu.FILE);
+    addMenuItem(
+        e -> saveAs(),
         "Save as...",
         "Select a new location and name for the current file",
         MenuBar.Menu.FILE);
-    view.attachWindowEvent(new WindowAdapter() {
-      @Override
-      public void windowClosing(WindowEvent e) {
-        exitOperation();
-      }
-    });
-    }
+    view.attachWindowEvent(
+        new WindowAdapter() {
+          @Override
+          public void windowClosing(WindowEvent e) {
+            exitOperation();
+          }
+        });
+  }
 
-    public PrimaryListController() {
+  public PrimaryListController() {
     this(new ArrayList<>());
-    }
+  }
+
+  public static void launch() {
+    var primaryController = new PrimaryListController();
+    return;
+  }
 
   public void exitOperation() {
     int response = view.prompt();
@@ -124,25 +129,24 @@ public class PrimaryListController {
     view.update();
   }
 
-  public void addMenuItem(ActionListener action, String shortText, String longText, MenuBar.Menu menu) {
+  public void addMenuItem(
+      ActionListener action, String shortText, String longText, MenuBar.Menu menu) {
     view.addMenuItem(action, shortText, longText, menu);
   }
 
   public void addDialog() {
-    DialogModel newDialog = new DialogModel();
+    var newPanel = DialogController.newModel();
     if (!view.getCurrentRoom().equals("")) {
-      newDialog.setTitle(view.getCurrentRoom());
+      newPanel.getModel().setTitle(view.getCurrentRoom());
     }
-    DialogController newPanel = new DialogController(newDialog);
     model.addDialog(newPanel);
   }
 
   public void removeCurrentDialog() {
     DialogController selected = view.currentSelection();
     if (selected != null) {
-      DialogController currentSelection = selected;
       view.getDialogList().setSelectedValue(selected, false);
-      model.deleteDialog(currentSelection);
+      model.deleteDialog(selected);
     }
   }
 
@@ -163,8 +167,7 @@ public class PrimaryListController {
       } catch (IOException e) {
         e.printStackTrace();
       }
-    }
-    else {
+    } else {
       saveAs();
     }
   }
@@ -174,10 +177,5 @@ public class PrimaryListController {
     Log.info("Setting path to " + newPath + "...");
     fileHandle.setPath(newPath);
     saveInPlace();
-  }
-
-  public static void launch() {
-    var primaryController = new PrimaryListController();
-    return;
   }
 }

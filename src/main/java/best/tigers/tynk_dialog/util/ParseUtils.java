@@ -1,8 +1,8 @@
 package best.tigers.tynk_dialog.util;
 
+import java.util.Optional;
 import javax.json.JsonString;
 import javax.json.JsonValue;
-import java.util.Optional;
 
 public class ParseUtils {
   public static Optional<String> getNullableTynkValue(JsonValue val) {
@@ -12,5 +12,4 @@ public class ParseUtils {
     }
     return Optional.empty();
   }
-
 }

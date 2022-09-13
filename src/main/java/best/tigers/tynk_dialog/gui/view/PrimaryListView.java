@@ -6,51 +6,76 @@ import best.tigers.tynk_dialog.gui.model.PrimaryListModel;
 import best.tigers.tynk_dialog.gui.view.components.DialogCellRenderer;
 import best.tigers.tynk_dialog.gui.view.components.MenuBar;
 
-import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+import javax.swing.WindowConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
-public class PrimaryListView implements Observer {
-  final private JFrame frame;
+public class PrimaryListView implements TObserver {
+  private static final Dimension PREFERRED_SIZE = new Dimension(600, 400);
+  private final JFrame frame;
+  private final JSplitPane splitPane;
+  private final JList<DialogController> dialogList;
+  private final MenuBar menuBar;
+  private final JToolBar toolBar;
+  private final JTextField currentRoom;
+  private final JPanel panel;
   private PrimaryListModel model;
-  final private JSplitPane splitPane;
-  final private JList<DialogController> dialogList;
-  final private MenuBar menuBar;
-  final private JToolBar toolBar;
-  final private JTextField currentRoom;
 
-  final public static Dimension PREFERRED_SIZE = new Dimension(600, 400);
-
-  public PrimaryListView(PrimaryListModel model) {
-    Assets.runIntegrations();
-    frame = new JFrame();
-    frame.setTitle("Tynk Dialog Editor - " + model.getPath());
+  private PrimaryListView(PrimaryListModel model) {
     this.model = model;
-    subscribe(this.model);
-    JPanel panel = new JPanel();
-    panel.setLayout(new BorderLayout());
+    frame = new JFrame();
     menuBar = new MenuBar(frame);
     dialogList = new JList<>(this.model);
-    JScrollPane listPanel = new JScrollPane(dialogList);
-    dialogList.setCellRenderer(new DialogCellRenderer());
-    listPanel.setMinimumSize(new Dimension(200, 200));
     toolBar = new JToolBar();
-    toolBar.setFloatable(false);
-    toolBar.setMaximumSize(new Dimension(Short.MAX_VALUE, 150));
-    panel.add(listPanel, BorderLayout.CENTER);
-
-    var roomSubPanel = new JPanel();
-    roomSubPanel.setLayout(new BorderLayout());
-    roomSubPanel.add(new JLabel(" Room:  "), BorderLayout.WEST);
     currentRoom = new JTextField();
-    roomSubPanel.add(currentRoom, BorderLayout.CENTER);
-    panel.add(roomSubPanel, BorderLayout.NORTH);
-    panel.add(toolBar, BorderLayout.SOUTH);
+    panel = new JPanel();
     splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panel, new JPanel());
+    subscribe(this.model);
+  }
+
+  public static PrimaryListView fromModel(PrimaryListModel model) {
+    var view = new PrimaryListView(model);
+    view.setupView();
+    return view;
+  }
+
+  private void setupView() {
+    panel.setLayout(new BorderLayout());
+    dialogList.setCellRenderer(new DialogCellRenderer());
+
+    var listPanel = new JScrollPane(dialogList);
+    listPanel.setMinimumSize(new Dimension(200, 200));
+    panel.add(listPanel, BorderLayout.CENTER);
+    setupSelectionListener();
+
+    buildToolbar();
+    panel.add(toolBar, BorderLayout.SOUTH);
+
+    var roomSubPanel = buildRoomSubPanel();
+    panel.add(roomSubPanel, BorderLayout.NORTH);
+
     splitPane.setEnabled(false);
+    splitPane.revalidate();
+    setupFrame();
+  }
+
+  private void setupFrame() {
+    frame.setTitle("Tynk Dialog Editor - " + model.getPath());
     frame.add(splitPane);
     frame.setPreferredSize(PREFERRED_SIZE);
     frame.setMinimumSize(PREFERRED_SIZE);
@@ -58,16 +83,29 @@ public class PrimaryListView implements Observer {
     frame.setLocationRelativeTo(null);
     frame.setVisible(true);
     frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-    splitPane.revalidate();
+  }
 
+  private void buildToolbar() {
+    toolBar.setFloatable(false);
+    toolBar.setMaximumSize(new Dimension(Short.MAX_VALUE, 150));
+  }
 
+  private JPanel buildRoomSubPanel() {
+    var roomSubPanel = new JPanel();
+    roomSubPanel.setLayout(new BorderLayout());
+    roomSubPanel.add(new JLabel(" Room:  "), BorderLayout.WEST);
+    roomSubPanel.add(currentRoom, BorderLayout.CENTER);
+    return roomSubPanel;
+  }
 
-    dialogList.addListSelectionListener(new ListSelectionListener() {
-      @Override
-      public void valueChanged(ListSelectionEvent e) {
-        update();
-      }
-    });
+  private void setupSelectionListener() {
+    dialogList.addListSelectionListener(
+            new ListSelectionListener() {
+              @Override
+              public void valueChanged(ListSelectionEvent e) {
+                update();
+              }
+            });
   }
 
   public void swapModel(PrimaryListModel model) {
@@ -82,14 +120,15 @@ public class PrimaryListView implements Observer {
     return dialogList.getSelectedValue();
   }
 
-  public void addMenuItem(ActionListener action, String shortText, String longText, MenuBar.Menu menu) {
-    JMenuItem newItem = new JMenuItem();
+  public void addMenuItem(
+          ActionListener action, String shortText, String longText, MenuBar.Menu menu) {
+    var newItem = new JMenuItem();
     newItem.addActionListener(action);
     newItem.setText(shortText);
     newItem.setToolTipText(longText);
     menuBar.addItem(menu, newItem);
     if (menu == MenuBar.Menu.EDIT) {
-      JButton toolButton = new JButton();
+      var toolButton = new JButton();
       toolButton.addActionListener(action);
       toolButton.setText(shortText.split(" ")[0]);
       toolBar.add(toolButton);
@@ -123,7 +162,12 @@ public class PrimaryListView implements Observer {
 
   public int prompt() {
     if (model.isModified()) {
-      return JOptionPane.showConfirmDialog(null, "You haven't saved this file since the last changes were made. Would you like to save before continuing?", "Hold on--", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+      return JOptionPane.showConfirmDialog(
+              null,
+              "You haven't saved this file since the last changes were made. Would you like to save before continuing?",
+              "Hold on--",
+              JOptionPane.YES_NO_CANCEL_OPTION,
+              JOptionPane.WARNING_MESSAGE);
     } else {
       return 1;
     }
