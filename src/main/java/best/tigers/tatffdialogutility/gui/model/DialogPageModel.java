@@ -77,6 +77,14 @@ public class DialogPageModel extends AbstractModel {
     notifySubscribers();
   }
 
+  public boolean getCanSkip() {
+    return dialogPage.isCanSkip();
+  }
+
+  public void setCanSkip(boolean canSkip) {
+    dialogPage.setCanSkip(canSkip);
+  }
+
   public JsonObject asJson() {
     return dialogPage.serialize();
   }

@@ -38,6 +38,9 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer, Shortc
 
   private final JLabel styleLabel;
   private final JTextField styleField;
+
+  private final JLabel canSkipLabel;
+  private final JCheckBox canSkipCheck;
   private final Font font = Assets.getInstance().getFont();
 
   public DialogPageEditorView(DialogPageModel model) {
@@ -59,6 +62,9 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer, Shortc
     styleLabel = createLabel("Textbox");
     styleField = createField();
     styleCheck = new JCheckBox();
+
+    canSkipLabel = createLabel("Skippable");
+    canSkipCheck = new JCheckBox();
 
     saveButton = new JButton("Save Changes (Shift + Enter)");
     createAnotherButton = new JButton("Make Next Textbox (Ctrl + Enter)");
@@ -84,13 +90,15 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer, Shortc
                                     .addComponent(characterLabel)
                                     .addComponent(contentLabel)
                                     .addComponent(blipLabel)
-                                    .addComponent(styleLabel))
+                                    .addComponent(styleLabel)
+                                    .addComponent(canSkipLabel))
                             .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                     .addComponent(characterField)
                                     .addComponent(contentToolbar)
                                     .addComponent(contentField, GroupLayout.Alignment.CENTER, contentField.getPreferredSize().width, contentField.getPreferredSize().width, contentField.getPreferredSize().width)
                                     .addComponent(blipField)
-                                    .addComponent(styleField))
+                                    .addComponent(styleField)
+                                    .addComponent(canSkipCheck))
                             .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                     .addComponent(blipCheck)
                                     .addComponent(styleCheck)))
@@ -115,6 +123,9 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer, Shortc
                             .addComponent(styleCheck)
                             .addComponent(styleLabel)
                             .addComponent(styleField, styleField.getPreferredSize().height, styleField.getPreferredSize().height, styleField.getPreferredSize().height))
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                            .addComponent(canSkipLabel)
+                            .addComponent(canSkipCheck))
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
                             .addComponent(saveButton)
                             .addComponent(createAnotherButton)
@@ -157,6 +168,7 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer, Shortc
     styleField.setEnabled(model.getStyleEnabled());
     blipCheck.setSelected(model.getBlipEnabled());
     styleCheck.setSelected(model.getStyleEnabled());
+    canSkipCheck.setSelected(model.getCanSkip());
     setSpeaker(model.getSpeaker());
     setContent(model.getContent());
     setBlip(model.getBlip());
@@ -218,6 +230,10 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer, Shortc
 
   public boolean getStyleEnabled() {
     return styleCheck.isSelected();
+  }
+
+  public boolean getCanSkip() {
+    return canSkipCheck.isSelected();
   }
 
   private JEditorPane createContentField() {
@@ -352,4 +368,6 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer, Shortc
     createAnotherButton.addActionListener(actionInstance);
     attachKeyboardShortcut(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK, true), "Ctrl+Enter released", actionInstance);
   }
+
+
 }

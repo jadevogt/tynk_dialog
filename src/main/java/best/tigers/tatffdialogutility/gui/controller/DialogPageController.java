@@ -69,6 +69,7 @@ public class DialogPageController {
       String newStyle = view.getStyle();
       boolean blipEnabled = view.getBlipEnabled();
       boolean styleEnabled = view.getStyleEnabled();
+      boolean canSkip = view.getCanSkip();
       if (!model.getSpeaker().equals(newSpeaker)) {
         model.setSpeaker(newSpeaker);
       }
@@ -86,6 +87,9 @@ public class DialogPageController {
       }
       if (model.getStyleEnabled()) {
         model.setTextBoxStyle(newStyle);
+      }
+      if (model.getCanSkip() != canSkip) {
+        model.setCanSkip(canSkip);
       }
   }
 
