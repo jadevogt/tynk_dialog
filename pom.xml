@@ -66,7 +66,7 @@
       <artifactId>annotations</artifactId>
       <groupId>org.jetbrains</groupId>
       <scope>compile</scope>
-      <version>RELEASE</version>
+      <version>23.1.0</version>
     </dependency>
   </dependencies>
   <groupId>best.tigers</groupId>
