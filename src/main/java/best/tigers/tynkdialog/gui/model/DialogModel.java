@@ -2,8 +2,11 @@ package best.tigers.tynkdialog.gui.model;
 
 import best.tigers.tynkdialog.exceptions.PageModelException;
 import best.tigers.tynkdialog.game.Dialog;
+import best.tigers.tynkdialog.game.page.FlatPage;
 import best.tigers.tynkdialog.game.page.Page;
 import best.tigers.tynkdialog.game.page.TalkPage;
+import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
+import best.tigers.tynkdialog.gui.model.page.FlatPageModel;
 import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
 import best.tigers.tynkdialog.gui.view.TObserver;
 import java.util.ArrayList;
@@ -12,9 +15,9 @@ import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
-public class DialogModel extends AbstractModel implements ListModel<TalkPageModel>, TObserver {
+public class DialogModel extends AbstractModel implements ListModel<AbstractPageModel>, TObserver {
 
-  private final ArrayList<TalkPageModel> pages;
+  private final ArrayList<AbstractPageModel> pages;
   private final ArrayList<ListDataListener> listDataListeners;
   private PageTableModel dptm;
   private String title;
@@ -32,23 +35,24 @@ public class DialogModel extends AbstractModel implements ListModel<TalkPageMode
       var pageKind = page.getPageKind();
       switch (pageKind) {
         case "talk" -> addPage(new TalkPageModel((TalkPage) page));
+        case "flat" -> addPage(new FlatPageModel((FlatPage) page));
         default -> throw new PageModelException("No models exists for page kind " + pageKind + ".");
       }
     }
   }
 
-  public void addPage(TalkPageModel newPage) {
+  public void addPage(AbstractPageModel newPage) {
     newPage.attachSubscriber(this);
     pages.add(newPage);
     notifyListeners();
   }
 
-  public void deletePage(TalkPageModel removedPage) {
+  public void deletePage(AbstractPageModel removedPage) {
     pages.remove(removedPage);
     notifyListeners();
   }
 
-  public ArrayList<TalkPageModel> getPages() {
+  public ArrayList<AbstractPageModel> getPages() {
     return pages;
   }
 
@@ -58,7 +62,7 @@ public class DialogModel extends AbstractModel implements ListModel<TalkPageMode
   }
 
   @Override
-  public TalkPageModel getElementAt(int index) {
+  public AbstractPageModel getElementAt(int index) {
     return pages.get(index);
   }
 
@@ -107,7 +111,7 @@ public class DialogModel extends AbstractModel implements ListModel<TalkPageMode
     notifyListeners();
   }
 
-  public int getPageIndex(TalkPageModel pageModel) {
+  public int getPageIndex(AbstractPageModel pageModel) {
     return pages.indexOf(pageModel);
   }
 
@@ -117,8 +121,8 @@ public class DialogModel extends AbstractModel implements ListModel<TalkPageMode
 
   public Dialog getDialog() {
     ArrayList<Page> contents = new ArrayList<>();
-    for (TalkPageModel page : pages) {
-      contents.add(page.getDialogPage());
+    for (AbstractPageModel page : pages) {
+      contents.add(page.getPage());
     }
     return new Dialog(title, contents);
   }

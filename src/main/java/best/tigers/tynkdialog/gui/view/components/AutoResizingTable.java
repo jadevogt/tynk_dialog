@@ -21,16 +21,14 @@ public class AutoResizingTable extends JTable implements ShortcutSupport {
   public AutoResizingTable(TableModel model) {
     super();
     setModel(model);
-    addHierarchyBoundsListener(
-        new HierarchyBoundsAdapter() {
-          @Override
-          public void ancestorResized(HierarchyEvent e) {
-            super.ancestorResized(e);
-            if (getParent() != null) {
-              resizeColumnWidth();
-            }
-          }
-        });
+    addHierarchyBoundsListener(new HierarchyBoundsAdapter() {
+      @Override
+      public void ancestorResized(HierarchyEvent e) {
+        super.ancestorResized(e);
+        setupView();
+      }
+    });
+
   }
 
   public static AutoResizingTable fromDialogPageModel(DialogModel model) {
@@ -39,13 +37,14 @@ public class AutoResizingTable extends JTable implements ShortcutSupport {
     return table;
   }
 
-  private void setupView() {
-    setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+  public void setupView() {
+    //setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     setDragEnabled(true);
     setDropMode(DropMode.ON_OR_INSERT);
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     var columnModel = getColumnModel();
-    columnModel.getColumn(0).setPreferredWidth(20);
+    columnModel.getColumn(0).setMinWidth(50);
+    columnModel.getColumn(1).setMinWidth(600);
     var tableHeader = getTableHeader();
     tableHeader.setResizingAllowed(true);
     tableHeader.setReorderingAllowed(false);

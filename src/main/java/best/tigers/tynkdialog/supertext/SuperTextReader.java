@@ -41,7 +41,7 @@ public class SuperTextReader {
     }
     tagStack.push(new SimpleAttributeSet());
     StyleConstants.setForeground(tagStack.peek(), Constants.TextColor.WHITE.toAWT());
-    StyleConstants.setBackground(tagStack.peek(), Constants.TextColor.BACKGROUND.toAWT());
+    // StyleConstants.setBackground(tagStack.peek(), Constants.TextColor.BACKGROUND.toAWT());
     for (var token : tokens) {
       if (token instanceof SuperTextTagToken tagToken) {
         switch (tagToken.getTagType()) {

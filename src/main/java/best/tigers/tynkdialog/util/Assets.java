@@ -36,7 +36,6 @@ public class Assets {
       ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, file));
       BufferedImage timer = ImageIO.read(
           Objects.requireNonNull(classLoader.getResource("timer.png")).openStream());
-      System.out.println(timer.getWidth());
     } catch (IOException | FontFormatException e) {
       e.printStackTrace();
     }

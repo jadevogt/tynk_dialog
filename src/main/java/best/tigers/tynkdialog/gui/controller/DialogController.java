@@ -1,6 +1,11 @@
 package best.tigers.tynkdialog.gui.controller;
 
+import best.tigers.tynkdialog.gui.controller.page.FlatPageControllerFactory;
+import best.tigers.tynkdialog.gui.controller.page.PageControllerFactory;
+import best.tigers.tynkdialog.gui.controller.page.TalkPageController;
+import best.tigers.tynkdialog.gui.controller.page.TalkPageControllerFactory;
 import best.tigers.tynkdialog.gui.model.DialogModel;
+import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
 import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
 import best.tigers.tynkdialog.gui.view.DialogEditorView;
 import java.awt.event.ActionEvent;
@@ -108,47 +113,64 @@ public class DialogController {
     model.setTitle(newTitle);
   }
 
-  public void addPage() {
-    var newModel = new TalkPageModel();
+  public void addPage(String kind) {
+    AbstractPageModel newModel;
+    var factory = getFactory(kind);
+    newModel = factory.createModel();
     model.addPage(newModel);
-    var newController = TalkPageController.fromModel(newModel);
+    var newController = factory.fromModel(newModel);
     var newView = newController.getView();
+
     newView.attachContinueAction(() -> {
       newController.saveAndExit();
       this.duplicateAndEditPage(newModel);
     });
+
     revalidateTable();
   }
 
-  public void duplicateAndEditPage(TalkPageModel oldModel) {
-    var newModel = new TalkPageModel();
-    newModel.setSpeaker(oldModel.getSpeaker());
-    newModel.setBlip(oldModel.getBlip());
-    newModel.setBlipEnabled(oldModel.getBlipEnabled());
-    newModel.setStyleEnabled(oldModel.getStyleEnabled());
-    newModel.setTextBoxStyle(oldModel.getTextBoxStyle());
+  public void addPage() {
+    addPage("talk");
+  }
+
+  public void duplicateAndEditPage(AbstractPageModel oldModel) {
+    var newModel = oldModel.clone();
     model.addPage(newModel);
     var oldIndex = model.getPageIndex(oldModel);
     var newIndex = model.getPageIndex(newModel);
     while (newIndex > oldIndex + 1) {
-      System.out.println(newIndex);
-      System.out.println(oldIndex);
       model.swapListItems(newIndex--, newIndex);
     }
-    var newController = TalkPageController.fromModelProceeding(newModel);
+
+    var factory = getFactory(oldModel);
+    var newController = factory.fromModelProceeding(newModel);
     var newView = newController.getView();
     newView.attachContinueAction(() -> {
       newController.saveAndExit();
       this.duplicateAndEditPage(newModel);
     });
-    newView.getContentField().requestFocus();
+    // newView.getContentField().requestFocus();
     revalidateTable();
+  }
+
+  static PageControllerFactory getFactory(String pageKind) {
+    PageControllerFactory factory;
+    switch(pageKind) {
+      case "flat" -> factory = new FlatPageControllerFactory();
+      default -> factory = new TalkPageControllerFactory();
+    }
+    return factory;
+  }
+
+  static PageControllerFactory getFactory(AbstractPageModel model) {
+    return getFactory(model.getPage().getPageKind());
   }
 
   public void editPage() {
     var selectedModel = view.getSelectedModel();
     if (selectedModel != null) {
-      var newController = TalkPageController.fromModel(selectedModel);
+      var factory = getFactory(selectedModel);
+      var newController = factory.fromModel(selectedModel);
       var newView = newController.getView();
       newView.attachContinueAction(() -> {
         newController.saveAndExit();

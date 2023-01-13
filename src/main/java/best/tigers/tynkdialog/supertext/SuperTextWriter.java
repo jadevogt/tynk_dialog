@@ -38,7 +38,6 @@ public class SuperTextWriter {
 
   public void writeText(Element text, int start, int len, Writer out)
       throws IOException, BadLocationException {
-    System.out.println(text.getName());
     if (text.getAttributes().getAttribute(SuperTextDocument.DELAY_MAGNITUDE_NAME) != null
         && text.getName().equals("icon")) {
       int delay_magnitude =

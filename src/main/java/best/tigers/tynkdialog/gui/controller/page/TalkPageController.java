@@ -1,4 +1,4 @@
-package best.tigers.tynkdialog.gui.controller;
+package best.tigers.tynkdialog.gui.controller.page;
 
 import static java.awt.event.WindowEvent.WINDOW_CLOSING;
 
@@ -10,12 +10,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import javax.swing.KeyStroke;
 
-public class TalkPageController {
-
+public class TalkPageController implements PageController {
   private final TalkPageEditorView view;
   private final TalkPageModel model;
 
-  private TalkPageController(TalkPageModel model, boolean proceeding) {
+  TalkPageController(TalkPageModel model, boolean proceeding) {
     this.model = model;
     if (proceeding) {
       view = TalkPageEditorView.fromModelProceeding(model).init();
@@ -24,9 +23,11 @@ public class TalkPageController {
     }
   }
 
-  private TalkPageController(TalkPageModel model) {
+  TalkPageController(TalkPageModel model) {
     this(model, false);
   }
+
+  public TalkPageControllerFactory getFactory() {return new TalkPageControllerFactory();}
 
   public static TalkPageController fromModel(TalkPageModel model) {
     var controller = new TalkPageController(model);
@@ -34,31 +35,20 @@ public class TalkPageController {
     return controller;
   }
 
-  public static TalkPageController fromModelProceeding(TalkPageModel model) {
-    var controller = new TalkPageController(model, true);
-    controller.setupViewShortcuts();
-    return controller;
-  }
-
-  public static TalkPageController fromNewModel() {
-    return TalkPageController.fromModel(new TalkPageModel());
-  }
-
   public static void editModel(TalkPageModel model) {
     TalkPageController.fromModel(model);
   }
 
-  public static TalkPageModel createModel() {
-    var model = new TalkPageModel();
-    TalkPageController.editModel(model);
-    return model;
+  public TalkPageModel getModel() {
+    return this.model;
   }
 
   public TalkPageEditorView getView() {
     return view;
   }
 
-  private void setupViewShortcuts() {
+  @Override
+  public void setupViewShortcuts() {
     var enterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK, true);
     var enterMapKey = "Shift+Enter released";
 
@@ -90,7 +80,8 @@ public class TalkPageController {
     });
   }
 
-  private void saveChanges() {
+  @Override
+  public void saveChanges() {
     javax.swing.ToolTipManager.sharedInstance().setInitialDelay(1000);
     String newSpeaker = view.getSpeaker();
     String newContent = view.getContent();
@@ -118,6 +109,7 @@ public class TalkPageController {
     }
   }
 
+  @Override
   public void saveAndExit() {
     saveChanges();
     view.getPanel().dispatchEvent(new WindowEvent(view.getFrame(), WINDOW_CLOSING));

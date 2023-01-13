@@ -35,7 +35,7 @@ import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.text.DefaultEditorKit;
 
-public class TalkPageEditorView implements TObserver, TalkPageViewer, ShortcutSupport {
+public class TalkPageEditorView implements TObserver, TalkPageViewer, ShortcutSupport, PageView {
 
   private final TalkPageModel model;
   private final JPanel panel;
@@ -259,7 +259,7 @@ public class TalkPageEditorView implements TObserver, TalkPageViewer, ShortcutSu
     field.setForeground(Constants.TextColor.WHITE.toAWT());
     field.setBackground(Constants.TextColor.BACKGROUND.toAWT());
     field.setContentType("supertext/supertext");
-    field.setPreferredSize(new Dimension(500, 100));
+    field.setPreferredSize(new Dimension(600, 100));
     return field;
   }
 
@@ -384,6 +384,7 @@ public class TalkPageEditorView implements TObserver, TalkPageViewer, ShortcutSu
     actionMap.put(actionMapKey, action);
   }
 
+  @Override
   public void attachSaveAction(Runnable action) {
     var actionInstance = new AbstractAction() {
       @Override
@@ -394,6 +395,7 @@ public class TalkPageEditorView implements TObserver, TalkPageViewer, ShortcutSu
     saveButton.addActionListener(actionInstance);
   }
 
+  @Override
   public void attachContinueAction(Runnable action) {
     var actionInstance = new AbstractAction() {
       @Override

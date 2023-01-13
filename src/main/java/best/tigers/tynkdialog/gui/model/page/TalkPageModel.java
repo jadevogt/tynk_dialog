@@ -1,10 +1,11 @@
 package best.tigers.tynkdialog.gui.model.page;
 
+import best.tigers.tynkdialog.game.page.Page;
 import best.tigers.tynkdialog.game.page.TalkPage;
 import best.tigers.tynkdialog.gui.model.AbstractModel;
 import javax.json.JsonObject;
 
-public class TalkPageModel extends AbstractModel {
+public class TalkPageModel extends AbstractPageModel {
 
   private final TalkPage page;
   private boolean blipEnabled = true;
@@ -85,5 +86,25 @@ public class TalkPageModel extends AbstractModel {
 
   public TalkPage getDialogPage() {
     return page;
+  }
+
+  public Page getPage() {
+    return page;
+  }
+
+  @Override
+  public AbstractPageModel clone() {
+    var newModel = new TalkPageModel();
+    newModel.setSpeaker(getSpeaker());
+    newModel.setBlip(getBlip());
+    newModel.setBlipEnabled(getBlipEnabled());
+    newModel.setStyleEnabled(getStyleEnabled());
+    newModel.setTextBoxStyle(getTextBoxStyle());
+    return newModel;
+  }
+
+  @Override
+  public String getTitleContent() {
+    return getSpeaker();
   }
 }

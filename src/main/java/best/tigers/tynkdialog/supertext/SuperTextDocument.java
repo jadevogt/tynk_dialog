@@ -56,8 +56,6 @@ public class SuperTextDocument extends DefaultStyledDocument {
     attrs.addAttribute(DELAY_MAGNITUDE_NAME, timeDelayQuantity);
 
     StyleConstants.setIcon(attrs, new ImageIcon(icon));
-    System.out.println(StyleConstants.getIcon(attrs));
-    System.out.println(attrs.getAttribute(DELAY_MAGNITUDE_NAME));
     try {
       insertString(offset, " ", attrs);
     } catch (BadLocationException e) {
@@ -65,7 +63,6 @@ public class SuperTextDocument extends DefaultStyledDocument {
       JOptionPane.showMessageDialog(null, "Can't insert delay!");
     }
     lengthLock = true;
-    dump(System.out);
   }
 
   public void insertFunctionCall(int offset, String functionName, String functionParam) {
@@ -95,7 +92,6 @@ public class SuperTextDocument extends DefaultStyledDocument {
       JOptionPane.showMessageDialog(null, "Can't insert function call!");
     }
     lengthLock = true;
-    dump(System.out);
   }
 
   public void changeDelayMagnitude(Element e, int magnitude) {

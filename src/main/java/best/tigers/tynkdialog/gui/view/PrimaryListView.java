@@ -23,7 +23,7 @@ import javax.swing.WindowConstants;
 
 public class PrimaryListView implements TObserver {
 
-  private static final Dimension PREFERRED_SIZE = new Dimension(600, 400);
+  private static final Dimension PREFERRED_SIZE = new Dimension(1000, 600);
   private final JFrame frame;
   private final JSplitPane splitPane;
   private final JList<DialogController> dialogList;

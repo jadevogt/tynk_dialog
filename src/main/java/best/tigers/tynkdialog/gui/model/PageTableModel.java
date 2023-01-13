@@ -1,15 +1,16 @@
 package best.tigers.tynkdialog.gui.model;
 
-import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
+import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 public class PageTableModel extends AbstractTableModel {
 
-  private final List<TalkPageModel> pages;
+  private final List<AbstractPageModel> pages;
 
-  public PageTableModel(List<TalkPageModel> pages) {
+  public PageTableModel(List<AbstractPageModel> pages) {
 
     this.pages = new ArrayList<>(pages);
   }
@@ -27,8 +28,8 @@ public class PageTableModel extends AbstractTableModel {
   @Override
   public String getColumnName(int columnIndex) {
     return switch (columnIndex) {
-      case 0 -> "Character";
-      case 1 -> "Text";
+      case 0 -> "Details";
+      case 1 -> "Content";
       default -> "ERROR";
     };
   }
@@ -37,10 +38,11 @@ public class PageTableModel extends AbstractTableModel {
   public Object getValueAt(int rowIndex, int columnIndex) {
 
     Object value = "??";
-    TalkPageModel page = pages.get(rowIndex);
+    AbstractPageModel page = pages.get(rowIndex);
     switch (columnIndex) {
-      case 0 -> value = page.getSpeaker();
-      case 1 -> value = page.getContent();
+      //case 0 -> value = page.getSpeaker();
+      //case 1 -> value = page.getContent();
+      default -> value = page;
     }
 
     return value;
@@ -48,7 +50,11 @@ public class PageTableModel extends AbstractTableModel {
 
   @Override
   public Class<?> getColumnClass(int columnIndex) {
-    return String.class;
+    Class<?> columnClass;
+    switch(columnIndex) {
+      default -> columnClass = AbstractPageModel.class;
+    }
+    return columnClass;
   }
 
   @Override
@@ -68,7 +74,7 @@ public class PageTableModel extends AbstractTableModel {
    * @param row
    * @return DialogPageModel
    */
-  public TalkPageModel getPageAt(int row) {
+  public AbstractPageModel getPageAt(int row) {
     if (row >= 0 && row < pages.size()) {
       return pages.get(row);
     } else {

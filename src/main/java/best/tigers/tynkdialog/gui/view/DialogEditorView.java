@@ -1,9 +1,14 @@
 package best.tigers.tynkdialog.gui.view;
 
+import best.tigers.tynkdialog.game.page.Page;
 import best.tigers.tynkdialog.gui.model.DialogModel;
 import best.tigers.tynkdialog.gui.model.PageTableModel;
+import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
 import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
 import best.tigers.tynkdialog.gui.view.components.AutoResizingTable;
+import best.tigers.tynkdialog.gui.view.components.cells.PageCellRenderer;
+import best.tigers.tynkdialog.gui.view.components.cells.PageDetailsCellRenderer;
+
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
@@ -61,6 +66,7 @@ public class DialogEditorView implements ShortcutSupport, DialogViewer, TObserve
   private JScrollPane setupScrollPane() {
     var scrollPane = new JScrollPane(pageList);
     scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+    scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
     return scrollPane;
   }
 
@@ -98,7 +104,13 @@ public class DialogEditorView implements ShortcutSupport, DialogViewer, TObserve
       titleField.setText(model.getTitle());
     }
     pageList.setModel(model.getDptm());
-    pageList.resizeColumnWidth();
+    pageList.setDefaultRenderer(AbstractPageModel.class, new PageCellRenderer());
+    pageList.setDefaultRenderer(TalkPageModel.class, new PageCellRenderer());
+    var columnModel = pageList.getColumnModel();
+    var column = columnModel.getColumn(0);
+    column.setCellRenderer(new PageDetailsCellRenderer());
+    pageList.setupView();
+    //pageList.resizeColumnWidth();
     pageList.validate();
   }
 
@@ -123,17 +135,9 @@ public class DialogEditorView implements ShortcutSupport, DialogViewer, TObserve
             super.focusLost(e);
           }
         });
-    titleField.addMouseMotionListener(
-        new MouseMotionAdapter() {
-          @Override
-          public void mouseMoved(MouseEvent e) {
-            SwingUtilities.invokeLater(runner);
-            super.mouseMoved(e);
-          }
-        });
   }
 
-  public TalkPageModel getSelectedPage() {
+  public AbstractPageModel getSelectedPage() {
     return model.getDptm().getPageAt(pageList.getSelectedRow());
   }
 
@@ -145,7 +149,7 @@ public class DialogEditorView implements ShortcutSupport, DialogViewer, TObserve
     }
   }
 
-  public TalkPageModel getSelectedModel() {
+  public AbstractPageModel getSelectedModel() {
     return getSelectedPage();
   }
 
