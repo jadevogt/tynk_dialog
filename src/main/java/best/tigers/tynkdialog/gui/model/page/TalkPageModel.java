@@ -2,7 +2,7 @@ package best.tigers.tynkdialog.gui.model.page;
 
 import best.tigers.tynkdialog.game.page.Page;
 import best.tigers.tynkdialog.game.page.TalkPage;
-import best.tigers.tynkdialog.gui.model.AbstractModel;
+
 import javax.json.JsonObject;
 
 public class TalkPageModel extends AbstractPageModel {

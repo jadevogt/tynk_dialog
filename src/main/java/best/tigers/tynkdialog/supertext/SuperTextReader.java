@@ -5,14 +5,15 @@ import best.tigers.tynkdialog.supertext.tokens.SuperTextCharacterToken;
 import best.tigers.tynkdialog.supertext.tokens.SuperTextTagToken;
 import best.tigers.tynkdialog.supertext.tokens.SuperTextToken;
 import best.tigers.tynkdialog.supertext.tokens.SuperTextTokenizer;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
+
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 
 public class SuperTextReader {
 
@@ -57,16 +58,13 @@ public class SuperTextReader {
   private void insertEntityBasedOnTag(SuperTextTagToken entity) throws BadLocationException {
     if (document instanceof SuperTextDocument doc) {
       switch (entity.getTagName().toLowerCase()) {
-        case "t", "wait", "time" ->
-            doc.insertTimeDelay(position++, Integer.parseInt(entity.getTagValue()));
-        case "f", "function" ->
-            doc.insertFunctionCall(position++, entity.getTagValue().split(",")[0],
+        case "t", "wait", "time" -> doc.insertTimeDelay(position++, Integer.parseInt(entity.getTagValue()));
+        case "f", "function" -> doc.insertFunctionCall(position++, entity.getTagValue().split(",")[0],
                 entity.getTagValue().split(",")[1]);
-        case "n" ->
-            doc.insertString(position++, "\n".repeat(Integer.parseInt(entity.getTagValue())),
+        case "n" -> doc.insertString(position++, "\n".repeat(Integer.parseInt(entity.getTagValue())),
                 tagStack.peek());
         default -> throw new IllegalStateException(
-            "Unexpected value: " + entity.getTagName().toLowerCase());
+                "Unexpected value: " + entity.getTagName().toLowerCase());
       }
     }
   }
@@ -83,12 +81,10 @@ public class SuperTextReader {
     var tagName = tag.getTagName().toLowerCase();
     switch (tagName) {
       case "c", "color", "colour" ->
-          StyleConstants.setForeground(attribs, Constants.TextColor.fromString(value).toAWT());
-      case "b", "behavior", "behaviour" ->
-          attribs.addAttribute(SuperTextDocument.BEHAVIOR_ATTRIBUTE_NAME,
+              StyleConstants.setForeground(attribs, Constants.TextColor.fromString(value).toAWT());
+      case "b", "behavior", "behaviour" -> attribs.addAttribute(SuperTextDocument.BEHAVIOR_ATTRIBUTE_NAME,
               Constants.Behavior.fromString(value));
-      default ->
-          throw new IllegalStateException("Invalid tag \"%s\" in document".formatted(tagName));
+      default -> throw new IllegalStateException("Invalid tag \"%s\" in document".formatted(tagName));
     }
   }
 }

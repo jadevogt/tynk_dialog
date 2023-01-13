@@ -1,9 +1,7 @@
 package best.tigers.tynkdialog.gui.view.page;
 
-import best.tigers.tynkdialog.gui.model.AbstractModel;
 import best.tigers.tynkdialog.gui.model.page.FlatPageModel;
 import best.tigers.tynkdialog.gui.view.TObserver;
-import best.tigers.tynkdialog.util.Assets;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -22,10 +20,10 @@ public class FlatPageEditorView implements PageView, TObserver {
     this.model = model;
     panel = new JPanel();
     frame = new JFrame();
-    
+
     flatLabel = new JLabel("Flat");
     flatField = new JTextField();
-    
+
     saveButton = new JButton("Save");
     var layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
     panel.setLayout(layout);
@@ -52,12 +50,12 @@ public class FlatPageEditorView implements PageView, TObserver {
     return this;
   }
 
-  public void setFlat(String newFlat) {
-    flatField.setText(newFlat);
-  }
-
   public String getFlat() {
     return flatField.getText();
+  }
+
+  public void setFlat(String newFlat) {
+    flatField.setText(newFlat);
   }
 
   @Override

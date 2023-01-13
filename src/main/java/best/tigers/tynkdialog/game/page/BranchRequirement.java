@@ -12,6 +12,7 @@ public class BranchRequirement {
   private String value;
   private ValueType valueType;
   private Comparison comparison;
+
   public BranchRequirement(String flag, Category category, String value, ValueType valueType) {
     this.flag = flag;
     this.category = category;

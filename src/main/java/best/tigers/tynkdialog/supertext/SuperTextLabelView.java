@@ -1,13 +1,10 @@
 package best.tigers.tynkdialog.supertext;
 
 import best.tigers.tynkdialog.game.Constants;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Shape;
+
 import javax.swing.text.Element;
 import javax.swing.text.LabelView;
+import java.awt.*;
 
 public class SuperTextLabelView extends LabelView {
 
@@ -20,10 +17,10 @@ public class SuperTextLabelView extends LabelView {
     super.paint(g, allocation);
     if (getAttributes().getAttribute(SuperTextDocument.BEHAVIOR_ATTRIBUTE_NAME) != null) {
       paintBehaviorIndicator(
-          g,
-          allocation,
-          (Constants.Behavior)
-              getAttributes().getAttribute(SuperTextDocument.BEHAVIOR_ATTRIBUTE_NAME));
+              g,
+              allocation,
+              (Constants.Behavior)
+                      getAttributes().getAttribute(SuperTextDocument.BEHAVIOR_ATTRIBUTE_NAME));
     }
   }
 

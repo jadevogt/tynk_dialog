@@ -12,7 +12,7 @@ public class TalkPage implements Page {
   private boolean canSkip;
 
   public TalkPage(
-      String speaker, String content, String textStyle, String blip, boolean canSkip) {
+          String speaker, String content, String textStyle, String blip, boolean canSkip) {
     this.content = content;
     this.speaker = speaker;
     this.textStyle = textStyle;
@@ -80,10 +80,10 @@ public class TalkPage implements Page {
 
   public JsonObject serialize() {
     javax.json.JsonObjectBuilder result =
-        Json.createObjectBuilder()
-            .add("txt", content)
-            .add("canSkip", canSkip)
-            .add("speaker", speaker);
+            Json.createObjectBuilder()
+                    .add("txt", content)
+                    .add("canSkip", canSkip)
+                    .add("speaker", speaker);
     if (blip != null) {
       result.add("blip", blip);
     } else {

@@ -3,19 +3,14 @@ package best.tigers.tynkdialog.util;
 import best.tigers.tynkdialog.exceptions.DialogFileIOException;
 import best.tigers.tynkdialog.exceptions.PageParseException;
 import best.tigers.tynkdialog.game.Dialog;
+
+import javax.json.*;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonReader;
-import javax.json.JsonStructure;
-import javax.json.JsonValue;
-import javax.json.JsonWriter;
 
 public class DialogFile {
 
@@ -51,9 +46,9 @@ public class DialogFile {
     JsonStructure jsonData = x.read();
     if (jsonData.getValueType() != JsonValue.ValueType.ARRAY) {
       throw new DialogFileIOException(
-          "The JSON file's data must be presented as an array, "
-              + "but this looks like "
-              + jsonData.getValueType());
+              "The JSON file's data must be presented as an array, "
+                      + "but this looks like "
+                      + jsonData.getValueType());
     }
     ArrayList<Dialog> dialog = new ArrayList<>();
     for (JsonValue item : jsonData.asJsonArray()) {
@@ -81,7 +76,7 @@ public class DialogFile {
     } catch (IOException ioe) {
       System.err.println(ioe.getLocalizedMessage());
       Log.error(
-          "(FATAL) IOException encountered while trying to save file " + ioe.getLocalizedMessage());
+              "(FATAL) IOException encountered while trying to save file " + ioe.getLocalizedMessage());
       System.exit(1);
     }
     Log.info("Successfully opened file, writing data...");

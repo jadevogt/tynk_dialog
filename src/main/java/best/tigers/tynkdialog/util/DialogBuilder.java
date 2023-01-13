@@ -7,9 +7,10 @@ import best.tigers.tynkdialog.util.page.ChoicePageBuilder;
 import best.tigers.tynkdialog.util.page.FlatPageBuilder;
 import best.tigers.tynkdialog.util.page.PageBuilder;
 import best.tigers.tynkdialog.util.page.TalkPageBuilder;
-import java.util.ArrayList;
+
 import javax.json.JsonObject;
 import javax.json.JsonValue;
+import java.util.ArrayList;
 
 public class DialogBuilder {
 
@@ -38,11 +39,11 @@ public class DialogBuilder {
       }
       if (currentPage.getValueType() != JsonValue.ValueType.OBJECT) {
         throw new PageParseException(
-            "Received an unexpected type while processing "
-                + "dialog \""
-                + title
-                + "\": "
-                + currentPage.getValueType());
+                "Received an unexpected type while processing "
+                        + "dialog \""
+                        + title
+                        + "\": "
+                        + currentPage.getValueType());
       }
       builder.parseJson(currentPage.asJsonObject());
       contents.add(builder.build());

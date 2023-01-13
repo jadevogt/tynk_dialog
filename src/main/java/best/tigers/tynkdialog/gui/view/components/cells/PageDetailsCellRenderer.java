@@ -11,6 +11,34 @@ import java.awt.*;
 
 public class PageDetailsCellRenderer implements TableCellRenderer {
   public static Font font = Assets.getInstance().getFont();
+
+  @Override
+  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+    var detailsPanel = new JPanel();
+    detailsPanel.setBackground(null);
+    var layout = new BoxLayout(detailsPanel, BoxLayout.Y_AXIS);
+    detailsPanel.setLayout(layout);
+    if (value instanceof AbstractPageModel pageModel) {
+      detailsPanel.add(new QuickPair("Kind", pageModel.getPage().getPageKind()), Component.TOP_ALIGNMENT);
+      switch (pageModel.getPage().getPageKind()) {
+        case "flat" -> {
+          FlatPageModel flatPageModel = (FlatPageModel) value;
+          detailsPanel.add(new QuickPair("Flat", flatPageModel.getFlat()), Component.TOP_ALIGNMENT);
+        }
+        default -> {
+          TalkPageModel talkPageModel = (TalkPageModel) value;
+          detailsPanel.add(new QuickPair("Char", talkPageModel.getSpeaker()), Component.TOP_ALIGNMENT);
+          detailsPanel.add(new QuickPair("Blip", talkPageModel.getBlip()), Component.TOP_ALIGNMENT);
+          detailsPanel.add(new QuickPair("Style", talkPageModel.getTextBoxStyle()), Component.TOP_ALIGNMENT);
+        }
+      }
+    }
+    if (isSelected) {
+      detailsPanel.setBackground(Color.decode("#297697"));
+    }
+    return detailsPanel;
+  }
+
   class QuickPair extends JPanel {
     public QuickPair(String label, String value) {
       super();
@@ -28,31 +56,5 @@ public class PageDetailsCellRenderer implements TableCellRenderer {
       boldLabel.setBackground(null);
       valueLabel.setBackground(null);
     }
-  }
-  @Override
-  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-    var detailsPanel = new JPanel();
-    detailsPanel.setBackground(null);
-    var layout = new BoxLayout(detailsPanel, BoxLayout.Y_AXIS);
-    detailsPanel.setLayout(layout);
-    if (value instanceof AbstractPageModel pageModel) {
-      detailsPanel.add(new QuickPair("Kind", pageModel.getPage().getPageKind()), Component.TOP_ALIGNMENT);
-      switch(pageModel.getPage().getPageKind()) {
-        case "flat" -> {
-          FlatPageModel flatPageModel = (FlatPageModel) value;
-          detailsPanel.add(new QuickPair("Flat", flatPageModel.getFlat()), Component.TOP_ALIGNMENT);
-        }
-        default ->  {
-          TalkPageModel talkPageModel = (TalkPageModel) value;
-          detailsPanel.add(new QuickPair("Char", talkPageModel.getSpeaker()), Component.TOP_ALIGNMENT);
-          detailsPanel.add(new QuickPair("Blip", talkPageModel.getBlip()), Component.TOP_ALIGNMENT);
-          detailsPanel.add(new QuickPair("Style", talkPageModel.getTextBoxStyle()), Component.TOP_ALIGNMENT);
-        }
-      }
-    }
-    if (isSelected) {
-      detailsPanel.setBackground(Color.decode("#297697"));
-    }
-    return detailsPanel;
   }
 }

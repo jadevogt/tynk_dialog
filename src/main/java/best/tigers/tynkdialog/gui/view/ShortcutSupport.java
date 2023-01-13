@@ -1,7 +1,6 @@
 package best.tigers.tynkdialog.gui.view;
 
-import javax.swing.AbstractAction;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 
 public interface ShortcutSupport {
 

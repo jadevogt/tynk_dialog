@@ -9,12 +9,13 @@ import best.tigers.tynkdialog.gui.view.PrimaryListView;
 import best.tigers.tynkdialog.gui.view.components.MenuBar;
 import best.tigers.tynkdialog.util.DialogFile;
 import best.tigers.tynkdialog.util.Log;
+
+import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.prefs.Preferences;
-import javax.swing.JFileChooser;
 
 public class PrimaryListController {
 
@@ -28,38 +29,38 @@ public class PrimaryListController {
     view = PrimaryListView.fromModel(model);
     fileHandle = new DialogFile();
     addMenuItem(
-        e -> addDialog(),
-        "Add DialogFile",
-        "Adds a DialogFile to the list, which may be populated with individual Pages",
-        MenuBar.Menu.EDIT);
+            e -> addDialog(),
+            "Add DialogFile",
+            "Adds a DialogFile to the list, which may be populated with individual Pages",
+            MenuBar.Menu.EDIT);
     addMenuItem(
-        e -> removeCurrentDialog(),
-        "Remove selected DialogFile",
-        "Removes the DialogFile that is highlighted in the list on the left",
-        MenuBar.Menu.EDIT);
+            e -> removeCurrentDialog(),
+            "Remove selected DialogFile",
+            "Removes the DialogFile that is highlighted in the list on the left",
+            MenuBar.Menu.EDIT);
     addMenuItem(
-        e -> newFile(),
-        "New file",
-        "Creates a new JSON dialog file for editing",
-        MenuBar.Menu.FILE);
+            e -> newFile(),
+            "New file",
+            "Creates a new JSON dialog file for editing",
+            MenuBar.Menu.FILE);
     addMenuItem(
-        e -> openFile(),
-        "Open file",
-        "Open a JSON dialog file from disk for editing",
-        MenuBar.Menu.FILE);
+            e -> openFile(),
+            "Open file",
+            "Open a JSON dialog file from disk for editing",
+            MenuBar.Menu.FILE);
     addMenuItem(e -> saveInPlace(), "Save", "Save the current file in place", MenuBar.Menu.FILE);
     addMenuItem(
-        e -> saveAs(),
-        "Save as...",
-        "Select a new location and name for the current file",
-        MenuBar.Menu.FILE);
+            e -> saveAs(),
+            "Save as...",
+            "Select a new location and name for the current file",
+            MenuBar.Menu.FILE);
     view.attachWindowEvent(
-        new WindowAdapter() {
-          @Override
-          public void windowClosing(WindowEvent e) {
-            exitOperation();
-          }
-        });
+            new WindowAdapter() {
+              @Override
+              public void windowClosing(WindowEvent e) {
+                exitOperation();
+              }
+            });
   }
 
   public PrimaryListController() {
@@ -129,7 +130,7 @@ public class PrimaryListController {
   }
 
   public void addMenuItem(
-      ActionListener action, String shortText, String longText, MenuBar.Menu menu) {
+          ActionListener action, String shortText, String longText, MenuBar.Menu menu) {
     view.addMenuItem(action, shortText, longText, menu);
   }
 

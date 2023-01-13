@@ -8,32 +8,11 @@ import best.tigers.tynkdialog.gui.view.components.FunctionCallDialog;
 import best.tigers.tynkdialog.gui.view.components.IntegerDialog;
 import best.tigers.tynkdialog.supertext.SuperTextEditorKit;
 import best.tigers.tynkdialog.util.Assets;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.GroupLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JEditorPane;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
-import javax.swing.KeyStroke;
+
+import javax.swing.*;
 import javax.swing.text.DefaultEditorKit;
+import java.awt.*;
+import java.awt.event.*;
 
 public class TalkPageEditorView implements TObserver, TalkPageViewer, ShortcutSupport, PageView {
 
@@ -100,57 +79,57 @@ public class TalkPageEditorView implements TObserver, TalkPageViewer, ShortcutSu
     layout.setAutoCreateGaps(true);
     layout.setAutoCreateContainerGaps(true);
     layout.setHorizontalGroup(
-        layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                    .addComponent(characterLabel)
-                    .addComponent(contentLabel)
-                    .addComponent(blipLabel)
-                    .addComponent(styleLabel))
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(characterField)
-                    .addComponent(contentToolbar)
-                    .addComponent(contentField, GroupLayout.Alignment.CENTER,
-                        contentField.getPreferredSize().width,
-                        contentField.getPreferredSize().width,
-                        contentField.getPreferredSize().width)
-                    .addComponent(blipField)
-                    .addComponent(styleField))
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(blipCheck)
-                    .addComponent(styleCheck)))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(saveButton)
-                .addComponent(createAnotherButton)));
+            layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                    .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                    .addComponent(characterLabel)
+                                    .addComponent(contentLabel)
+                                    .addComponent(blipLabel)
+                                    .addComponent(styleLabel))
+                            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                    .addComponent(characterField)
+                                    .addComponent(contentToolbar)
+                                    .addComponent(contentField, GroupLayout.Alignment.CENTER,
+                                            contentField.getPreferredSize().width,
+                                            contentField.getPreferredSize().width,
+                                            contentField.getPreferredSize().width)
+                                    .addComponent(blipField)
+                                    .addComponent(styleField))
+                            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                    .addComponent(blipCheck)
+                                    .addComponent(styleCheck)))
+                    .addGroup(layout.createSequentialGroup()
+                            .addComponent(saveButton)
+                            .addComponent(createAnotherButton)));
     layout.setVerticalGroup(
-        layout.createSequentialGroup()
-            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                .addComponent(characterLabel)
-                .addComponent(characterField, GroupLayout.Alignment.CENTER,
-                    characterField.getPreferredSize().height,
-                    characterField.getPreferredSize().height,
-                    characterField.getPreferredSize().height))
-            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                .addComponent(contentToolbar))
-            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                .addComponent(contentLabel)
-                .addComponent(contentField, GroupLayout.Alignment.CENTER,
-                    contentField.getPreferredSize().height, contentField.getPreferredSize().height,
-                    contentField.getPreferredSize().height))
-            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                .addComponent(blipCheck)
-                .addComponent(blipLabel)
-                .addComponent(blipField, blipField.getPreferredSize().height,
-                    blipField.getPreferredSize().height, blipField.getPreferredSize().height))
-            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                .addComponent(styleCheck)
-                .addComponent(styleLabel)
-                .addComponent(styleField, styleField.getPreferredSize().height,
-                    styleField.getPreferredSize().height, styleField.getPreferredSize().height))
-            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                .addComponent(saveButton)
-                .addComponent(createAnotherButton)
-            )
+            layout.createSequentialGroup()
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                            .addComponent(characterLabel)
+                            .addComponent(characterField, GroupLayout.Alignment.CENTER,
+                                    characterField.getPreferredSize().height,
+                                    characterField.getPreferredSize().height,
+                                    characterField.getPreferredSize().height))
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                            .addComponent(contentToolbar))
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                            .addComponent(contentLabel)
+                            .addComponent(contentField, GroupLayout.Alignment.CENTER,
+                                    contentField.getPreferredSize().height, contentField.getPreferredSize().height,
+                                    contentField.getPreferredSize().height))
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                            .addComponent(blipCheck)
+                            .addComponent(blipLabel)
+                            .addComponent(blipField, blipField.getPreferredSize().height,
+                                    blipField.getPreferredSize().height, blipField.getPreferredSize().height))
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                            .addComponent(styleCheck)
+                            .addComponent(styleLabel)
+                            .addComponent(styleField, styleField.getPreferredSize().height,
+                                    styleField.getPreferredSize().height, styleField.getPreferredSize().height))
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                            .addComponent(saveButton)
+                            .addComponent(createAnotherButton)
+                    )
     );
     return layout;
   }
@@ -362,7 +341,7 @@ public class TalkPageEditorView implements TObserver, TalkPageViewer, ShortcutSu
 
   @Override
   public void attachFunctionalKeyboardShortcut(KeyStroke keyStroke, String actionMapKey,
-      Runnable action) {
+                                               Runnable action) {
     var inputMap = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     inputMap.put(keyStroke, actionMapKey);
     var actionMap = panel.getActionMap();
@@ -377,7 +356,7 @@ public class TalkPageEditorView implements TObserver, TalkPageViewer, ShortcutSu
 
   @Override
   public void attachKeyboardShortcut(KeyStroke keyStroke, String actionMapKey,
-      AbstractAction action) {
+                                     AbstractAction action) {
     var inputMap = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     inputMap.put(keyStroke, actionMapKey);
     var actionMap = panel.getActionMap();
@@ -405,7 +384,7 @@ public class TalkPageEditorView implements TObserver, TalkPageViewer, ShortcutSu
     };
     createAnotherButton.addActionListener(actionInstance);
     attachKeyboardShortcut(
-        KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK, true),
-        "Ctrl+Enter released", actionInstance);
+            KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK, true),
+            "Ctrl+Enter released", actionInstance);
   }
 }

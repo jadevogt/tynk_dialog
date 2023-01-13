@@ -4,6 +4,7 @@ import javax.swing.*;
 
 public interface PageView {
   void attachSaveAction(Runnable action);
+
   void attachContinueAction(Runnable action);
 
   JPanel getPanel();

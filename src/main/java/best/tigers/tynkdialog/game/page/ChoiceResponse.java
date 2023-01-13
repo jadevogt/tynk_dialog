@@ -9,11 +9,13 @@ public class ChoiceResponse {
   private String content;
   private String choiceResult;
   private ResponseIcon icon;
+
   public ChoiceResponse(String content, String choiceResult, ResponseIcon icon) {
     this.content = content;
     this.choiceResult = choiceResult;
     this.icon = icon;
   }
+
   public ChoiceResponse(String content, String choiceResult, int icon) {
     this(content, choiceResult, getIcon(icon));
   }

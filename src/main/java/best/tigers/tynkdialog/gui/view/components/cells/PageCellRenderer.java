@@ -1,7 +1,5 @@
 package best.tigers.tynkdialog.gui.view.components.cells;
 
-import best.tigers.tynkdialog.game.page.Page;
-import best.tigers.tynkdialog.game.page.TalkPage;
 import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
 import best.tigers.tynkdialog.gui.model.page.FlatPageModel;
 import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
@@ -14,11 +12,12 @@ import java.awt.*;
 public class PageCellRenderer implements TableCellRenderer {
 
   public static Font font = Assets.getInstance().getFont();
+
   @Override
   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
     Component comp = null;
     if (value instanceof AbstractPageModel pageModel) {
-      switch(pageModel.getPage().getPageKind()) {
+      switch (pageModel.getPage().getPageKind()) {
         case "flat" -> {
           var field = new JLabel();
           var panel = new JPanel();

@@ -1,30 +1,18 @@
 package best.tigers.tynkdialog.supertext;
 
 import best.tigers.tynkdialog.game.Constants;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Shape;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.text.*;
+import javax.swing.tree.TreeNode;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Objects;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.BoxView;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.Element;
-import javax.swing.text.ParagraphView;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.tree.TreeNode;
 
 public class SuperTextDocument extends DefaultStyledDocument {
 
@@ -49,7 +37,7 @@ public class SuperTextDocument extends DefaultStyledDocument {
     var classLoader = getClass().getClassLoader();
     try {
       icon = ImageIO.read(
-          Objects.requireNonNull(classLoader.getResource("timer.png")).openStream());
+              Objects.requireNonNull(classLoader.getResource("timer.png")).openStream());
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -77,7 +65,7 @@ public class SuperTextDocument extends DefaultStyledDocument {
     var classLoader = getClass().getClassLoader();
     try {
       icon = ImageIO.read(
-          Objects.requireNonNull(classLoader.getResource("function.png")).openStream());
+              Objects.requireNonNull(classLoader.getResource("function.png")).openStream());
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -98,7 +86,7 @@ public class SuperTextDocument extends DefaultStyledDocument {
     var attribs = new SimpleAttributeSet();
     attribs.addAttribute(SuperTextDocument.DELAY_MAGNITUDE_NAME, magnitude);
     setCharacterAttributes(
-        e.getStartOffset(), e.getEndOffset() - e.getStartOffset(), attribs, false);
+            e.getStartOffset(), e.getEndOffset() - e.getStartOffset(), attribs, false);
   }
 
   public void changeFunctionCall(Element e, String functionName, String functionParams) {
@@ -106,7 +94,7 @@ public class SuperTextDocument extends DefaultStyledDocument {
     attribs.addAttribute(SuperTextDocument.FUNCTION_CALL_NAME, functionName);
     attribs.addAttribute(SuperTextDocument.FUNCTION_PARAM_NAME, functionParams);
     setCharacterAttributes(
-        e.getStartOffset(), e.getEndOffset() - e.getStartOffset(), attribs, false);
+            e.getStartOffset(), e.getEndOffset() - e.getStartOffset(), attribs, false);
   }
 
   @Override
@@ -132,18 +120,18 @@ public class SuperTextDocument extends DefaultStyledDocument {
       }
       var stringLines = str.split("\n");
       var strLongestLine =
-          Arrays.stream(stringLines)
-              .max(
-                  Comparator.comparingInt(String::length));
+              Arrays.stream(stringLines)
+                      .max(
+                              Comparator.comparingInt(String::length));
       if ((currentElement.getEndOffset() - currentElement.getStartOffset() < (45 + timerCount)
-          && (!(str.contains("\n"))
-          || (!(str.equals("\n"))
-          && stringLines.length <= (4 - paragraphCount)
-          && strLongestLine
-          .orElse("")
-          .length()
-          <= (45 + timerCount))))
-          || (str.equals("\n") && paragraphCount <= 3)) {
+              && (!(str.contains("\n"))
+              || (!(str.equals("\n"))
+              && stringLines.length <= (4 - paragraphCount)
+              && strLongestLine
+              .orElse("")
+              .length()
+              <= (45 + timerCount))))
+              || (str.equals("\n") && paragraphCount <= 3)) {
         super.insertString(offs, str, a);
       }
     } catch (BadLocationException e) {
@@ -186,10 +174,10 @@ public class SuperTextDocument extends DefaultStyledDocument {
       g2.setStroke(new BasicStroke(2));
       g2.setColor(Color.black);
       g2.drawLine(
-          boundaries.x,
-          boundaries.y + boundaries.height,
-          boundaries.x + boundaries.width,
-          boundaries.y + boundaries.height);
+              boundaries.x,
+              boundaries.y + boundaries.height,
+              boundaries.x + boundaries.width,
+              boundaries.y + boundaries.height);
       super.paint(g, a);
     }
   }

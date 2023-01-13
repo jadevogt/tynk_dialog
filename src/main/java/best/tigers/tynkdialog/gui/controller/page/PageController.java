@@ -5,12 +5,18 @@ import best.tigers.tynkdialog.gui.view.page.PageView;
 
 public interface PageController {
   PageControllerFactory getFactory();
+
   PageView getView();
 
   AbstractPageModel getModel();
 
-  default void setupViewShortcuts() {};
+  default void setupViewShortcuts() {
+  }
+
+  ;
+
   void saveChanges();
+
   void saveAndExit();
 
 }

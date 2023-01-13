@@ -1,22 +1,20 @@
 package best.tigers.tynkdialog.gui.view.components;
 
 import best.tigers.tynkdialog.gui.controller.DialogController;
-import java.awt.Color;
-import java.awt.Component;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
+
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import java.awt.*;
 
 public class DialogCellRenderer extends JLabel implements ListCellRenderer<DialogController> {
 
   @Override
   public Component getListCellRendererComponent(
-      JList<? extends DialogController> list,
-      DialogController value,
-      int index,
-      boolean isSelected,
-      boolean cellHasFocus) {
+          JList<? extends DialogController> list,
+          DialogController value,
+          int index,
+          boolean isSelected,
+          boolean cellHasFocus) {
     setText(value.getModel().getTitle());
 
     Color background;

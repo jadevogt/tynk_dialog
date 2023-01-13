@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 public class Log {
 
   private static final Logger logger =
-      java.util.logging.Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+          java.util.logging.Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
   public static void info(String logMessage) {
     logger.info(logMessage);

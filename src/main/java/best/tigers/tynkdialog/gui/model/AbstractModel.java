@@ -1,6 +1,7 @@
 package best.tigers.tynkdialog.gui.model;
 
 import best.tigers.tynkdialog.gui.view.TObserver;
+
 import java.util.ArrayList;
 
 public abstract class AbstractModel {

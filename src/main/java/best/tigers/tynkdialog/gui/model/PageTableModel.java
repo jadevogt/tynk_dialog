@@ -2,9 +2,9 @@ package best.tigers.tynkdialog.gui.model;
 
 import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
 
+import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.table.AbstractTableModel;
 
 public class PageTableModel extends AbstractTableModel {
 
@@ -51,7 +51,7 @@ public class PageTableModel extends AbstractTableModel {
   @Override
   public Class<?> getColumnClass(int columnIndex) {
     Class<?> columnClass;
-    switch(columnIndex) {
+    switch (columnIndex) {
       default -> columnClass = AbstractPageModel.class;
     }
     return columnClass;

@@ -5,6 +5,7 @@ import best.tigers.tynkdialog.gui.model.AbstractModel;
 
 public abstract class AbstractPageModel extends AbstractModel {
   public abstract Page getPage();
+
   public abstract AbstractPageModel clone();
 
   public abstract String getTitleContent();

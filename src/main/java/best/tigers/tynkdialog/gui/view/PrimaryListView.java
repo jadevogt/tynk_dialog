@@ -4,22 +4,11 @@ import best.tigers.tynkdialog.gui.controller.DialogController;
 import best.tigers.tynkdialog.gui.model.PrimaryListModel;
 import best.tigers.tynkdialog.gui.view.components.DialogCellRenderer;
 import best.tigers.tynkdialog.gui.view.components.MenuBar;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
-import javax.swing.WindowConstants;
 
 public class PrimaryListView implements TObserver {
 
@@ -97,7 +86,7 @@ public class PrimaryListView implements TObserver {
 
   private void setupSelectionListener() {
     dialogList.addListSelectionListener(
-        e -> update());
+            e -> update());
   }
 
   public void swapModel(PrimaryListModel model) {
@@ -113,7 +102,7 @@ public class PrimaryListView implements TObserver {
   }
 
   public void addMenuItem(
-      ActionListener action, String shortText, String longText, MenuBar.Menu menu) {
+          ActionListener action, String shortText, String longText, MenuBar.Menu menu) {
     var newItem = new JMenuItem();
     newItem.addActionListener(action);
     newItem.setText(shortText);
@@ -155,11 +144,11 @@ public class PrimaryListView implements TObserver {
   public int prompt() {
     if (model.isModified()) {
       return JOptionPane.showConfirmDialog(
-          null,
-          "You haven't saved this file since the last changes were made. Would you like to save before continuing?",
-          "Hold on--",
-          JOptionPane.YES_NO_CANCEL_OPTION,
-          JOptionPane.WARNING_MESSAGE);
+              null,
+              "You haven't saved this file since the last changes were made. Would you like to save before continuing?",
+              "Hold on--",
+              JOptionPane.YES_NO_CANCEL_OPTION,
+              JOptionPane.WARNING_MESSAGE);
     } else {
       return 1;
     }

@@ -1,10 +1,6 @@
 package best.tigers.tynkdialog.gui.controller;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 public class NotSavedDialog {
 
@@ -14,7 +10,7 @@ public class NotSavedDialog {
     dialog = new JDialog();
     dialog.setModal(true);
     JLabel message =
-        new JLabel("Your changes have not been saved to disk. What would you like to do?");
+            new JLabel("Your changes have not been saved to disk. What would you like to do?");
     JButton cancelButton = new JButton("Cancel");
     JButton saveButton = new JButton("Save");
     JButton saveAsButton = new JButton("Save As");

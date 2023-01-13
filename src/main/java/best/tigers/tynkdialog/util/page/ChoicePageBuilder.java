@@ -4,10 +4,11 @@ import best.tigers.tynkdialog.exceptions.PageParseException;
 import best.tigers.tynkdialog.game.page.ChoicePage;
 import best.tigers.tynkdialog.game.page.ChoiceResponse;
 import best.tigers.tynkdialog.util.ParseUtils;
-import java.util.ArrayList;
-import java.util.List;
+
 import javax.json.JsonObject;
 import javax.json.JsonString;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChoicePageBuilder implements PageBuilder {
 
@@ -23,7 +24,7 @@ public class ChoicePageBuilder implements PageBuilder {
   }
 
   public static ChoiceResponse parseResponseJson(JsonObject responseData)
-      throws PageParseException {
+          throws PageParseException {
     String responseContent;
     String symbol;
     try {
@@ -50,17 +51,17 @@ public class ChoicePageBuilder implements PageBuilder {
     }
     blip = ParseUtils.getNullableTynkString(json.get("blip")).orElse(null);
     gifts = !json.containsKey("gifts") ? new ArrayList<>() : json.getJsonArray("gifts")
-        .stream()
-        .filter(JsonString.class::isInstance)
-        .map(JsonString.class::cast)
-        .map(JsonString::getString)
-        .toList();
+            .stream()
+            .filter(JsonString.class::isInstance)
+            .map(JsonString.class::cast)
+            .map(JsonString::getString)
+            .toList();
     responses = !json.containsKey("responses") ? new ArrayList<>() : json.getJsonArray("responses")
-        .stream()
-        .filter(JsonObject.class::isInstance)
-        .map(JsonObject.class::cast)
-        .map(ChoicePageBuilder::parseResponseJson)
-        .toList();
+            .stream()
+            .filter(JsonObject.class::isInstance)
+            .map(JsonObject.class::cast)
+            .map(ChoicePageBuilder::parseResponseJson)
+            .toList();
   }
 
   public ChoicePage build() {

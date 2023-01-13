@@ -1,10 +1,10 @@
 package best.tigers.tynkdialog.game.page;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChoicePage implements Page {
 
@@ -16,8 +16,8 @@ public class ChoicePage implements Page {
   private boolean canSkip;
 
   public ChoicePage(
-      String speaker, String content, String blip, boolean canSkip, List<String> gifts,
-      List<ChoiceResponse> responses) {
+          String speaker, String content, String blip, boolean canSkip, List<String> gifts,
+          List<ChoiceResponse> responses) {
     this.content = content;
     this.speaker = speaker;
     this.blip = blip;

@@ -1,14 +1,15 @@
 package best.tigers.tynkdialog.gui.controller.page;
 
-import static java.awt.event.WindowEvent.WINDOW_CLOSING;
-
 import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
 import best.tigers.tynkdialog.gui.view.page.TalkPageEditorView;
 import best.tigers.tynkdialog.supertext.SuperTextEditorKit;
+
+import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
-import javax.swing.KeyStroke;
+
+import static java.awt.event.WindowEvent.WINDOW_CLOSING;
 
 public class TalkPageController implements PageController {
   private final TalkPageEditorView view;
@@ -27,8 +28,6 @@ public class TalkPageController implements PageController {
     this(model, false);
   }
 
-  public TalkPageControllerFactory getFactory() {return new TalkPageControllerFactory();}
-
   public static TalkPageController fromModel(TalkPageModel model) {
     var controller = new TalkPageController(model);
     controller.setupViewShortcuts();
@@ -37,6 +36,10 @@ public class TalkPageController implements PageController {
 
   public static void editModel(TalkPageModel model) {
     TalkPageController.fromModel(model);
+  }
+
+  public TalkPageControllerFactory getFactory() {
+    return new TalkPageControllerFactory();
   }
 
   public TalkPageModel getModel() {

@@ -3,7 +3,6 @@ package best.tigers.tynkdialog.gui.controller.page;
 import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
 import best.tigers.tynkdialog.gui.model.page.FlatPageModel;
 import best.tigers.tynkdialog.gui.view.page.FlatPageEditorView;
-import best.tigers.tynkdialog.gui.view.page.PageView;
 
 import java.awt.event.WindowEvent;
 

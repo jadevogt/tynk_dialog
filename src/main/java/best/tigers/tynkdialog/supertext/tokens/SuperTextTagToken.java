@@ -40,12 +40,12 @@ public class SuperTextTagToken extends SuperTextToken {
   @Override
   public String toString() {
     return "<SuperText Token | name: TagToken | tag: "
-        + tagName
-        + " | type: "
-        + this.tagType.toString()
-        + " | value: "
-        + this.tagValue
-        + ">";
+            + tagName
+            + " | type: "
+            + this.tagType.toString()
+            + " | value: "
+            + this.tagValue
+            + ">";
   }
 
   public TagType getTagType() {

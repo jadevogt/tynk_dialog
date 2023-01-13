@@ -3,6 +3,7 @@ package best.tigers.tynkdialog.util.page;
 import best.tigers.tynkdialog.exceptions.PageParseException;
 import best.tigers.tynkdialog.game.page.TalkPage;
 import best.tigers.tynkdialog.util.ParseUtils;
+
 import javax.json.JsonObject;
 
 public class TalkPageBuilder implements PageBuilder {

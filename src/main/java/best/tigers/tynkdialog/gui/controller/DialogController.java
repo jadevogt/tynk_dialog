@@ -2,22 +2,13 @@ package best.tigers.tynkdialog.gui.controller;
 
 import best.tigers.tynkdialog.gui.controller.page.FlatPageControllerFactory;
 import best.tigers.tynkdialog.gui.controller.page.PageControllerFactory;
-import best.tigers.tynkdialog.gui.controller.page.TalkPageController;
 import best.tigers.tynkdialog.gui.controller.page.TalkPageControllerFactory;
 import best.tigers.tynkdialog.gui.model.DialogModel;
 import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
-import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
 import best.tigers.tynkdialog.gui.view.DialogEditorView;
-import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.KeyStroke;
+
+import javax.swing.*;
+import java.awt.event.*;
 
 public class DialogController {
 
@@ -39,13 +30,26 @@ public class DialogController {
     return DialogController.fromModel(new DialogModel());
   }
 
+  static PageControllerFactory getFactory(String pageKind) {
+    PageControllerFactory factory;
+    switch (pageKind) {
+      case "flat" -> factory = new FlatPageControllerFactory();
+      default -> factory = new TalkPageControllerFactory();
+    }
+    return factory;
+  }
+
+  static PageControllerFactory getFactory(AbstractPageModel model) {
+    return getFactory(model.getPage().getPageKind());
+  }
+
   private void initDialogController() {
     // Setup view and shortcuts
     var ctrlN = KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK, true);
     var ctrlNKey = "Ctrl+N released";
     view.attachFunctionalKeyboardShortcut(ctrlN, ctrlNKey, this::addPage);
     view.addEditorActions(new EditAction(), new AddAction(), new DeleteAction(), new SwapUpAction(),
-        new SwapDownAction());
+            new SwapDownAction());
     view.attachFocusListener(this::saveTitle);
 
     var table = view.getTable();
@@ -56,7 +60,6 @@ public class DialogController {
     var enterMapKey = "Enter";
     table.attachFunctionalKeyboardShortcut(enterKey, enterMapKey, this::editPage);
   }
-
 
   MouseAdapter buildDoubleClickAdapter() {
     return new MouseAdapter() {
@@ -151,19 +154,6 @@ public class DialogController {
     });
     // newView.getContentField().requestFocus();
     revalidateTable();
-  }
-
-  static PageControllerFactory getFactory(String pageKind) {
-    PageControllerFactory factory;
-    switch(pageKind) {
-      case "flat" -> factory = new FlatPageControllerFactory();
-      default -> factory = new TalkPageControllerFactory();
-    }
-    return factory;
-  }
-
-  static PageControllerFactory getFactory(AbstractPageModel model) {
-    return getFactory(model.getPage().getPageKind());
   }
 
   public void editPage() {

@@ -1,6 +1,6 @@
 package best.tigers.tynkdialog.game;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.Arrays;
 
 public final class Constants {
@@ -26,9 +26,9 @@ public final class Constants {
 
     public static Behavior fromString(String input) {
       return Arrays.stream(Behavior.values())
-          .filter(v -> v.getBehaviorValue().equals(input.toLowerCase()))
-          .findFirst()
-          .orElse(null);
+              .filter(v -> v.getBehaviorValue().equals(input.toLowerCase()))
+              .findFirst()
+              .orElse(null);
     }
 
     public String getBehaviorValue() {
@@ -67,16 +67,16 @@ public final class Constants {
 
     public static TextColor fromAWT(Color color) {
       return Arrays.stream(TextColor.values())
-          .filter(v -> v.toAWT().equals(color))
-          .findFirst()
-          .orElse(WHITE);
+              .filter(v -> v.toAWT().equals(color))
+              .findFirst()
+              .orElse(WHITE);
     }
 
     public static TextColor fromString(String input) {
       return Arrays.stream(TextColor.values())
-          .filter(v -> v.getGameName().equals(input.toLowerCase()))
-          .findFirst()
-          .orElse(WHITE);
+              .filter(v -> v.getGameName().equals(input.toLowerCase()))
+              .findFirst()
+              .orElse(WHITE);
     }
 
     public Color toAWT() {

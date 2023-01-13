@@ -1,8 +1,8 @@
 package best.tigers.tynkdialog.game.page;
 
-import java.util.ArrayList;
 import javax.json.Json;
 import javax.json.JsonObject;
+import java.util.ArrayList;
 
 public class BranchPage implements Page {
 
@@ -31,7 +31,7 @@ public class BranchPage implements Page {
   }
 
   public void setRequirements(
-      ArrayList<BranchRequirement> requirements) {
+          ArrayList<BranchRequirement> requirements) {
     this.requirements = requirements;
   }
 

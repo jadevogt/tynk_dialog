@@ -1,7 +1,6 @@
 package best.tigers.tynkdialog.gui.view.components.cells;
 
 import best.tigers.tynkdialog.game.Constants;
-import best.tigers.tynkdialog.game.page.TalkPage;
 import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
 import best.tigers.tynkdialog.util.Assets;
 
@@ -34,6 +33,6 @@ public class TalkPageCell extends JEditorPane {
     Component parent = getParent();
     ComponentUI ui = getUI();
 
-    return parent != null ? (ui.getPreferredSize(this).width <= parent .getSize().width) : true;
+    return parent != null ? (ui.getPreferredSize(this).width <= parent.getSize().width) : true;
   }
 }

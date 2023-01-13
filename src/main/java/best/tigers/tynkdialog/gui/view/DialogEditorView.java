@@ -1,6 +1,5 @@
 package best.tigers.tynkdialog.gui.view;
 
-import best.tigers.tynkdialog.game.page.Page;
 import best.tigers.tynkdialog.gui.model.DialogModel;
 import best.tigers.tynkdialog.gui.model.PageTableModel;
 import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
@@ -9,25 +8,12 @@ import best.tigers.tynkdialog.gui.view.components.AutoResizingTable;
 import best.tigers.tynkdialog.gui.view.components.cells.PageCellRenderer;
 import best.tigers.tynkdialog.gui.view.components.cells.PageDetailsCellRenderer;
 
-import java.awt.BorderLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 import java.util.Arrays;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
-import javax.swing.KeyStroke;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 
 public class DialogEditorView implements ShortcutSupport, DialogViewer, TObserver {
 
@@ -128,13 +114,13 @@ public class DialogEditorView implements ShortcutSupport, DialogViewer, TObserve
 
   public void attachFocusListener(Runnable runner) {
     titleField.addFocusListener(
-        new FocusAdapter() {
-          @Override
-          public void focusLost(FocusEvent e) {
-            SwingUtilities.invokeLater(runner);
-            super.focusLost(e);
-          }
-        });
+            new FocusAdapter() {
+              @Override
+              public void focusLost(FocusEvent e) {
+                SwingUtilities.invokeLater(runner);
+                super.focusLost(e);
+              }
+            });
   }
 
   public AbstractPageModel getSelectedPage() {
@@ -163,7 +149,7 @@ public class DialogEditorView implements ShortcutSupport, DialogViewer, TObserve
 
   @Override
   public void attachFunctionalKeyboardShortcut(KeyStroke keyStroke, String actionMapKey,
-      Runnable action) {
+                                               Runnable action) {
     var inputMap = panel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     inputMap.put(keyStroke, actionMapKey);
     var actionMap = panel.getActionMap();
@@ -178,7 +164,7 @@ public class DialogEditorView implements ShortcutSupport, DialogViewer, TObserve
 
   @Override
   public void attachKeyboardShortcut(KeyStroke keyStroke, String actionMapKey,
-      AbstractAction action) {
+                                     AbstractAction action) {
     var inputMap = panel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     inputMap.put(keyStroke, actionMapKey);
     var actionMap = panel.getActionMap();
