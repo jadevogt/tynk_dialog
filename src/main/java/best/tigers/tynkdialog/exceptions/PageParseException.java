@@ -1,6 +1,6 @@
 package best.tigers.tynkdialog.exceptions;
 
-public class PageParseException extends Exception {
+public class PageParseException extends RuntimeException {
 
   public PageParseException() {
   }
