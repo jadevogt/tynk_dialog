@@ -1,9 +1,9 @@
-package best.tigers.tynkdialog.game;
+package best.tigers.tynkdialog.game.page;
 
 import javax.json.Json;
 import javax.json.JsonObject;
 
-public class DialogPage {
+public class TalkPage implements Page {
 
   private String speaker;
   private String content;
@@ -11,7 +11,7 @@ public class DialogPage {
   private String blip;
   private boolean canSkip;
 
-  public DialogPage(
+  public TalkPage(
       String speaker, String content, String textStyle, String blip, boolean canSkip) {
     this.content = content;
     this.speaker = speaker;
@@ -20,11 +20,11 @@ public class DialogPage {
     this.canSkip = canSkip;
   }
 
-  public DialogPage(String speaker) {
+  public TalkPage(String speaker) {
     this(speaker, "", null, null, true);
   }
 
-  public DialogPage() {
+  public TalkPage() {
     this("");
   }
 
@@ -71,6 +71,11 @@ public class DialogPage {
 
   public void setCanSkip(boolean skippable) {
     canSkip = skippable;
+  }
+
+  @Override
+  public String getPageKind() {
+    return "talk";
   }
 
   public JsonObject serialize() {

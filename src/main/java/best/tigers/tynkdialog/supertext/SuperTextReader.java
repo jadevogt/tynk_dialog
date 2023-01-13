@@ -1,10 +1,10 @@
-package best.tigers.tynkdialog.gui.text;
+package best.tigers.tynkdialog.supertext;
 
 import best.tigers.tynkdialog.game.Constants;
-import best.tigers.tynkdialog.game.supertext.SuperTextCharacterToken;
-import best.tigers.tynkdialog.game.supertext.SuperTextTagToken;
-import best.tigers.tynkdialog.game.supertext.SuperTextToken;
-import best.tigers.tynkdialog.game.supertext.SuperTextTokenizer;
+import best.tigers.tynkdialog.supertext.tokens.SuperTextCharacterToken;
+import best.tigers.tynkdialog.supertext.tokens.SuperTextTagToken;
+import best.tigers.tynkdialog.supertext.tokens.SuperTextToken;
+import best.tigers.tynkdialog.supertext.tokens.SuperTextTokenizer;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayDeque;
@@ -54,11 +54,15 @@ public class SuperTextReader {
     }
   }
 
-  private void insertEntityBasedOnTag(SuperTextTagToken entity) {
+  private void insertEntityBasedOnTag(SuperTextTagToken entity) throws BadLocationException {
     if (document instanceof SuperTextDocument doc) {
       switch (entity.getTagName().toLowerCase()) {
         case "t", "wait", "time" ->
             doc.insertTimeDelay(position++, Integer.parseInt(entity.getTagValue()));
+        case "f", "function" ->
+            doc.insertFunctionCall(position++, entity.getTagValue().split(",")[0], entity.getTagValue().split(",")[1]);
+        case "n" ->
+            doc.insertString(position++, "\n".repeat(Integer.parseInt(entity.getTagValue())), tagStack.peek());
         default -> throw new IllegalStateException(
             "Unexpected value: " + entity.getTagName().toLowerCase());
       }

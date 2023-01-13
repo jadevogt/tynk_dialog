@@ -1,6 +1,5 @@
-package best.tigers.tynkdialog.gui;
+package best.tigers.tynkdialog.util;
 
-import best.tigers.tynkdialog.util.Log;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;

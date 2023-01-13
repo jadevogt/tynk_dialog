@@ -1,4 +1,4 @@
-package best.tigers.tynkdialog.gui.text;
+package best.tigers.tynkdialog.supertext;
 
 import java.awt.Container;
 import java.awt.Graphics;

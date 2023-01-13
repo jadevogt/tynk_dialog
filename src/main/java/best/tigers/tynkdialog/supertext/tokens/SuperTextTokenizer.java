@@ -1,4 +1,4 @@
-package best.tigers.tynkdialog.game.supertext;
+package best.tigers.tynkdialog.supertext.tokens;
 
 import java.io.EOFException;
 import java.io.IOException;

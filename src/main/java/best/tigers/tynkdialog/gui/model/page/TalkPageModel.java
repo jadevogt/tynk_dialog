@@ -1,53 +1,54 @@
-package best.tigers.tynkdialog.gui.model;
+package best.tigers.tynkdialog.gui.model.page;
 
-import best.tigers.tynkdialog.game.DialogPage;
+import best.tigers.tynkdialog.game.page.TalkPage;
+import best.tigers.tynkdialog.gui.model.AbstractModel;
 import javax.json.JsonObject;
 
-public class DialogPageModel extends AbstractModel {
+public class TalkPageModel extends AbstractModel {
 
-  private final DialogPage dialogPage;
+  private final TalkPage page;
   private boolean blipEnabled = true;
   private boolean styleEnabled = true;
 
-  public DialogPageModel(DialogPage dialogPage) {
+  public TalkPageModel(TalkPage talkPage) {
     super();
-    this.dialogPage = dialogPage;
-    if (dialogPage.getBlip() == null) {
+    this.page = talkPage;
+    if (talkPage.getBlip() == null) {
       blipEnabled = false;
     }
-    if (dialogPage.getTextBoxStyle() == null) {
+    if (talkPage.getTextBoxStyle() == null) {
       styleEnabled = false;
     }
   }
 
-  public DialogPageModel() {
-    this(new DialogPage());
+  public TalkPageModel() {
+    this(new TalkPage());
   }
 
   public String getSpeaker() {
-    return dialogPage.getSpeaker();
+    return page.getSpeaker();
   }
 
   public void setSpeaker(String newCharacter) {
-    dialogPage.setSpeaker(newCharacter);
+    page.setSpeaker(newCharacter);
     notifySubscribers();
   }
 
   public String getContent() {
-    return dialogPage.getContent();
+    return page.getContent();
   }
 
   public void setContent(String newContent) {
-    dialogPage.setContent(newContent);
+    page.setContent(newContent);
     notifySubscribers();
   }
 
   public String getBlip() {
-    return dialogPage.getBlip();
+    return page.getBlip();
   }
 
   public void setBlip(String newBlip) {
-    dialogPage.setBlip(newBlip);
+    page.setBlip(newBlip);
     notifySubscribers();
   }
 
@@ -57,7 +58,7 @@ public class DialogPageModel extends AbstractModel {
 
   public void setBlipEnabled(boolean newState) {
     blipEnabled = newState;
-    dialogPage.setBlip(null);
+    page.setBlip(null);
   }
 
   public boolean getStyleEnabled() {
@@ -66,23 +67,23 @@ public class DialogPageModel extends AbstractModel {
 
   public void setStyleEnabled(boolean newState) {
     styleEnabled = newState;
-    dialogPage.setTextBoxStyle(null);
+    page.setTextBoxStyle(null);
   }
 
   public String getTextBoxStyle() {
-    return dialogPage.getTextBoxStyle();
+    return page.getTextBoxStyle();
   }
 
   public void setTextBoxStyle(String newStyle) {
-    dialogPage.setTextBoxStyle(newStyle);
+    page.setTextBoxStyle(newStyle);
     notifySubscribers();
   }
 
   public JsonObject asJson() {
-    return dialogPage.serialize();
+    return page.asPage();
   }
 
-  public DialogPage getDialogPage() {
-    return dialogPage;
+  public TalkPage getDialogPage() {
+    return page;
   }
 }

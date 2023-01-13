@@ -1,4 +1,4 @@
-package best.tigers.tynkdialog.gui.text;
+package best.tigers.tynkdialog.supertext;
 
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.BoxView;
@@ -27,11 +27,12 @@ public class SuperTextViewFactory implements ViewFactory {
         case StyleConstants.IconElementName:
           return new IconView(elem);
         case SuperTextDocument.DELAY_ELEMENT_NAME:
+        case SuperTextDocument.FUNCTION_ELEMENT_NAME:
           return new SuperTextEntityView(elem);
         // return new HarlowTMLLabelView(elem);
       }
     }
-    // default to text display
+    // default to supertext display
     return new SuperTextLabelView(elem);
   }
 }

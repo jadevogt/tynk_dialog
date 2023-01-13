@@ -1,7 +1,7 @@
 package best.tigers.tynkdialog.gui.controller;
 
 import best.tigers.tynkdialog.gui.model.DialogModel;
-import best.tigers.tynkdialog.gui.model.DialogPageModel;
+import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
 import best.tigers.tynkdialog.gui.view.DialogEditorView;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
@@ -109,9 +109,9 @@ public class DialogController {
   }
 
   public void addPage() {
-    var newModel = new DialogPageModel();
+    var newModel = new TalkPageModel();
     model.addPage(newModel);
-    var newController = DialogPageController.fromModel(newModel);
+    var newController = TalkPageController.fromModel(newModel);
     var newView = newController.getView();
     newView.attachContinueAction(() -> {
       newController.saveAndExit();
@@ -120,8 +120,8 @@ public class DialogController {
     revalidateTable();
   }
 
-  public void duplicateAndEditPage(DialogPageModel oldModel) {
-    var newModel = new DialogPageModel();
+  public void duplicateAndEditPage(TalkPageModel oldModel) {
+    var newModel = new TalkPageModel();
     newModel.setSpeaker(oldModel.getSpeaker());
     newModel.setBlip(oldModel.getBlip());
     newModel.setBlipEnabled(oldModel.getBlipEnabled());
@@ -135,7 +135,7 @@ public class DialogController {
       System.out.println(oldIndex);
       model.swapListItems(newIndex--, newIndex);
     }
-    var newController = DialogPageController.fromModelProceeding(newModel);
+    var newController = TalkPageController.fromModelProceeding(newModel);
     var newView = newController.getView();
     newView.attachContinueAction(() -> {
       newController.saveAndExit();
@@ -148,7 +148,7 @@ public class DialogController {
   public void editPage() {
     var selectedModel = view.getSelectedModel();
     if (selectedModel != null) {
-      var newController = DialogPageController.fromModel(selectedModel);
+      var newController = TalkPageController.fromModel(selectedModel);
       var newView = newController.getView();
       newView.attachContinueAction(() -> {
         newController.saveAndExit();

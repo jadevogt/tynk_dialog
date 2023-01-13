@@ -1,6 +1,7 @@
-package best.tigers.tynkdialog.gui.text;
+package best.tigers.tynkdialog.supertext;
 
 import best.tigers.tynkdialog.game.Constants;
+import best.tigers.tynkdialog.gui.view.components.FunctionCallDialog;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -39,13 +40,14 @@ public class SuperTextEditorKit extends StyledEditorKit {
   public static final String TYNK_YELLOW_TEXT = "Yellow";
   public static final String TYNK_GREEN_TEXT = "Green";
   public static final String TYNK_BLUE_TEXT = "Blue";
-
   public static final String TYNK_WHITE_TEXT = "White";
-
   public static final String TYNK_GREY_TEXT = "Grey";
+
   public static final TynkDelayAction DELAY_ACTION_FIVE = new TynkDelayAction(5);
   public static final TynkDelayAction DELAY_ACTION_FIFTEEN = new TynkDelayAction(15);
   public static final TynkDelayAction DELAY_ACTION_SIXTY = new TynkDelayAction(60);
+
+
   public static final Action[] defaultActions = {
       new TynkColorAction(Constants.TextColor.RED, KeyStroke.getKeyStroke(KeyEvent.VK_R,
           InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, true)),
@@ -99,6 +101,13 @@ public class SuperTextEditorKit extends StyledEditorKit {
           src.setToolTipText("Delay: " + (int) v.getAttributes().getAttribute(
               SuperTextDocument.DELAY_MAGNITUDE_NAME));
           javax.swing.ToolTipManager.sharedInstance().setInitialDelay(0);
+        } else if (v != null
+            && v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_CALL_NAME) != null
+            && v instanceof IconView) {
+          src.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+          src.setToolTipText("Function Call: " + v.getAttributes().getAttribute(
+              SuperTextDocument.FUNCTION_CALL_NAME) + '(' + v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_PARAM_NAME) + ')');
+          javax.swing.ToolTipManager.sharedInstance().setInitialDelay(0);
         } else {
           javax.swing.ToolTipManager.sharedInstance().setInitialDelay(1000);
           src.setToolTipText("");
@@ -124,6 +133,14 @@ public class SuperTextEditorKit extends StyledEditorKit {
             doc.changeDelayMagnitude(v.getElement(), newMagnitude);
           }
         }
+
+        if (v != null
+            && v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_CALL_NAME) != null) {
+          if (v.getDocument() instanceof SuperTextDocument doc) {
+            String[] newDetails  = FunctionCallDialog.promptForFunctionDetails((String) v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_CALL_NAME), (String) v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_PARAM_NAME));
+            doc.changeFunctionCall(v.getElement(), newDetails[0], newDetails[1]);
+          }
+        }
       }
     };
   }
@@ -137,9 +154,18 @@ public class SuperTextEditorKit extends StyledEditorKit {
     }
   }
 
+  public static void addFunctionCall(JTextComponent e, String functionName, String functionParam) {
+    if (e instanceof JEditorPane editor) {
+      var document = editor.getDocument();
+      if (document instanceof SuperTextDocument doc) {
+        doc.insertFunctionCall(e.getSelectionStart(), functionName, functionParam);
+      }
+    }
+  }
+
   @Override
   public String getContentType() {
-    return "text/supertext";
+    return "supertext/supertext";
   }
 
   @Override
@@ -185,7 +211,8 @@ public class SuperTextEditorKit extends StyledEditorKit {
   @Override
   public void write(Writer out, Document doc, int pos, int len)
       throws IOException, BadLocationException {
-    SuperTextWriter.write(doc, pos, len, out);
+    var writer = new SuperTextWriter();
+    writer.write(doc, pos, len, out);
   }
 
   @Override
@@ -239,7 +266,7 @@ public class SuperTextEditorKit extends StyledEditorKit {
       super(StringUtils.capitalize(tynkColor.getGameName()), tynkColor.toAWT());
       this.shortcutKey = shortcutKey;
       this.keyMapName = tynkColor.getGameName() + "keyboardShortcut";
-      putValue(Action.SHORT_DESCRIPTION, "Make the selected text " + tynkColor.getGameName() + ".");
+      putValue(Action.SHORT_DESCRIPTION, "Make the selected supertext " + tynkColor.getGameName() + ".");
       putValue(Action.SMALL_ICON, new TynkColorIcon(new Dimension(16, 16), tynkColor));
       putValue(Action.LARGE_ICON_KEY, new TynkColorIcon(new Dimension(32, 16), tynkColor));
     }
@@ -257,7 +284,7 @@ public class SuperTextEditorKit extends StyledEditorKit {
 
     //private Constants.Behavior tynkBehavior;
     public ClearTynkBehaviorAction() {
-      super("Remove behaviors");
+      super("None");
     }
 
     @Override
@@ -317,6 +344,23 @@ public class SuperTextEditorKit extends StyledEditorKit {
     @Override
     public void actionPerformed(ActionEvent e) {
       SuperTextEditorKit.addTimeDelay(getTextComponent(e), delayMagnitude);
+    }
+  }
+
+  public static class TynkFunctionCallAction extends StyledTextAction {
+
+    private final String functionName;
+    private final String functionParam;
+
+    public TynkFunctionCallAction(String functionName, String functionParam) {
+      super("Function call: " + functionName + '(' + functionParam + ')');
+      this.functionName = functionName;
+      this.functionParam = functionParam;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      SuperTextEditorKit.addFunctionCall(getTextComponent(e), functionName, functionParam);
     }
   }
 

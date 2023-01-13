@@ -1,4 +1,4 @@
-package best.tigers.tynkdialog.gui.text;
+package best.tigers.tynkdialog.supertext;
 
 import best.tigers.tynkdialog.game.Constants;
 import java.awt.BasicStroke;

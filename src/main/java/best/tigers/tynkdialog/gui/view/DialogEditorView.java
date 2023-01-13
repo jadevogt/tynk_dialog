@@ -1,8 +1,8 @@
 package best.tigers.tynkdialog.gui.view;
 
 import best.tigers.tynkdialog.gui.model.DialogModel;
-import best.tigers.tynkdialog.gui.model.DialogPageModel;
-import best.tigers.tynkdialog.gui.model.DialogPageTableModel;
+import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
+import best.tigers.tynkdialog.gui.model.PageTableModel;
 import best.tigers.tynkdialog.gui.view.components.AutoResizingTable;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -133,7 +133,7 @@ public class DialogEditorView implements ShortcutSupport, DialogViewer, TObserve
         });
   }
 
-  public DialogPageModel getSelectedPage() {
+  public TalkPageModel getSelectedPage() {
     return model.getDptm().getPageAt(pageList.getSelectedRow());
   }
 
@@ -145,11 +145,11 @@ public class DialogEditorView implements ShortcutSupport, DialogViewer, TObserve
     }
   }
 
-  public DialogPageModel getSelectedModel() {
+  public TalkPageModel getSelectedModel() {
     return getSelectedPage();
   }
 
-  public DialogPageTableModel getDptm() {
+  public PageTableModel getDptm() {
     return model.getDptm();
   }
 

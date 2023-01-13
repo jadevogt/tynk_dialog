@@ -1,4 +1,4 @@
-package best.tigers.tynkdialog.gui.text;
+package best.tigers.tynkdialog.supertext;
 
 import best.tigers.tynkdialog.game.Constants;
 import java.awt.BasicStroke;
@@ -31,6 +31,10 @@ public class SuperTextDocument extends DefaultStyledDocument {
   public static final String BEHAVIOR_ATTRIBUTE_NAME = "behavior";
   public static final String DELAY_ELEMENT_NAME = "TimeDelayElement";
   public static final String DELAY_MAGNITUDE_NAME = "TimeDelayMagnitude";
+  public static final String FUNCTION_ELEMENT_NAME = "FunctionCallElement";
+  public static final String FUNCTION_CALL_NAME = "FunctionCallName";
+  public static final String FUNCTION_PARAM_NAME = "FunctionParamName";
+
   private boolean lengthLock = true;
 
   public void insertTimeDelay(int offset, int timeDelayQuantity) {
@@ -64,9 +68,47 @@ public class SuperTextDocument extends DefaultStyledDocument {
     dump(System.out);
   }
 
+  public void insertFunctionCall(int offset, String functionName, String functionParam) {
+    if (functionName.strip().equals("")) {
+      java.awt.Toolkit.getDefaultToolkit().beep();
+      return;
+    }
+    lengthLock = false;
+    SimpleAttributeSet attrs = new SimpleAttributeSet(getCharacterElement(offset).getAttributes());
+    StyleConstants.setForeground(attrs, Constants.TextColor.WHITE.toAWT());
+    BufferedImage icon = null;
+    var classLoader = getClass().getClassLoader();
+    try {
+      icon = ImageIO.read(
+          Objects.requireNonNull(classLoader.getResource("function.png")).openStream());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    attrs.addAttribute(FUNCTION_CALL_NAME, functionName);
+    attrs.addAttribute(FUNCTION_PARAM_NAME, functionParam);
+
+    StyleConstants.setIcon(attrs, new ImageIcon(icon));
+    try {
+      insertString(offset, " ", attrs);
+    } catch (BadLocationException e) {
+      e.printStackTrace();
+      JOptionPane.showMessageDialog(null, "Can't insert function call!");
+    }
+    lengthLock = true;
+    dump(System.out);
+  }
+
   public void changeDelayMagnitude(Element e, int magnitude) {
     var attribs = new SimpleAttributeSet();
     attribs.addAttribute(SuperTextDocument.DELAY_MAGNITUDE_NAME, magnitude);
+    setCharacterAttributes(
+        e.getStartOffset(), e.getEndOffset() - e.getStartOffset(), attribs, false);
+  }
+
+  public void changeFunctionCall(Element e, String functionName, String functionParams) {
+    var attribs = new SimpleAttributeSet();
+    attribs.addAttribute(SuperTextDocument.FUNCTION_CALL_NAME, functionName);
+    attribs.addAttribute(SuperTextDocument.FUNCTION_PARAM_NAME, functionParams);
     setCharacterAttributes(
         e.getStartOffset(), e.getEndOffset() - e.getStartOffset(), attribs, false);
   }

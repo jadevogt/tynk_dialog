@@ -1,8 +1,8 @@
 package best.tigers.tynkdialog.util;
 
-import best.tigers.tynkdialog.exceptions.DialogParseException;
+import best.tigers.tynkdialog.exceptions.PageParseException;
 import best.tigers.tynkdialog.game.Dialog;
-import best.tigers.tynkdialog.game.DialogPage;
+import best.tigers.tynkdialog.game.page.Page;
 import java.util.ArrayList;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
@@ -10,26 +10,36 @@ import javax.json.JsonValue;
 public class DialogBuilder {
 
   private String title;
-  private ArrayList<DialogPage> contents;
+  private ArrayList<Page> contents;
 
   public DialogBuilder() {
   }
 
-  void ParseJSON(JsonObject dialogData) throws DialogParseException {
+  void ParseJSON(JsonObject dialogData) throws PageParseException {
     title = dialogData.getString("title");
     contents = new ArrayList<>();
     for (JsonValue currentPage : dialogData.getJsonArray("contents")) {
-      DialogPageBuilder pageBuilder = new DialogPageBuilder();
+      PageBuilder builder;
+      String kind;
+      try {
+        kind = currentPage.asJsonObject().getString("pageKind");
+      } catch (NullPointerException e) {
+        kind = "talk";
+      }
+      switch(kind) {
+        case "talk" -> builder = new TalkPageBuilder();
+        default -> throw new PageParseException("Page kind " + kind + " is not yet supported!");
+      }
       if (currentPage.getValueType() != JsonValue.ValueType.OBJECT) {
-        throw new DialogParseException(
+        throw new PageParseException(
             "Received an unexpected type while processing "
                 + "dialog \""
                 + title
                 + "\": "
                 + currentPage.getValueType());
       }
-      pageBuilder.ParseJSON(currentPage.asJsonObject());
-      contents.add(pageBuilder.build());
+      builder.parseJson(currentPage.asJsonObject());
+      contents.add(builder.build());
     }
   }
 
@@ -38,34 +48,3 @@ public class DialogBuilder {
   }
 }
 
-class DialogPageBuilder {
-
-  private String content;
-  private String speaker;
-  private String textBoxStyle;
-  private String blip;
-  private boolean canSkip;
-
-  public DialogPageBuilder() {
-  }
-
-  public boolean verify() {
-    return content != null && speaker != null;
-  }
-
-  public void ParseJSON(JsonObject dialogPageData) throws DialogParseException {
-    try {
-      content = dialogPageData.getString("txt");
-      speaker = dialogPageData.getString("speaker");
-      canSkip = dialogPageData.getBoolean("canSkip");
-    } catch (ClassCastException cce) {
-      throw new DialogParseException("Invalid DialogPage data: " + dialogPageData);
-    }
-    textBoxStyle = ParseUtils.getNullableTynkValue(dialogPageData.get("textbox")).orElse(null);
-    blip = ParseUtils.getNullableTynkValue(dialogPageData.get("blip")).orElse(null);
-  }
-
-  public DialogPage build() {
-    return new DialogPage(speaker, content, textBoxStyle, blip, canSkip);
-  }
-}

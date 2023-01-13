@@ -1,9 +1,12 @@
-package best.tigers.tynkdialog.gui.view;
+package best.tigers.tynkdialog.gui.view.page;
 
 import best.tigers.tynkdialog.game.Constants;
-import best.tigers.tynkdialog.gui.Assets;
-import best.tigers.tynkdialog.gui.model.DialogPageModel;
-import best.tigers.tynkdialog.gui.text.SuperTextEditorKit;
+import best.tigers.tynkdialog.util.Assets;
+import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
+import best.tigers.tynkdialog.supertext.SuperTextEditorKit;
+import best.tigers.tynkdialog.gui.view.ShortcutSupport;
+import best.tigers.tynkdialog.gui.view.TObserver;
+import best.tigers.tynkdialog.gui.view.components.FunctionCallDialog;
 import best.tigers.tynkdialog.gui.view.components.IntegerDialog;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -32,9 +35,9 @@ import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.text.DefaultEditorKit;
 
-public class DialogPageEditorView implements TObserver, DialogPageViewer, ShortcutSupport {
+public class TalkPageEditorView implements TObserver, TalkPageViewer, ShortcutSupport {
 
-  private final DialogPageModel model;
+  private final TalkPageModel model;
   private final JPanel panel;
   private final JFrame frame;
 
@@ -59,7 +62,7 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer, Shortc
   private final JTextField styleField;
   private final Font font = Assets.getInstance().getFont();
 
-  public DialogPageEditorView(DialogPageModel model) {
+  public TalkPageEditorView(TalkPageModel model) {
     this.model = model;
     panel = new JPanel();
     frame = new JFrame();
@@ -86,8 +89,8 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer, Shortc
     frame.add(panel);
   }
 
-  public static DialogPageEditorView fromModelProceeding(DialogPageModel model) {
-    var newView = new DialogPageEditorView(model);
+  public static TalkPageEditorView fromModelProceeding(TalkPageModel model) {
+    var newView = new TalkPageEditorView(model);
     newView.getContentField().requestFocus();
     return newView;
   }
@@ -152,7 +155,7 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer, Shortc
     return layout;
   }
 
-  public DialogPageEditorView init() {
+  public TalkPageEditorView init() {
     model.attachSubscriber(this);
     frame.addWindowListener(new WindowAdapter() {
       @Override
@@ -255,7 +258,7 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer, Shortc
     field.setFont(font);
     field.setForeground(Constants.TextColor.WHITE.toAWT());
     field.setBackground(Constants.TextColor.BACKGROUND.toAWT());
-    field.setContentType("text/supertext");
+    field.setContentType("supertext/supertext");
     field.setPreferredSize(new Dimension(500, 100));
     return field;
   }
@@ -272,6 +275,14 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer, Shortc
   protected JToolBar createContentToolbar() {
     var toolbar = new JToolBar();
     var tb = getContentField();
+    var function = new JButton(new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        String[] details = FunctionCallDialog.promptForFunctionDetails();
+        SuperTextEditorKit.addFunctionCall(tb, details[0], details[1]);
+      }
+    });
+    function.setText("Function call...");
     toolbar.add(tb.getActionMap().get(SuperTextEditorKit.TYNK_RED_TEXT));
     toolbar.add(tb.getActionMap().get(SuperTextEditorKit.TYNK_YELLOW_TEXT));
     toolbar.add(tb.getActionMap().get(SuperTextEditorKit.TYNK_BLUE_TEXT));
@@ -281,6 +292,7 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer, Shortc
     toolbar.add(tb.getActionMap().get(SuperTextEditorKit.DELAY_ACTION_FIVE));
     toolbar.add(tb.getActionMap().get(SuperTextEditorKit.DELAY_ACTION_FIFTEEN));
     toolbar.add(tb.getActionMap().get(SuperTextEditorKit.DELAY_ACTION_SIXTY));
+    toolbar.add(function);
     toolbar.setFloatable(false);
     return toolbar;
   }
@@ -289,6 +301,7 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer, Shortc
     var menubar = new JMenuBar();
     var tb = getContentField();
     var editMenu = new JMenu("Edit");
+    var insertMenu = new JMenu("Insert");
     var colorMenu = new JMenu("Colors");
     var behaviorMenu = new JMenu("Behaviors");
 
@@ -304,7 +317,16 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer, Shortc
         }
       });
       delay.setText("Delay...");
-      editMenu.add(delay);
+      var function = new JMenuItem(new AbstractAction() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          String[] details = FunctionCallDialog.promptForFunctionDetails();
+          SuperTextEditorKit.addFunctionCall(tb, details[0], details[1]);
+        }
+      });
+      function.setText("Function call...");
+      insertMenu.add(delay);
+      insertMenu.add(function);
     }
 
     var cut = new DefaultEditorKit.CutAction();
@@ -320,6 +342,7 @@ public class DialogPageEditorView implements TObserver, DialogPageViewer, Shortc
     editMenu.add(paste);
 
     menubar.add(editMenu);
+    menubar.add(insertMenu);
     menubar.add(colorMenu);
     menubar.add(behaviorMenu);
     return menubar;

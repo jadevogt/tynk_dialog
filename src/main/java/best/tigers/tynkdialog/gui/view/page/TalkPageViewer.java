@@ -1,6 +1,6 @@
-package best.tigers.tynkdialog.gui.view;
+package best.tigers.tynkdialog.gui.view.page;
 
-public interface DialogPageViewer {
+public interface TalkPageViewer {
 
   String getSpeaker();
 

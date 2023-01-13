@@ -2,59 +2,59 @@ package best.tigers.tynkdialog.gui.controller;
 
 import static java.awt.event.WindowEvent.WINDOW_CLOSING;
 
-import best.tigers.tynkdialog.gui.model.DialogPageModel;
-import best.tigers.tynkdialog.gui.text.SuperTextEditorKit;
-import best.tigers.tynkdialog.gui.view.DialogPageEditorView;
+import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
+import best.tigers.tynkdialog.supertext.SuperTextEditorKit;
+import best.tigers.tynkdialog.gui.view.page.TalkPageEditorView;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import javax.swing.KeyStroke;
 
-public class DialogPageController {
+public class TalkPageController {
 
-  private final DialogPageEditorView view;
-  private final DialogPageModel model;
+  private final TalkPageEditorView view;
+  private final TalkPageModel model;
 
-  private DialogPageController(DialogPageModel model, boolean proceeding) {
+  private TalkPageController(TalkPageModel model, boolean proceeding) {
     this.model = model;
     if (proceeding) {
-      view = DialogPageEditorView.fromModelProceeding(model).init();
+      view = TalkPageEditorView.fromModelProceeding(model).init();
     } else {
-      view = new DialogPageEditorView(model).init();
+      view = new TalkPageEditorView(model).init();
     }
   }
 
-  private DialogPageController(DialogPageModel model) {
+  private TalkPageController(TalkPageModel model) {
     this(model, false);
   }
 
-  public static DialogPageController fromModel(DialogPageModel model) {
-    var controller = new DialogPageController(model);
+  public static TalkPageController fromModel(TalkPageModel model) {
+    var controller = new TalkPageController(model);
     controller.setupViewShortcuts();
     return controller;
   }
 
-  public static DialogPageController fromModelProceeding(DialogPageModel model) {
-    var controller = new DialogPageController(model, true);
+  public static TalkPageController fromModelProceeding(TalkPageModel model) {
+    var controller = new TalkPageController(model, true);
     controller.setupViewShortcuts();
     return controller;
   }
 
-  public static DialogPageController fromNewModel() {
-    return DialogPageController.fromModel(new DialogPageModel());
+  public static TalkPageController fromNewModel() {
+    return TalkPageController.fromModel(new TalkPageModel());
   }
 
-  public static void editModel(DialogPageModel model) {
-    DialogPageController.fromModel(model);
+  public static void editModel(TalkPageModel model) {
+    TalkPageController.fromModel(model);
   }
 
-  public static DialogPageModel createModel() {
-    var model = new DialogPageModel();
-    DialogPageController.editModel(model);
+  public static TalkPageModel createModel() {
+    var model = new TalkPageModel();
+    TalkPageController.editModel(model);
     return model;
   }
 
-  public DialogPageEditorView getView() {
+  public TalkPageEditorView getView() {
     return view;
   }
 

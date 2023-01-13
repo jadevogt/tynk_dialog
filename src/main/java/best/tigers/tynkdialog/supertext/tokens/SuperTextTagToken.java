@@ -1,4 +1,4 @@
-package best.tigers.tynkdialog.game.supertext;
+package best.tigers.tynkdialog.supertext.tokens;
 
 public class SuperTextTagToken extends SuperTextToken {
 
@@ -50,7 +50,7 @@ public class SuperTextTagToken extends SuperTextToken {
 
   public TagType getTagType() {
     return switch (getTagName()) {
-      case "t", "wait", "time" -> TagType.ENTITY;
+      case "t", "wait", "time", "n", "f" -> TagType.ENTITY;
       default -> this.tagType;
     };
   }

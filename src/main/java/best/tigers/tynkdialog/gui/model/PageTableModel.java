@@ -1,14 +1,15 @@
 package best.tigers.tynkdialog.gui.model;
 
+import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
-public class DialogPageTableModel extends AbstractTableModel {
+public class PageTableModel extends AbstractTableModel {
 
-  private final List<DialogPageModel> pages;
+  private final List<TalkPageModel> pages;
 
-  public DialogPageTableModel(List<DialogPageModel> pages) {
+  public PageTableModel(List<TalkPageModel> pages) {
 
     this.pages = new ArrayList<>(pages);
   }
@@ -36,7 +37,7 @@ public class DialogPageTableModel extends AbstractTableModel {
   public Object getValueAt(int rowIndex, int columnIndex) {
 
     Object value = "??";
-    DialogPageModel page = pages.get(rowIndex);
+    TalkPageModel page = pages.get(rowIndex);
     switch (columnIndex) {
       case 0 -> value = page.getSpeaker();
       case 1 -> value = page.getContent();
@@ -67,7 +68,7 @@ public class DialogPageTableModel extends AbstractTableModel {
    * @param row
    * @return DialogPageModel
    */
-  public DialogPageModel getPageAt(int row) {
+  public TalkPageModel getPageAt(int row) {
     if (row >= 0 && row < pages.size()) {
       return pages.get(row);
     } else {

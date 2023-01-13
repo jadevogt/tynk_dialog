@@ -1,4 +1,4 @@
-package best.tigers.tynkdialog.game.supertext;
+package best.tigers.tynkdialog.supertext.tokens;
 
 public class SuperTextCharacterToken extends SuperTextToken {
 
