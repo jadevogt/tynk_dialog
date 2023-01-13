@@ -60,9 +60,11 @@ public class SuperTextReader {
         case "t", "wait", "time" ->
             doc.insertTimeDelay(position++, Integer.parseInt(entity.getTagValue()));
         case "f", "function" ->
-            doc.insertFunctionCall(position++, entity.getTagValue().split(",")[0], entity.getTagValue().split(",")[1]);
+            doc.insertFunctionCall(position++, entity.getTagValue().split(",")[0],
+                entity.getTagValue().split(",")[1]);
         case "n" ->
-            doc.insertString(position++, "\n".repeat(Integer.parseInt(entity.getTagValue())), tagStack.peek());
+            doc.insertString(position++, "\n".repeat(Integer.parseInt(entity.getTagValue())),
+                tagStack.peek());
         default -> throw new IllegalStateException(
             "Unexpected value: " + entity.getTagName().toLowerCase());
       }

@@ -22,10 +22,6 @@ public class ChoicePageBuilder implements PageBuilder {
   public ChoicePageBuilder() {
   }
 
-  public boolean verify() {
-    return content != null && speaker != null;
-  }
-
   public static ChoiceResponse parseResponseJson(JsonObject responseData)
       throws PageParseException {
     String responseContent;
@@ -38,6 +34,10 @@ public class ChoicePageBuilder implements PageBuilder {
     var iconValue = ParseUtils.getNullableTynkInteger(responseData.get("symbol")).orElse(1);
     var resultValue = ParseUtils.getNullableTynkString(responseData.get("result")).orElse(null);
     return new ChoiceResponse(responseContent, resultValue, iconValue);
+  }
+
+  public boolean verify() {
+    return content != null && speaker != null;
   }
 
   public void parseJson(JsonObject json) throws PageParseException {

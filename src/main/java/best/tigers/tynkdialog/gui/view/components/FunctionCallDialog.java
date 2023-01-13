@@ -57,14 +57,14 @@ public class FunctionCallDialog {
     return new String[]{name, param};
   }
 
-  public void setValue(String newName, String newParam) {
-    name = newName;
-    param = newParam;
-  }
-
   public void setValue(String[] newDetails) {
     name = newDetails[0];
     param = newDetails[1];
+  }
+
+  public void setValue(String newName, String newParam) {
+    name = newName;
+    param = newParam;
   }
 
   private void init() {
@@ -115,14 +115,14 @@ public class FunctionCallDialog {
                 .addComponent(promptLabel)
             )
             .addGroup(layout.createSequentialGroup()
-            .addGroup(layout.createParallelGroup()
-                .addComponent(nameLabel)
-                .addComponent(paramLabel)
-            )
-            .addGroup(layout.createParallelGroup()
-                .addComponent(nameField)
-                .addComponent(paramField)
-            ))
+                .addGroup(layout.createParallelGroup()
+                    .addComponent(nameLabel)
+                    .addComponent(paramLabel)
+                )
+                .addGroup(layout.createParallelGroup()
+                    .addComponent(nameField)
+                    .addComponent(paramField)
+                ))
             .addComponent(spacer, 30, 30, 30)
             .addComponent(okayButton));
     layout.setVerticalGroup(

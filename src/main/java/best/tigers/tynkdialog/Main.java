@@ -1,7 +1,7 @@
 package best.tigers.tynkdialog;
 
-import best.tigers.tynkdialog.util.Assets;
 import best.tigers.tynkdialog.gui.controller.PrimaryListController;
+import best.tigers.tynkdialog.util.Assets;
 import com.formdev.flatlaf.intellijthemes.FlatMaterialDesignDarkIJTheme;
 import java.awt.EventQueue;
 import javax.swing.JEditorPane;

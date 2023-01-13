@@ -6,17 +6,25 @@ import javax.json.JsonObjectBuilder;
 
 public class ChoiceResponse {
 
-  public enum ResponseIcon {
-    CANCEL,
-    NEUTRAL,
-    ACT,
-    SPEAK,
-    GIFT
+  private String content;
+  private String choiceResult;
+  private ResponseIcon icon;
+  public ChoiceResponse(String content, String choiceResult, ResponseIcon icon) {
+    this.content = content;
+    this.choiceResult = choiceResult;
+    this.icon = icon;
+  }
+  public ChoiceResponse(String content, String choiceResult, int icon) {
+    this(content, choiceResult, getIcon(icon));
+  }
+
+  public ChoiceResponse() {
+    this("", null, ResponseIcon.NEUTRAL);
   }
 
   public static ResponseIcon getIcon(int id) {
     ResponseIcon responseIcon;
-    switch(id) {
+    switch (id) {
       case 0 -> responseIcon = ResponseIcon.CANCEL;
       case 2 -> responseIcon = ResponseIcon.ACT;
       case 3 -> responseIcon = ResponseIcon.SPEAK;
@@ -24,24 +32,6 @@ public class ChoiceResponse {
       default -> responseIcon = ResponseIcon.NEUTRAL;
     }
     return responseIcon;
-  }
-
-  private String content;
-  private String choiceResult;
-  private ResponseIcon icon;
-
-  public ChoiceResponse(String content, String choiceResult, ResponseIcon icon) {
-    this.content = content;
-    this.choiceResult = choiceResult;
-    this.icon = icon;
-  }
-
-  public ChoiceResponse(String content, String choiceResult, int icon) {
-    this(content, choiceResult, getIcon(icon));
-  }
-
-  public ChoiceResponse() {
-    this("", null, ResponseIcon.NEUTRAL);
   }
 
   public String getChoiceResult() {
@@ -86,5 +76,13 @@ public class ChoiceResponse {
     }
     result.add("symbol", iconValue);
     return result.build();
+  }
+
+  public enum ResponseIcon {
+    CANCEL,
+    NEUTRAL,
+    ACT,
+    SPEAK,
+    GIFT
   }
 }

@@ -16,7 +16,8 @@ public class ChoicePage implements Page {
   private boolean canSkip;
 
   public ChoicePage(
-      String speaker, String content, String blip, boolean canSkip, List<String> gifts, List<ChoiceResponse> responses) {
+      String speaker, String content, String blip, boolean canSkip, List<String> gifts,
+      List<ChoiceResponse> responses) {
     this.content = content;
     this.speaker = speaker;
     this.blip = blip;

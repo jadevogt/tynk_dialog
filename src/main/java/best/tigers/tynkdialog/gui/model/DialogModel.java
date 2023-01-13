@@ -30,7 +30,7 @@ public class DialogModel extends AbstractModel implements ListModel<TalkPageMode
     setTitle(dialog.getTitle());
     for (Page page : dialog.getPages()) {
       var pageKind = page.getPageKind();
-      switch(pageKind) {
+      switch (pageKind) {
         case "talk" -> addPage(new TalkPageModel((TalkPage) page));
         default -> throw new PageModelException("No models exists for page kind " + pageKind + ".");
       }

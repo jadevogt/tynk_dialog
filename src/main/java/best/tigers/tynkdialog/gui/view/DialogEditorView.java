@@ -1,8 +1,8 @@
 package best.tigers.tynkdialog.gui.view;
 
 import best.tigers.tynkdialog.gui.model.DialogModel;
-import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
 import best.tigers.tynkdialog.gui.model.PageTableModel;
+import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
 import best.tigers.tynkdialog.gui.view.components.AutoResizingTable;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;

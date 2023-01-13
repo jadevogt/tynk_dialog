@@ -106,7 +106,8 @@ public class SuperTextEditorKit extends StyledEditorKit {
             && v instanceof IconView) {
           src.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
           src.setToolTipText("Function Call: " + v.getAttributes().getAttribute(
-              SuperTextDocument.FUNCTION_CALL_NAME) + '(' + v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_PARAM_NAME) + ')');
+              SuperTextDocument.FUNCTION_CALL_NAME) + '(' + v.getAttributes()
+              .getAttribute(SuperTextDocument.FUNCTION_PARAM_NAME) + ')');
           javax.swing.ToolTipManager.sharedInstance().setInitialDelay(0);
         } else {
           javax.swing.ToolTipManager.sharedInstance().setInitialDelay(1000);
@@ -137,7 +138,9 @@ public class SuperTextEditorKit extends StyledEditorKit {
         if (v != null
             && v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_CALL_NAME) != null) {
           if (v.getDocument() instanceof SuperTextDocument doc) {
-            String[] newDetails  = FunctionCallDialog.promptForFunctionDetails((String) v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_CALL_NAME), (String) v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_PARAM_NAME));
+            String[] newDetails = FunctionCallDialog.promptForFunctionDetails(
+                (String) v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_CALL_NAME),
+                (String) v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_PARAM_NAME));
             doc.changeFunctionCall(v.getElement(), newDetails[0], newDetails[1]);
           }
         }
@@ -266,7 +269,8 @@ public class SuperTextEditorKit extends StyledEditorKit {
       super(StringUtils.capitalize(tynkColor.getGameName()), tynkColor.toAWT());
       this.shortcutKey = shortcutKey;
       this.keyMapName = tynkColor.getGameName() + "keyboardShortcut";
-      putValue(Action.SHORT_DESCRIPTION, "Make the selected supertext " + tynkColor.getGameName() + ".");
+      putValue(Action.SHORT_DESCRIPTION,
+          "Make the selected supertext " + tynkColor.getGameName() + ".");
       putValue(Action.SMALL_ICON, new TynkColorIcon(new Dimension(16, 16), tynkColor));
       putValue(Action.LARGE_ICON_KEY, new TynkColorIcon(new Dimension(32, 16), tynkColor));
     }

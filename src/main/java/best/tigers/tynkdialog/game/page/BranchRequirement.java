@@ -7,31 +7,11 @@ import javax.json.JsonObjectBuilder;
 public class BranchRequirement {
 
 
-
-  public enum Category {
-    STORY,
-  }
-  public enum Comparison {
-    LESS_THAN,
-    //LESS_THAN_OR_EQUAL,
-    GREATER_THAN,
-    //GREATER_THAN_OR_EQUAL,
-    EQUAL,
-  }
-  public enum ValueType {
-    REAL_NUMBER,
-    BOOLEAN,
-    STRING,
-    INTEGER,
-  }
-
   private String flag;
   private Category category;
   private String value;
   private ValueType valueType;
-
   private Comparison comparison;
-
   public BranchRequirement(String flag, Category category, String value, ValueType valueType) {
     this.flag = flag;
     this.category = category;
@@ -82,12 +62,12 @@ public class BranchRequirement {
   public JsonObject serialize() {
     JsonObjectBuilder result = Json.createObjectBuilder();
     result.add("flag", flag);
-    switch(category) {
+    switch (category) {
       default -> result.add("category", "story");
     }
     result.add("value", value);
     String typeValue;
-    switch(valueType) {
+    switch (valueType) {
       case STRING -> typeValue = "str";
       case REAL_NUMBER -> typeValue = "real";
       case BOOLEAN -> typeValue = "bool";
@@ -95,7 +75,7 @@ public class BranchRequirement {
     }
     result.add("valType", typeValue);
     String comparisonValue;
-    switch(comparison) {
+    switch (comparison) {
       case LESS_THAN -> comparisonValue = "<";
       //case LESS_THAN_OR_EQUAL -> comparisonValue = "<=";
       case GREATER_THAN -> comparisonValue = ">";
@@ -104,5 +84,24 @@ public class BranchRequirement {
     }
     result.add("eval", comparisonValue);
     return result.build();
+  }
+
+  public enum Category {
+    STORY,
+  }
+
+  public enum Comparison {
+    LESS_THAN,
+    //LESS_THAN_OR_EQUAL,
+    GREATER_THAN,
+    //GREATER_THAN_OR_EQUAL,
+    EQUAL,
+  }
+
+  public enum ValueType {
+    REAL_NUMBER,
+    BOOLEAN,
+    STRING,
+    INTEGER,
   }
 }

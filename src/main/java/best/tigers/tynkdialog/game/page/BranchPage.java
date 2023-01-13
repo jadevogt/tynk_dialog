@@ -5,10 +5,6 @@ import javax.json.Json;
 import javax.json.JsonObject;
 
 public class BranchPage implements Page {
-  public enum Leaf {
-    JUMP,
-    ADD,
-  }
 
   private Leaf leaf;
   private String branchResult;
@@ -48,7 +44,7 @@ public class BranchPage implements Page {
   public JsonObject serialize() {
     var result = Json.createObjectBuilder();
     String leafValue;
-    switch(leaf) {
+    switch (leaf) {
       case ADD -> leafValue = "add";
       default -> leafValue = "jump";
     }
@@ -62,5 +58,10 @@ public class BranchPage implements Page {
     requirements.forEach(r -> requirementsArray.add(r.serialize()));
     result.add("req", requirementsArray);
     return result.build();
+  }
+
+  public enum Leaf {
+    JUMP,
+    ADD,
   }
 }

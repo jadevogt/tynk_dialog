@@ -3,8 +3,8 @@ package best.tigers.tynkdialog.gui.controller;
 import static java.awt.event.WindowEvent.WINDOW_CLOSING;
 
 import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
-import best.tigers.tynkdialog.supertext.SuperTextEditorKit;
 import best.tigers.tynkdialog.gui.view.page.TalkPageEditorView;
+import best.tigers.tynkdialog.supertext.SuperTextEditorKit;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;

@@ -1,13 +1,13 @@
 package best.tigers.tynkdialog.gui.view.page;
 
 import best.tigers.tynkdialog.game.Constants;
-import best.tigers.tynkdialog.util.Assets;
 import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
-import best.tigers.tynkdialog.supertext.SuperTextEditorKit;
 import best.tigers.tynkdialog.gui.view.ShortcutSupport;
 import best.tigers.tynkdialog.gui.view.TObserver;
 import best.tigers.tynkdialog.gui.view.components.FunctionCallDialog;
 import best.tigers.tynkdialog.gui.view.components.IntegerDialog;
+import best.tigers.tynkdialog.supertext.SuperTextEditorKit;
+import best.tigers.tynkdialog.util.Assets;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;

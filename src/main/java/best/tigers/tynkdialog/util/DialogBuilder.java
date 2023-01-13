@@ -29,7 +29,7 @@ public class DialogBuilder {
       } catch (NullPointerException e) {
         kind = "talk";
       }
-      switch(kind) {
+      switch (kind) {
         case "talk" -> builder = new TalkPageBuilder();
         case "choice" -> builder = new ChoicePageBuilder();
         default -> throw new PageParseException("Page kind " + kind + " is not yet supported!");
