@@ -1,44 +1,24 @@
 package best.tigers.tynkdialog.game.page;
 
+import java.util.ArrayList;
 import javax.json.Json;
 import javax.json.JsonObject;
-import java.util.ArrayList;
+import lombok.Getter;
+import lombok.Setter;
 
 public class BranchPage extends AbstractPage {
 
+  @Getter
+  private final String pageKind = "branch";
+  @Getter
+  @Setter
   private Leaf leaf;
+  @Getter
+  @Setter
   private String branchResult;
+  @Getter
+  @Setter
   private ArrayList<BranchRequirement> requirements;
-
-  public Leaf getLeaf() {
-    return leaf;
-  }
-
-  public void setLeaf(Leaf leaf) {
-    this.leaf = leaf;
-  }
-
-  public String getBranchResult() {
-    return branchResult;
-  }
-
-  public void setBranchResult(String branchResult) {
-    this.branchResult = branchResult;
-  }
-
-  public ArrayList<BranchRequirement> getRequirements() {
-    return requirements;
-  }
-
-  public void setRequirements(
-          ArrayList<BranchRequirement> requirements) {
-    this.requirements = requirements;
-  }
-
-  @Override
-  public String getPageKind() {
-    return "branch";
-  }
 
   @Override
   public JsonObject serialize() {

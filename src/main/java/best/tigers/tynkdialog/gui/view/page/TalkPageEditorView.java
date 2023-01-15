@@ -6,12 +6,29 @@ import best.tigers.tynkdialog.gui.view.components.FunctionCallDialog;
 import best.tigers.tynkdialog.gui.view.components.IntegerDialog;
 import best.tigers.tynkdialog.supertext.SuperTextEditorKit;
 import best.tigers.tynkdialog.util.Assets;
-
-import javax.swing.*;
-import javax.swing.text.DefaultEditorKit;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JEditorPane;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+import javax.swing.text.DefaultEditorKit;
 
 public class TalkPageEditorView extends AbstractPageEditorView {
 
@@ -37,6 +54,10 @@ public class TalkPageEditorView extends AbstractPageEditorView {
   private final JLabel styleLabel;
   private final JTextField styleField;
   private final Font font = Assets.getInstance().getFont();
+  private final JLabel skipLabel;
+  private final JLabel skipWarningLabel;
+  private final JPanel skipLabelPanel;
+  private final JCheckBox skipCheck;
 
   public TalkPageEditorView(TalkPageModel model) {
     super();
@@ -56,6 +77,17 @@ public class TalkPageEditorView extends AbstractPageEditorView {
     styleField = createField();
     styleCheck = new JCheckBox();
 
+    skipLabel = createLabel("Skippable");
+    skipWarningLabel = createLabel("");
+    skipLabelPanel = new JPanel();
+    var boxLayout = new BoxLayout(skipLabelPanel, BoxLayout.X_AXIS);
+    skipLabelPanel.setLayout(boxLayout);
+    skipLabelPanel.add(skipLabel, Component.LEFT_ALIGNMENT);
+    skipLabelPanel.add(skipWarningLabel, Component.LEFT_ALIGNMENT);
+    skipWarningLabel.setFont(skipWarningLabel.getFont().deriveFont(Font.ITALIC));
+    skipWarningLabel.setForeground(Color.decode("#888888"));
+    skipCheck = new JCheckBox();
+
     saveButton = new JButton("Save Changes (Shift + Enter)");
     createAnotherButton = new JButton("Make Next Textbox (Ctrl + Enter)");
     getPanel().setLayout(setupLayout());
@@ -65,57 +97,62 @@ public class TalkPageEditorView extends AbstractPageEditorView {
   private GroupLayout setupLayout() {
     var layout = createGroupLayout(getPanel());
     layout.setHorizontalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                    .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                    .addComponent(characterLabel)
-                                    .addComponent(contentLabel)
-                                    .addComponent(blipLabel)
-                                    .addComponent(styleLabel))
-                            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                    .addComponent(characterField)
-                                    .addComponent(contentToolbar)
-                                    .addComponent(contentField, GroupLayout.Alignment.CENTER,
-                                            contentField.getPreferredSize().width,
-                                            contentField.getPreferredSize().width,
-                                            contentField.getPreferredSize().width)
-                                    .addComponent(blipField)
-                                    .addComponent(styleField))
-                            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                    .addComponent(blipCheck)
-                                    .addComponent(styleCheck)))
-                    .addGroup(layout.createSequentialGroup()
-                            .addComponent(saveButton)
-                            .addComponent(createAnotherButton)));
+        layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                    .addComponent(characterLabel)
+                    .addComponent(contentLabel)
+                    .addComponent(blipLabel)
+                    .addComponent(styleLabel)
+                    .addComponent(skipCheck))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(characterField)
+                    .addComponent(contentToolbar)
+                    .addComponent(contentField, GroupLayout.Alignment.CENTER,
+                        contentField.getPreferredSize().width,
+                        contentField.getPreferredSize().width,
+                        contentField.getPreferredSize().width)
+                    .addComponent(blipField)
+                    .addComponent(styleField)
+                    .addComponent(skipLabelPanel, Alignment.LEADING))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(blipCheck)
+                    .addComponent(styleCheck)))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(saveButton)
+                .addComponent(createAnotherButton)));
     layout.setVerticalGroup(
-            layout.createSequentialGroup()
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                            .addComponent(characterLabel)
-                            .addComponent(characterField, GroupLayout.Alignment.CENTER,
-                                    characterField.getPreferredSize().height,
-                                    characterField.getPreferredSize().height,
-                                    characterField.getPreferredSize().height))
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                            .addComponent(contentToolbar))
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                            .addComponent(contentLabel)
-                            .addComponent(contentField, GroupLayout.Alignment.CENTER,
-                                    contentField.getPreferredSize().height, contentField.getPreferredSize().height,
-                                    contentField.getPreferredSize().height))
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                            .addComponent(blipCheck)
-                            .addComponent(blipLabel)
-                            .addComponent(blipField, blipField.getPreferredSize().height,
-                                    blipField.getPreferredSize().height, blipField.getPreferredSize().height))
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                            .addComponent(styleCheck)
-                            .addComponent(styleLabel)
-                            .addComponent(styleField, styleField.getPreferredSize().height,
-                                    styleField.getPreferredSize().height, styleField.getPreferredSize().height))
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                            .addComponent(saveButton)
-                            .addComponent(createAnotherButton)
-                    )
+        layout.createSequentialGroup()
+            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                .addComponent(characterLabel)
+                .addComponent(characterField, GroupLayout.Alignment.CENTER,
+                    characterField.getPreferredSize().height,
+                    characterField.getPreferredSize().height,
+                    characterField.getPreferredSize().height))
+            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                .addComponent(contentToolbar))
+            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                .addComponent(contentLabel)
+                .addComponent(contentField, GroupLayout.Alignment.CENTER,
+                    contentField.getPreferredSize().height, contentField.getPreferredSize().height,
+                    contentField.getPreferredSize().height))
+            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                .addComponent(blipCheck)
+                .addComponent(blipLabel)
+                .addComponent(blipField, blipField.getPreferredSize().height,
+                    blipField.getPreferredSize().height, blipField.getPreferredSize().height))
+            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                .addComponent(styleCheck)
+                .addComponent(styleLabel)
+                .addComponent(styleField, styleField.getPreferredSize().height,
+                    styleField.getPreferredSize().height, styleField.getPreferredSize().height))
+            .addGroup(layout.createParallelGroup(Alignment.CENTER)
+                .addComponent(skipCheck)
+                .addComponent(skipLabelPanel))
+            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                .addComponent(saveButton)
+                .addComponent(createAnotherButton)
+            )
     );
     return layout;
   }
@@ -134,14 +171,15 @@ public class TalkPageEditorView extends AbstractPageEditorView {
   @Override
   public void update() {
     getFrame().setTitle("DialogPage Editor (" + model.getSpeaker() + ")");
-    blipField.setEnabled(model.getBlipEnabled());
-    styleField.setEnabled(model.getStyleEnabled());
-    blipCheck.setSelected(model.getBlipEnabled());
-    styleCheck.setSelected(model.getStyleEnabled());
+    blipField.setEnabled(model.isBlipEnabled());
+    styleField.setEnabled(model.isStyleEnabled());
+    blipCheck.setSelected(model.isBlipEnabled());
+    styleCheck.setSelected(model.isStyleEnabled());
     setSpeaker(model.getSpeaker());
     setContent(model.getContent());
     setBlip(model.getBlip());
     setStyle(model.getTextBoxStyle());
+    setCanSkip(model.isCanSkip());
   }
 
 
@@ -185,6 +223,14 @@ public class TalkPageEditorView extends AbstractPageEditorView {
     return styleCheck.isSelected();
   }
 
+  public boolean getCanSkip() {
+    return skipCheck.isSelected();
+  }
+
+  public void setCanSkip(boolean canSkip) {
+    skipCheck.setSelected(canSkip);
+  }
+
   private JEditorPane createContentField() {
     var field = new JEditorPane();
     field.setMargin(new Insets(0, 0, 0, 0));
@@ -214,19 +260,20 @@ public class TalkPageEditorView extends AbstractPageEditorView {
       public void actionPerformed(ActionEvent e) {
         String[] details = FunctionCallDialog.promptForFunctionDetails();
         SuperTextEditorKit.addFunctionCall(cf, details[0], details[1]);
+        autoDisableSkip();
       }
     });
     function.setText("Function call...");
-    var actions = new Object[] {
-            SuperTextEditorKit.TYNK_RED_TEXT,
-            SuperTextEditorKit.TYNK_YELLOW_TEXT,
-            SuperTextEditorKit.TYNK_BLUE_TEXT,
-            SuperTextEditorKit.TYNK_GREEN_TEXT,
-            SuperTextEditorKit.TYNK_GREY_TEXT,
-            SuperTextEditorKit.TYNK_WHITE_TEXT,
-            SuperTextEditorKit.DELAY_ACTION_FIVE,
-            SuperTextEditorKit.DELAY_ACTION_FIFTEEN,
-            SuperTextEditorKit.DELAY_ACTION_SIXTY
+    var actions = new Object[]{
+        SuperTextEditorKit.TYNK_RED_TEXT,
+        SuperTextEditorKit.TYNK_YELLOW_TEXT,
+        SuperTextEditorKit.TYNK_BLUE_TEXT,
+        SuperTextEditorKit.TYNK_GREEN_TEXT,
+        SuperTextEditorKit.TYNK_GREY_TEXT,
+        SuperTextEditorKit.TYNK_WHITE_TEXT,
+        SuperTextEditorKit.DELAY_ACTION_FIVE,
+        SuperTextEditorKit.DELAY_ACTION_FIFTEEN,
+        SuperTextEditorKit.DELAY_ACTION_SIXTY
     };
     Arrays.stream(actions).forEach(action -> toolbar.add(map.get(action)));
     toolbar.add(function);
@@ -246,20 +293,21 @@ public class TalkPageEditorView extends AbstractPageEditorView {
     kit.getBehaviorActions().forEach(behaviorMenu::add);
     behaviorMenu.add(kit.getClearBehaviorAction());
     var delay = new JMenuItem(new AbstractAction() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
+      @Override
+      public void actionPerformed(ActionEvent e) {
         int magnitude = IntegerDialog.promptForInteger();
         SuperTextEditorKit.addTimeDelay(cf, magnitude);
-    }
-  });
+      }
+    });
     delay.setText("Delay...");
     var function = new JMenuItem(new AbstractAction() {
-                               @Override
-                               public void actionPerformed(ActionEvent e) {
+      @Override
+      public void actionPerformed(ActionEvent e) {
         String[] details = FunctionCallDialog.promptForFunctionDetails();
         SuperTextEditorKit.addFunctionCall(cf, details[0], details[1]);
-    }
-  });
+        autoDisableSkip();
+      }
+    });
     function.setText("Function call...");
     insertMenu.add(delay);
     insertMenu.add(function);
@@ -281,6 +329,11 @@ public class TalkPageEditorView extends AbstractPageEditorView {
     menubar.add(colorMenu);
     menubar.add(behaviorMenu);
     return menubar;
+  }
+
+  public void autoDisableSkip() {
+    setCanSkip(false);
+    skipWarningLabel.setText(" (auto-unchecked due to function call)");
   }
 
   @Override

@@ -3,11 +3,19 @@ package best.tigers.tynkdialog.game.page;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import lombok.Getter;
+import lombok.Setter;
 
 public class ChoiceResponse {
 
+  @Getter
+  @Setter
   private String content;
+  @Getter
+  @Setter
   private String choiceResult;
+  @Getter
+  @Setter
   private ResponseIcon icon;
 
   public ChoiceResponse(String content, String choiceResult, ResponseIcon icon) {
@@ -17,14 +25,14 @@ public class ChoiceResponse {
   }
 
   public ChoiceResponse(String content, String choiceResult, int icon) {
-    this(content, choiceResult, getIcon(icon));
+    this(content, choiceResult, correspondingSymbol(icon));
   }
 
   public ChoiceResponse() {
     this("", null, ResponseIcon.NEUTRAL);
   }
 
-  public static ResponseIcon getIcon(int id) {
+  static ResponseIcon correspondingSymbol(int id) {
     ResponseIcon responseIcon;
     switch (id) {
       case 0 -> responseIcon = ResponseIcon.CANCEL;
@@ -34,30 +42,6 @@ public class ChoiceResponse {
       default -> responseIcon = ResponseIcon.NEUTRAL;
     }
     return responseIcon;
-  }
-
-  public String getChoiceResult() {
-    return choiceResult;
-  }
-
-  public void setChoiceResult(String choiceResult) {
-    this.choiceResult = choiceResult;
-  }
-
-  public ResponseIcon getIcon() {
-    return icon;
-  }
-
-  public void setIcon(ResponseIcon icon) {
-    this.icon = icon;
-  }
-
-  public String getContent() {
-    return content;
-  }
-
-  public void setContent(String content) {
-    this.content = content;
   }
 
   public JsonObject serialize() {

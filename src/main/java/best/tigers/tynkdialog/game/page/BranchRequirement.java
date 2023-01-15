@@ -3,14 +3,26 @@ package best.tigers.tynkdialog.game.page;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import lombok.Getter;
+import lombok.Setter;
 
 public class BranchRequirement {
 
 
+  @Getter
+  @Setter
   private String flag;
+  @Getter
+  @Setter
   private Category category;
+  @Getter
+  @Setter
   private String value;
+  @Getter
+  @Setter
   private ValueType valueType;
+  @Getter
+  @Setter
   private Comparison comparison;
 
   public BranchRequirement(String flag, Category category, String value, ValueType valueType) {
@@ -18,46 +30,6 @@ public class BranchRequirement {
     this.category = category;
     this.value = value;
     this.valueType = valueType;
-  }
-
-  public String getFlag() {
-    return flag;
-  }
-
-  public void setFlag(String flag) {
-    this.flag = flag;
-  }
-
-  public Category getCategory() {
-    return category;
-  }
-
-  public void setCategory(Category category) {
-    this.category = category;
-  }
-
-  public String getValue() {
-    return value;
-  }
-
-  public void setValue(String value) {
-    this.value = value;
-  }
-
-  public ValueType getValueType() {
-    return valueType;
-  }
-
-  public void setValueType(ValueType valueType) {
-    this.valueType = valueType;
-  }
-
-  public Comparison getComparison() {
-    return comparison;
-  }
-
-  public void setComparison(Comparison comparison) {
-    this.comparison = comparison;
   }
 
   public JsonObject serialize() {

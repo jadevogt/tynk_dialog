@@ -1,9 +1,12 @@
 package best.tigers.tynkdialog.gui.view.components;
 
-import javax.swing.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 
 public class MenuBar {
 
@@ -11,7 +14,7 @@ public class MenuBar {
   private final JMenu fileMenu;
   private final JMenu editMenu;
   private final JMenu helpMenu;
-  private Map<String, JMenu> menuMap;
+  private final Map<String, JMenu> menuMap;
 
   public MenuBar(JFrame frame) {
     menuMap = new HashMap<>();
@@ -58,12 +61,6 @@ public class MenuBar {
     helpMenu.add(item);
   }
 
-  public enum Menu {
-    FILE,
-    EDIT,
-    HELP
-  }
-
   public Map<String, JMenu> getMenuMap() {
     return menuMap;
   }
@@ -72,5 +69,11 @@ public class MenuBar {
     var newMenu = new JMenu(menu);
     menuBar.add(newMenu);
     menuMap.put(menu, newMenu);
+  }
+
+  public enum Menu {
+    FILE,
+    EDIT,
+    HELP
   }
 }

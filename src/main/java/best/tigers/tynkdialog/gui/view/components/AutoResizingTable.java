@@ -2,15 +2,19 @@ package best.tigers.tynkdialog.gui.view.components;
 
 import best.tigers.tynkdialog.gui.model.DialogModel;
 import best.tigers.tynkdialog.gui.view.ShortcutSupport;
-
-import javax.swing.*;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
-import java.awt.*;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.HierarchyBoundsAdapter;
 import java.awt.event.HierarchyEvent;
+import javax.swing.AbstractAction;
+import javax.swing.DropMode;
+import javax.swing.JComponent;
+import javax.swing.JTable;
+import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 
 public class AutoResizingTable extends JTable implements ShortcutSupport {
 
@@ -69,7 +73,7 @@ public class AutoResizingTable extends JTable implements ShortcutSupport {
 
   @Override
   public void attachFunctionalKeyboardShortcut(KeyStroke keyStroke, String actionMapKey,
-                                               Runnable action) {
+      Runnable action) {
     var inputMap = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     inputMap.put(keyStroke, actionMapKey);
     var actionMap = getActionMap();
@@ -85,7 +89,7 @@ public class AutoResizingTable extends JTable implements ShortcutSupport {
 
   @Override
   public void attachKeyboardShortcut(KeyStroke keyStroke, String actionMapKey,
-                                     AbstractAction action) {
+      AbstractAction action) {
     var inputMap = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     inputMap.put(keyStroke, actionMapKey);
     var actionMap = getActionMap();

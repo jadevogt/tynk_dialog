@@ -1,12 +1,22 @@
 package best.tigers.tynkdialog.gui.view.components;
 
-import javax.swing.*;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
+import javax.swing.AbstractAction;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 
 public class FunctionCallDialog {
 
@@ -22,7 +32,7 @@ public class FunctionCallDialog {
     nameField.setText(functionName);
     paramField = new JTextField();
     paramField.setText(functionParam);
-    dialog = new JDialog();
+    dialog = new DynamicDialog();
     dialog.setModal(true);
     okayButton = new JButton("OK (Enter)");
   }
@@ -44,7 +54,7 @@ public class FunctionCallDialog {
   }
 
   public String[] getValue() {
-    return new String[] { name, param };
+    return new String[]{name, param};
   }
 
   public void setValue(String[] newDetails) {
@@ -98,50 +108,50 @@ public class FunctionCallDialog {
 
     var spacer = new JPanel();
     layout.setHorizontalGroup(
-            layout
+        layout
+            .createParallelGroup(GroupLayout.Alignment.CENTER)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(inputIcon)
+                .addComponent(promptLabel)
+            )
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup()
+                    .addComponent(nameLabel)
+                    .addComponent(paramLabel)
+                )
+                .addGroup(layout.createParallelGroup()
+                    .addComponent(nameField)
+                    .addComponent(paramField)
+                ))
+            .addComponent(spacer, 30, 30, 30)
+            .addComponent(okayButton));
+    layout.setVerticalGroup(
+        layout
+            .createSequentialGroup()
+            .addGroup(layout.createParallelGroup(Alignment.CENTER)
+                .addComponent(inputIcon)
+                .addComponent(promptLabel)
+            )
+            .addGroup(
+                layout
                     .createParallelGroup(GroupLayout.Alignment.CENTER)
                     .addGroup(layout.createSequentialGroup()
-                            .addComponent(inputIcon)
-                            .addComponent(promptLabel)
-                    )
-                    .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup()
-                                    .addComponent(nameLabel)
-                                    .addComponent(paramLabel)
-                            )
-                            .addGroup(layout.createParallelGroup()
-                                    .addComponent(nameField)
-                                    .addComponent(paramField)
-                            ))
-                    .addComponent(spacer, 30, 30, 30)
-                    .addComponent(okayButton));
-    layout.setVerticalGroup(
-            layout
-                    .createSequentialGroup()
-                    .addGroup(layout.createParallelGroup(Alignment.CENTER)
-                            .addComponent(inputIcon)
-                            .addComponent(promptLabel)
-                    )
-                    .addGroup(
-                            layout
-                                    .createParallelGroup(GroupLayout.Alignment.CENTER)
-                                    .addGroup(layout.createSequentialGroup()
-                                            .addGroup(layout.createParallelGroup(Alignment.CENTER)
-                                                    .addComponent(nameLabel)
-                                                    .addComponent(
-                                                            nameField,
-                                                            nameField.getPreferredSize().height,
-                                                            nameField.getPreferredSize().height,
-                                                            nameField.getPreferredSize().height))
-                                            .addGroup(layout.createParallelGroup(Alignment.CENTER)
-                                                    .addComponent(paramLabel)
-                                                    .addComponent(
-                                                            paramField,
-                                                            paramField.getPreferredSize().height,
-                                                            paramField.getPreferredSize().height,
-                                                            paramField.getPreferredSize().height)))
-                                    .addComponent(spacer, 30, 30, 30))
-                    .addComponent(okayButton));
+                        .addGroup(layout.createParallelGroup(Alignment.CENTER)
+                            .addComponent(nameLabel)
+                            .addComponent(
+                                nameField,
+                                nameField.getPreferredSize().height,
+                                nameField.getPreferredSize().height,
+                                nameField.getPreferredSize().height))
+                        .addGroup(layout.createParallelGroup(Alignment.CENTER)
+                            .addComponent(paramLabel)
+                            .addComponent(
+                                paramField,
+                                paramField.getPreferredSize().height,
+                                paramField.getPreferredSize().height,
+                                paramField.getPreferredSize().height)))
+                    .addComponent(spacer, 30, 30, 30))
+            .addComponent(okayButton));
 
     inner.setSize(new Dimension(400, 240));
     dialog.setLayout(new BorderLayout());

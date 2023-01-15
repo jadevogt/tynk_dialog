@@ -1,10 +1,9 @@
 package best.tigers.tynkdialog.gui.controller.page;
 
 import best.tigers.tynkdialog.gui.view.page.AbstractPageEditorView;
-
-import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import javax.swing.KeyStroke;
 
 public abstract class AbstractPageController {
 

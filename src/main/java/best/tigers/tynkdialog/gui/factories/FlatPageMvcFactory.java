@@ -9,6 +9,7 @@ import best.tigers.tynkdialog.gui.view.page.AbstractPageEditorView;
 import best.tigers.tynkdialog.gui.view.page.FlatPageEditorView;
 
 public class FlatPageMvcFactory extends AbstractPageMvcFactory {
+
   @Override
   public FlatPage createPage() {
     return new FlatPage("");
@@ -25,7 +26,8 @@ public class FlatPageMvcFactory extends AbstractPageMvcFactory {
   }
 
   @Override
-  public FlatPageController createPageController(AbstractPageModel pageModel, AbstractPageEditorView pageView) {
+  public FlatPageController createPageController(AbstractPageModel pageModel,
+      AbstractPageEditorView pageView) {
     return new FlatPageController((FlatPageModel) pageModel, (FlatPageEditorView) pageView);
   }
 }

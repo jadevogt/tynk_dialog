@@ -1,9 +1,9 @@
 package best.tigers.tynkdialog.util;
 
+import java.util.Optional;
 import javax.json.JsonNumber;
 import javax.json.JsonString;
 import javax.json.JsonValue;
-import java.util.Optional;
 
 public class ParseUtils {
 

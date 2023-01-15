@@ -3,15 +3,14 @@ package best.tigers.tynkdialog.gui.model;
 import best.tigers.tynkdialog.game.Dialog;
 import best.tigers.tynkdialog.gui.controller.DialogController;
 import best.tigers.tynkdialog.gui.view.TObserver;
-
-import javax.swing.*;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
 import java.util.ArrayList;
 import java.util.Collections;
+import javax.swing.ListModel;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 
 public class PrimaryListModel extends AbstractModel
-        implements ListModel<DialogController>, TObserver {
+    implements ListModel<DialogController>, TObserver {
 
   private static final String BLANK_PATH = "(New file)";
   private final ArrayList<DialogController> dialogFiles;
@@ -88,7 +87,7 @@ public class PrimaryListModel extends AbstractModel
   public void notifyListeners() {
     modified = true;
     ListDataEvent event =
-            new ListDataEvent(dialogFiles, ListDataEvent.CONTENTS_CHANGED, 0, dialogFiles.size() - 1);
+        new ListDataEvent(dialogFiles, ListDataEvent.CONTENTS_CHANGED, 0, dialogFiles.size() - 1);
     for (ListDataListener listener : listDataListeners) {
       listener.contentsChanged(event);
     }

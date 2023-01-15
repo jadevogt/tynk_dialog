@@ -2,17 +2,37 @@ package best.tigers.tynkdialog.supertext;
 
 import best.tigers.tynkdialog.game.Constants;
 import best.tigers.tynkdialog.gui.view.components.FunctionCallDialog;
-import org.apache.commons.lang3.StringUtils;
-
-import javax.swing.*;
-import javax.swing.text.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.stream.Stream;
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.JEditorPane;
+import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.IconView;
+import javax.swing.text.JTextComponent;
+import javax.swing.text.Position;
+import javax.swing.text.StyledEditorKit;
+import javax.swing.text.View;
+import javax.swing.text.ViewFactory;
+import org.apache.commons.lang3.StringUtils;
 
 public class SuperTextEditorKit extends StyledEditorKit {
 
@@ -29,26 +49,26 @@ public class SuperTextEditorKit extends StyledEditorKit {
 
 
   public static final Action[] defaultActions = {
-          new TynkColorAction(Constants.TextColor.RED, KeyStroke.getKeyStroke(KeyEvent.VK_R,
-                  InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, true)),
-          new TynkColorAction(Constants.TextColor.YELLOW, KeyStroke.getKeyStroke(KeyEvent.VK_Y,
-                  InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, true)),
-          new TynkColorAction(Constants.TextColor.GREEN, KeyStroke.getKeyStroke(KeyEvent.VK_G,
-                  InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, true)),
-          new TynkColorAction(Constants.TextColor.GREY, KeyStroke.getKeyStroke(KeyEvent.VK_H,
-                  InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, true)),
-          new TynkColorAction(Constants.TextColor.BLUE, KeyStroke.getKeyStroke(KeyEvent.VK_B,
-                  InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, true)),
-          new TynkColorAction(Constants.TextColor.WHITE, KeyStroke.getKeyStroke(KeyEvent.VK_W,
-                  InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, true)),
-          new TynkBehaviorAction(Constants.Behavior.WAVE, KeyStroke.getKeyStroke(KeyEvent.VK_W,
-                  InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK, true)),
-          new TynkBehaviorAction(Constants.Behavior.QUAKE, KeyStroke.getKeyStroke(KeyEvent.VK_Q,
-                  InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK, true)),
-          new ClearTynkBehaviorAction(),
-          DELAY_ACTION_FIVE,
-          DELAY_ACTION_FIFTEEN,
-          DELAY_ACTION_SIXTY,
+      new TynkColorAction(Constants.TextColor.RED, KeyStroke.getKeyStroke(KeyEvent.VK_R,
+          InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, true)),
+      new TynkColorAction(Constants.TextColor.YELLOW, KeyStroke.getKeyStroke(KeyEvent.VK_Y,
+          InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, true)),
+      new TynkColorAction(Constants.TextColor.GREEN, KeyStroke.getKeyStroke(KeyEvent.VK_G,
+          InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, true)),
+      new TynkColorAction(Constants.TextColor.GREY, KeyStroke.getKeyStroke(KeyEvent.VK_H,
+          InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, true)),
+      new TynkColorAction(Constants.TextColor.BLUE, KeyStroke.getKeyStroke(KeyEvent.VK_B,
+          InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, true)),
+      new TynkColorAction(Constants.TextColor.WHITE, KeyStroke.getKeyStroke(KeyEvent.VK_W,
+          InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, true)),
+      new TynkBehaviorAction(Constants.Behavior.WAVE, KeyStroke.getKeyStroke(KeyEvent.VK_W,
+          InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK, true)),
+      new TynkBehaviorAction(Constants.Behavior.QUAKE, KeyStroke.getKeyStroke(KeyEvent.VK_Q,
+          InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK, true)),
+      new ClearTynkBehaviorAction(),
+      DELAY_ACTION_FIVE,
+      DELAY_ACTION_FIFTEEN,
+      DELAY_ACTION_SIXTY,
   };
   private final MouseMotionListener listener;
   private final MouseListener clickListener;
@@ -69,25 +89,25 @@ public class SuperTextEditorKit extends StyledEditorKit {
         }
 
         if (v != null
-                && v.getAttributes().getAttribute(SuperTextDocument.BEHAVIOR_ATTRIBUTE_NAME) != null) {
+            && v.getAttributes().getAttribute(SuperTextDocument.BEHAVIOR_ATTRIBUTE_NAME) != null) {
           String x = ((Constants.Behavior) v.getAttributes().getAttribute(
-                  SuperTextDocument.BEHAVIOR_ATTRIBUTE_NAME)).getBehaviorName();
+              SuperTextDocument.BEHAVIOR_ATTRIBUTE_NAME)).getBehaviorName();
           src.setToolTipText("Behavior: " + x);
           javax.swing.ToolTipManager.sharedInstance().setInitialDelay(0);
         } else if (v != null
-                && v.getAttributes().getAttribute(SuperTextDocument.DELAY_MAGNITUDE_NAME) != null
-                && v instanceof IconView) {
+            && v.getAttributes().getAttribute(SuperTextDocument.DELAY_MAGNITUDE_NAME) != null
+            && v instanceof IconView) {
           src.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
           src.setToolTipText("Delay: " + (int) v.getAttributes().getAttribute(
-                  SuperTextDocument.DELAY_MAGNITUDE_NAME));
+              SuperTextDocument.DELAY_MAGNITUDE_NAME));
           javax.swing.ToolTipManager.sharedInstance().setInitialDelay(0);
         } else if (v != null
-                && v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_CALL_NAME) != null
-                && v instanceof IconView) {
+            && v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_CALL_NAME) != null
+            && v instanceof IconView) {
           src.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
           src.setToolTipText("Function Call: " + v.getAttributes().getAttribute(
-                  SuperTextDocument.FUNCTION_CALL_NAME) + '(' + v.getAttributes()
-                  .getAttribute(SuperTextDocument.FUNCTION_PARAM_NAME) + ')');
+              SuperTextDocument.FUNCTION_CALL_NAME) + '(' + v.getAttributes()
+              .getAttribute(SuperTextDocument.FUNCTION_PARAM_NAME) + ')');
           javax.swing.ToolTipManager.sharedInstance().setInitialDelay(0);
         } else {
           javax.swing.ToolTipManager.sharedInstance().setInitialDelay(1000);
@@ -107,20 +127,20 @@ public class SuperTextEditorKit extends StyledEditorKit {
         }
 
         if (v != null
-                && v.getAttributes().getAttribute(SuperTextDocument.DELAY_MAGNITUDE_NAME) != null) {
+            && v.getAttributes().getAttribute(SuperTextDocument.DELAY_MAGNITUDE_NAME) != null) {
           if (v.getDocument() instanceof SuperTextDocument doc) {
             int newMagnitude = Integer.parseInt(
-                    JOptionPane.showInputDialog("Please enter a new duration"));
+                JOptionPane.showInputDialog("Please enter a new duration"));
             doc.changeDelayMagnitude(v.getElement(), newMagnitude);
           }
         }
 
         if (v != null
-                && v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_CALL_NAME) != null) {
+            && v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_CALL_NAME) != null) {
           if (v.getDocument() instanceof SuperTextDocument doc) {
             String[] newDetails = FunctionCallDialog.promptForFunctionDetails(
-                    (String) v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_CALL_NAME),
-                    (String) v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_PARAM_NAME));
+                (String) v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_CALL_NAME),
+                (String) v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_PARAM_NAME));
             doc.changeFunctionCall(v.getElement(), newDetails[0], newDetails[1]);
           }
         }
@@ -163,12 +183,12 @@ public class SuperTextEditorKit extends StyledEditorKit {
 
   public Stream<TynkColorAction> getColorActions() {
     return Arrays.stream(defaultActions).filter((action -> action instanceof TynkColorAction))
-            .map(a -> (TynkColorAction) a);
+        .map(a -> (TynkColorAction) a);
   }
 
   public Stream<TynkBehaviorAction> getBehaviorActions() {
     return Arrays.stream(defaultActions).filter((action -> action instanceof TynkBehaviorAction))
-            .map(a -> (TynkBehaviorAction) a);
+        .map(a -> (TynkBehaviorAction) a);
   }
 
   public Action getClearBehaviorAction() {
@@ -193,7 +213,7 @@ public class SuperTextEditorKit extends StyledEditorKit {
 
   @Override
   public void write(Writer out, Document doc, int pos, int len)
-          throws IOException, BadLocationException {
+      throws IOException, BadLocationException {
     var writer = new SuperTextWriter();
     writer.write(doc, pos, len, out);
   }
@@ -250,7 +270,7 @@ public class SuperTextEditorKit extends StyledEditorKit {
       this.shortcutKey = shortcutKey;
       this.keyMapName = tynkColor.getGameName() + "keyboardShortcut";
       putValue(Action.SHORT_DESCRIPTION,
-              "Make the selected supertext " + tynkColor.getGameName() + ".");
+          "Make the selected supertext " + tynkColor.getGameName() + ".");
       putValue(Action.SMALL_ICON, new TynkColorIcon(new Dimension(16, 16), tynkColor));
       putValue(Action.LARGE_ICON_KEY, new TynkColorIcon(new Dimension(32, 16), tynkColor));
     }

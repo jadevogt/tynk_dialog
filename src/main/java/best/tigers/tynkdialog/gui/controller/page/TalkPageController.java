@@ -3,12 +3,12 @@ package best.tigers.tynkdialog.gui.controller.page;
 import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
 import best.tigers.tynkdialog.gui.view.page.TalkPageEditorView;
 import best.tigers.tynkdialog.supertext.SuperTextEditorKit;
-
-import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import javax.swing.KeyStroke;
 
 public class TalkPageController extends AbstractPageController {
+
   private final TalkPageEditorView view;
   private final TalkPageModel model;
 
@@ -61,23 +61,27 @@ public class TalkPageController extends AbstractPageController {
     String newStyle = view.getStyle();
     boolean blipEnabled = view.getBlipEnabled();
     boolean styleEnabled = view.getStyleEnabled();
+    boolean newSkip = view.getCanSkip();
     if (!model.getSpeaker().equals(newSpeaker)) {
       model.setSpeaker(newSpeaker);
     }
     if (!model.getContent().equals(newContent)) {
       model.setContent(newContent);
     }
-    if (model.getBlipEnabled() != blipEnabled) {
+    if (model.isBlipEnabled() != blipEnabled) {
       model.setBlipEnabled(blipEnabled);
     }
-    if (model.getBlipEnabled()) {
+    if (model.isBlipEnabled()) {
       model.setBlip(newBlip);
     }
-    if (model.getStyleEnabled() != styleEnabled) {
+    if (model.isStyleEnabled() != styleEnabled) {
       model.setStyleEnabled(styleEnabled);
     }
-    if (model.getStyleEnabled()) {
+    if (model.isStyleEnabled()) {
       model.setTextBoxStyle(newStyle);
+    }
+    if (newSkip != model.isCanSkip()) {
+      model.setCanSkip(newSkip);
     }
   }
 }

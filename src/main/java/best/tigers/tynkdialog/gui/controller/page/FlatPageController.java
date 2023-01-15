@@ -4,6 +4,7 @@ import best.tigers.tynkdialog.gui.model.page.FlatPageModel;
 import best.tigers.tynkdialog.gui.view.page.FlatPageEditorView;
 
 public class FlatPageController extends AbstractPageController {
+
   private final FlatPageEditorView view;
   private final FlatPageModel model;
 

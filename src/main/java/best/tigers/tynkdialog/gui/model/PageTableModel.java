@@ -1,10 +1,9 @@
 package best.tigers.tynkdialog.gui.model;
 
 import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
-
-import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.table.AbstractTableModel;
 
 public class PageTableModel extends AbstractTableModel {
 

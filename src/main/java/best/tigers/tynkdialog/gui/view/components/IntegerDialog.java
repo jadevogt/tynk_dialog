@@ -1,17 +1,27 @@
 package best.tigers.tynkdialog.gui.view.components;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DocumentFilter;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.AbstractAction;
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 
 public class IntegerDialog {
 
@@ -23,7 +33,7 @@ public class IntegerDialog {
   public IntegerDialog() {
     value = 0;
     intField = new JTextField();
-    dialog = new JDialog();
+    dialog = new DynamicDialog();
     dialog.setModal(true);
     okayButton = new JButton("OK (Enter)");
   }
@@ -82,34 +92,34 @@ public class IntegerDialog {
 
     var spacer = new JPanel();
     layout.setHorizontalGroup(
-            layout
-                    .createParallelGroup(GroupLayout.Alignment.CENTER)
-                    .addGroup(
-                            layout
-                                    .createSequentialGroup()
-                                    .addComponent(inputIcon, 60, 60, 60)
-                                    .addGroup(
-                                            layout
-                                                    .createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                    .addComponent(promptLabel)
-                                                    .addComponent(intField))
-                                    .addComponent(spacer, 30, 30, 30))
-                    .addComponent(okayButton));
-    layout.setVerticalGroup(
-            layout
+        layout
+            .createParallelGroup(GroupLayout.Alignment.CENTER)
+            .addGroup(
+                layout
                     .createSequentialGroup()
-                    .addGroup(layout.createSequentialGroup().addComponent(promptLabel))
+                    .addComponent(inputIcon, 60, 60, 60)
                     .addGroup(
-                            layout
-                                    .createParallelGroup(GroupLayout.Alignment.CENTER)
-                                    .addComponent(inputIcon, 60, 60, 60)
-                                    .addComponent(
-                                            intField,
-                                            intField.getPreferredSize().height,
-                                            intField.getPreferredSize().height,
-                                            intField.getPreferredSize().height)
-                                    .addComponent(spacer, 30, 30, 30))
-                    .addComponent(okayButton));
+                        layout
+                            .createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(promptLabel)
+                            .addComponent(intField))
+                    .addComponent(spacer, 30, 30, 30))
+            .addComponent(okayButton));
+    layout.setVerticalGroup(
+        layout
+            .createSequentialGroup()
+            .addGroup(layout.createSequentialGroup().addComponent(promptLabel))
+            .addGroup(
+                layout
+                    .createParallelGroup(GroupLayout.Alignment.CENTER)
+                    .addComponent(inputIcon, 60, 60, 60)
+                    .addComponent(
+                        intField,
+                        intField.getPreferredSize().height,
+                        intField.getPreferredSize().height,
+                        intField.getPreferredSize().height)
+                    .addComponent(spacer, 30, 30, 30))
+            .addComponent(okayButton));
 
     inner.setSize(new Dimension(400, 240));
     dialog.setLayout(new BorderLayout());
@@ -140,23 +150,23 @@ public class IntegerDialog {
 
   private void setupIntegerField() {
     ((AbstractDocument) intField.getDocument())
-            .setDocumentFilter(
-                    new DocumentFilter() {
-                      final Pattern regEx = Pattern.compile("\\d*");
+        .setDocumentFilter(
+            new DocumentFilter() {
+              final Pattern regEx = Pattern.compile("\\d*");
 
-                      @Override
-                      public void replace(
-                              FilterBypass fb, int offset, int length, String text, AttributeSet attrs) {
-                        Matcher matcher = regEx.matcher(text);
-                        if (!matcher.matches()) {
-                          return;
-                        }
-                        try {
-                          super.replace(fb, offset, length, text, attrs);
-                        } catch (BadLocationException e) {
-                          e.printStackTrace();
-                        }
-                      }
-                    });
+              @Override
+              public void replace(
+                  FilterBypass fb, int offset, int length, String text, AttributeSet attrs) {
+                Matcher matcher = regEx.matcher(text);
+                if (!matcher.matches()) {
+                  return;
+                }
+                try {
+                  super.replace(fb, offset, length, text, attrs);
+                } catch (BadLocationException e) {
+                  e.printStackTrace();
+                }
+              }
+            });
   }
 }

@@ -1,41 +1,48 @@
 package best.tigers.tynkdialog.gui.view.page;
 
+import static java.awt.event.WindowEvent.WINDOW_CLOSING;
+
 import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
 import best.tigers.tynkdialog.gui.view.ShortcutSupport;
 import best.tigers.tynkdialog.gui.view.TObserver;
-
-import javax.swing.*;
+import best.tigers.tynkdialog.gui.view.components.DynamicFrame;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
-import static java.awt.event.WindowEvent.WINDOW_CLOSING;
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.GroupLayout;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+import lombok.Getter;
 
 public abstract class AbstractPageEditorView implements TObserver, ShortcutSupport {
-  private AbstractAction saveAction;
-  private AbstractAction continueAction;
+
+  @Getter
   private final JPanel panel;
+  @Getter
   private final JFrame frame;
+  @Getter
+  private AbstractAction saveAction;
+  @Getter
+  private AbstractAction continueAction;
 
   public AbstractPageEditorView() {
     panel = new JPanel();
-    frame = new JFrame();
+    frame = new DynamicFrame();
     frame.add(panel);
   }
 
-  JPanel getPanel() {
-    return panel;
-  }
-
-  JFrame getFrame() {
-    return frame;
-  }
-
-
-
   public void close() {
     panel.dispatchEvent(new WindowEvent(frame, WINDOW_CLOSING));
-    frame.dispose();  };
+    frame.dispose();
+  }
 
   abstract AbstractPageModel getModel();
 
@@ -64,13 +71,13 @@ public abstract class AbstractPageEditorView implements TObserver, ShortcutSuppo
   }
 
   public void attachKeyboardShortcut(KeyStroke keyStroke, String actionMapKey,
-                                     AbstractAction action) {
+      AbstractAction action) {
     getInputMap().put(keyStroke, actionMapKey);
     getActionMap().put(actionMapKey, action);
   }
 
   public void attachFunctionalKeyboardShortcut(KeyStroke keyStroke, String actionMapKey,
-                                               Runnable action) {
+      Runnable action) {
     var actionInstance = new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -96,14 +103,6 @@ public abstract class AbstractPageEditorView implements TObserver, ShortcutSuppo
         action.run();
       }
     };
-  };
-
-  AbstractAction getSaveAction() {
-    return saveAction;
-  }
-
-  public AbstractAction getContinueAction() {
-    return continueAction;
   }
 
   public abstract void setupSaveActions();

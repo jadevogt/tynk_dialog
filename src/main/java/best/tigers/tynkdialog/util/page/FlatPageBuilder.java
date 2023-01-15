@@ -1,12 +1,12 @@
 package best.tigers.tynkdialog.util.page;
 
 import best.tigers.tynkdialog.exceptions.PageParseException;
-import best.tigers.tynkdialog.game.page.FlatPage;
 import best.tigers.tynkdialog.game.page.AbstractPage;
-
+import best.tigers.tynkdialog.game.page.FlatPage;
 import javax.json.JsonObject;
 
 public class FlatPageBuilder implements PageBuilder {
+
   private String flat;
 
   @Override

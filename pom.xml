@@ -3,7 +3,14 @@
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <artifactId>tynk_dialog</artifactId>
+  <repositories>
+    <repository>
+      <id>jitpack.io</id>
+      <url>https://jitpack.io</url>
+    </repository>
+  </repositories>
   <build>
+
     <plugins>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -67,6 +74,17 @@
       <groupId>org.jetbrains</groupId>
       <scope>compile</scope>
       <version>RELEASE</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.Dansoftowner</groupId>
+      <artifactId>jSystemThemeDetector</artifactId>
+      <version>3.8</version>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.24</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
   <groupId>best.tigers</groupId>

@@ -1,14 +1,15 @@
 package best.tigers.tynkdialog.gui.model.page;
 
-import best.tigers.tynkdialog.game.page.AbstractPage;
 import best.tigers.tynkdialog.game.page.TalkPage;
-
-import javax.json.JsonObject;
+import lombok.Getter;
 
 public class TalkPageModel extends AbstractPageModel {
 
+  @Getter
   private final TalkPage page;
+  @Getter
   private boolean blipEnabled = true;
+  @Getter
   private boolean styleEnabled = true;
 
   public TalkPageModel(TalkPage talkPage) {
@@ -17,7 +18,7 @@ public class TalkPageModel extends AbstractPageModel {
     if (talkPage.getBlip() == null) {
       blipEnabled = false;
     }
-    if (talkPage.getTextBoxStyle() == null) {
+    if (talkPage.getTextStyle() == null) {
       styleEnabled = false;
     }
   }
@@ -53,58 +54,46 @@ public class TalkPageModel extends AbstractPageModel {
     notifySubscribers();
   }
 
-  public boolean getBlipEnabled() {
-    return blipEnabled;
-  }
-
   public void setBlipEnabled(boolean newState) {
     blipEnabled = newState;
     page.setBlip(null);
-  }
-
-  public boolean getStyleEnabled() {
-    return styleEnabled;
+    notifySubscribers();
   }
 
   public void setStyleEnabled(boolean newState) {
     styleEnabled = newState;
-    page.setTextBoxStyle(null);
-  }
-
-  public String getTextBoxStyle() {
-    return page.getTextBoxStyle();
-  }
-
-  public void setTextBoxStyle(String newStyle) {
-    page.setTextBoxStyle(newStyle);
+    page.setTextStyle(null);
     notifySubscribers();
   }
 
-  public JsonObject asJson() {
-    return page.asPage();
+  public String getTextBoxStyle() {
+    return page.getTextStyle();
   }
 
-  public TalkPage getDialogPage() {
-    return page;
+  public void setTextBoxStyle(String newStyle) {
+    page.setTextStyle(newStyle);
+    notifySubscribers();
   }
 
-  public AbstractPage getPage() {
-    return page;
+  public boolean isCanSkip() {
+    return page.isCanSkip();
   }
+
+  public void setCanSkip(boolean canSkip) {
+    this.page.setCanSkip(canSkip);
+    notifySubscribers();
+  }
+
 
   @Override
   public AbstractPageModel clone() {
     var newModel = new TalkPageModel();
     newModel.setSpeaker(getSpeaker());
     newModel.setBlip(getBlip());
-    newModel.setBlipEnabled(getBlipEnabled());
-    newModel.setStyleEnabled(getStyleEnabled());
+    newModel.setBlipEnabled(isBlipEnabled());
+    newModel.setStyleEnabled(isStyleEnabled());
     newModel.setTextBoxStyle(getTextBoxStyle());
     return newModel;
   }
 
-  @Override
-  public String getTitleContent() {
-    return getSpeaker();
-  }
 }

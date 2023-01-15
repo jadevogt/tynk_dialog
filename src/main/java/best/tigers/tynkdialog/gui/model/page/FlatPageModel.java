@@ -1,10 +1,11 @@
 package best.tigers.tynkdialog.gui.model.page;
 
 import best.tigers.tynkdialog.game.page.FlatPage;
-
-import javax.json.JsonObject;
+import lombok.Getter;
 
 public class FlatPageModel extends AbstractPageModel {
+
+  @Getter
   private final FlatPage page;
 
   public FlatPageModel(FlatPage flatPage) {
@@ -21,15 +22,7 @@ public class FlatPageModel extends AbstractPageModel {
 
   public void setFlat(String newFlat) {
     page.setFlat(newFlat);
-  }
-
-  public JsonObject asJson() {
-    return page.asPage();
-  }
-
-  @Override
-  public FlatPage getPage() {
-    return page;
+    notifySubscribers();
   }
 
   @Override
@@ -39,8 +32,4 @@ public class FlatPageModel extends AbstractPageModel {
     return newModel;
   }
 
-  @Override
-  public String getTitleContent() {
-    return getFlat();
-  }
 }

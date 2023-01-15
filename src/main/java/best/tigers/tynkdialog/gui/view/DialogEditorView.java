@@ -5,15 +5,25 @@ import best.tigers.tynkdialog.gui.model.PageTableModel;
 import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
 import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
 import best.tigers.tynkdialog.gui.view.components.AutoResizingTable;
-import best.tigers.tynkdialog.gui.view.components.cells.PageCellRenderer;
-import best.tigers.tynkdialog.gui.view.components.cells.PageDetailsCellRenderer;
-
-import javax.swing.*;
-import java.awt.*;
+import best.tigers.tynkdialog.gui.view.components.cells.OverviewCellRenderer;
+import best.tigers.tynkdialog.gui.view.components.cells.factories.DetailedCellRenderer;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.Arrays;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 public class DialogEditorView implements ShortcutSupport, TObserver {
 
@@ -90,11 +100,11 @@ public class DialogEditorView implements ShortcutSupport, TObserver {
       titleField.setText(model.getTitle());
     }
     pageList.setModel(model.getDptm());
-    pageList.setDefaultRenderer(AbstractPageModel.class, new PageCellRenderer());
-    pageList.setDefaultRenderer(TalkPageModel.class, new PageCellRenderer());
+    pageList.setDefaultRenderer(AbstractPageModel.class, new DetailedCellRenderer());
+    pageList.setDefaultRenderer(TalkPageModel.class, new DetailedCellRenderer());
     var columnModel = pageList.getColumnModel();
     var column = columnModel.getColumn(0);
-    column.setCellRenderer(new PageDetailsCellRenderer());
+    column.setCellRenderer(new OverviewCellRenderer());
     pageList.setupView();
     //pageList.resizeColumnWidth();
     pageList.validate();
@@ -112,13 +122,13 @@ public class DialogEditorView implements ShortcutSupport, TObserver {
 
   public void attachFocusListener(Runnable runner) {
     titleField.addFocusListener(
-            new FocusAdapter() {
-              @Override
-              public void focusLost(FocusEvent e) {
-                SwingUtilities.invokeLater(runner);
-                super.focusLost(e);
-              }
-            });
+        new FocusAdapter() {
+          @Override
+          public void focusLost(FocusEvent e) {
+            SwingUtilities.invokeLater(runner);
+            super.focusLost(e);
+          }
+        });
   }
 
   public AbstractPageModel getSelectedPage() {
@@ -147,7 +157,7 @@ public class DialogEditorView implements ShortcutSupport, TObserver {
 
   @Override
   public void attachFunctionalKeyboardShortcut(KeyStroke keyStroke, String actionMapKey,
-                                               Runnable action) {
+      Runnable action) {
     var inputMap = panel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     inputMap.put(keyStroke, actionMapKey);
     var actionMap = panel.getActionMap();
@@ -162,7 +172,7 @@ public class DialogEditorView implements ShortcutSupport, TObserver {
 
   @Override
   public void attachKeyboardShortcut(KeyStroke keyStroke, String actionMapKey,
-                                     AbstractAction action) {
+      AbstractAction action) {
     var inputMap = panel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     inputMap.put(keyStroke, actionMapKey);
     var actionMap = panel.getActionMap();

@@ -2,19 +2,18 @@ package best.tigers.tynkdialog.gui.model;
 
 import best.tigers.tynkdialog.exceptions.PageModelException;
 import best.tigers.tynkdialog.game.Dialog;
-import best.tigers.tynkdialog.game.page.FlatPage;
 import best.tigers.tynkdialog.game.page.AbstractPage;
+import best.tigers.tynkdialog.game.page.FlatPage;
 import best.tigers.tynkdialog.game.page.TalkPage;
 import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
 import best.tigers.tynkdialog.gui.model.page.FlatPageModel;
 import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
 import best.tigers.tynkdialog.gui.view.TObserver;
-
-import javax.swing.*;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
 import java.util.ArrayList;
 import java.util.Collections;
+import javax.swing.ListModel;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 
 public class DialogModel extends AbstractModel implements ListModel<AbstractPageModel>, TObserver {
 
@@ -74,7 +73,7 @@ public class DialogModel extends AbstractModel implements ListModel<AbstractPage
 
   public void notifyListeners() {
     ListDataEvent event =
-            new ListDataEvent(pages, ListDataEvent.CONTENTS_CHANGED, 0, pages.size() - 1);
+        new ListDataEvent(pages, ListDataEvent.CONTENTS_CHANGED, 0, pages.size() - 1);
     for (ListDataListener listener : listDataListeners) {
       listener.contentsChanged(event);
     }

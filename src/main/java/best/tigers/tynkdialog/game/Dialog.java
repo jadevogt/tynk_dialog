@@ -1,10 +1,9 @@
 package best.tigers.tynkdialog.game;
 
 import best.tigers.tynkdialog.game.page.AbstractPage;
-
+import java.util.ArrayList;
 import javax.json.Json;
 import javax.json.JsonObject;
-import java.util.ArrayList;
 
 /**
  * Represents what the internal documentation refers to as a "Dialog File," essentially a titled
@@ -65,9 +64,9 @@ public class Dialog {
       pageArray.add(currentPage.asPage());
     }
     return Json.createObjectBuilder()
-            .add("title", this.title)
-            .add("contents", pageArray.build())
-            .build();
+        .add("title", this.title)
+        .add("contents", pageArray.build())
+        .build();
   }
 
   public ArrayList<AbstractPage> getPages() {

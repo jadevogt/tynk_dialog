@@ -10,13 +10,22 @@ import best.tigers.tynkdialog.gui.view.DialogEditorView;
 import best.tigers.tynkdialog.gui.view.components.AutoResizingTable;
 import best.tigers.tynkdialog.gui.view.page.AbstractPageEditorView;
 import best.tigers.tynkdialog.util.Log;
-
-import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.KeyStroke;
+import lombok.Getter;
 
 public class DialogController {
 
   private final DialogEditorView view;
+  @Getter
   private final DialogModel model;
 
   private DialogController(DialogModel model) {
@@ -40,7 +49,8 @@ public class DialogController {
       case "flat" -> factory = new FlatPageMvcFactory();
       case "talk" -> factory = new TalkPageMvcFactory();
       default -> {
-        Log.info("Couldn't find a MvcFactory for pageKind \"" + pageKind + ",\" falling back to talkKind.");
+        Log.info("Couldn't find a MvcFactory for pageKind \"" + pageKind
+            + ",\" falling back to talkKind.");
         factory = new TalkPageMvcFactory();
       }
     }
@@ -64,7 +74,8 @@ public class DialogController {
     var enterMapKey = "Enter";
     table.attachFunctionalKeyboardShortcut(enterKey, enterMapKey, this::editPage);
 
-    view.addEditorActions(new EditAction(), buildAddAction("talk"), buildAddAction("flat"), new DeleteAction(), new SwapUpAction(), new SwapDownAction());
+    view.addEditorActions(new EditAction(), buildAddAction("talk"), buildAddAction("flat"),
+        new DeleteAction(), new SwapUpAction(), new SwapDownAction());
     view.attachFocusListener(this::saveTitle);
 
     MouseAdapter doubleClickAdapter = buildDoubleClickAdapter();
@@ -95,10 +106,6 @@ public class DialogController {
     return view.getPanel();
   }
 
-  public DialogModel getModel() {
-    return model;
-  }
-
   public void swapUp() {
     var page = view.getSelectedPage();
     int pageIndex = model.getPageIndex(page);
@@ -126,7 +133,8 @@ public class DialogController {
     model.setTitle(newTitle);
   }
 
-  void bindPageEditorShortcuts(AbstractPageModel model, AbstractPageEditorView view, AbstractPageController controller) {
+  void bindPageEditorShortcuts(AbstractPageModel model, AbstractPageEditorView view,
+      AbstractPageController controller) {
     view.attachContinueAction(() -> {
       controller.saveAndExit();
       duplicateAndEditPage(model);
@@ -205,7 +213,8 @@ public class DialogController {
       }
     };
     newAction.putValue(Action.NAME, "Add " + pageKind + " page");
-    newAction.putValue(Action.SHORT_DESCRIPTION, "Create a new " + pageKind + " page and open it in the editor");
+    newAction.putValue(Action.SHORT_DESCRIPTION,
+        "Create a new " + pageKind + " page and open it in the editor");
     return newAction;
   }
 

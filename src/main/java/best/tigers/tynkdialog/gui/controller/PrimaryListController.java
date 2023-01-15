@@ -6,69 +6,76 @@ import best.tigers.tynkdialog.gui.controller.filters.JSONFilter;
 import best.tigers.tynkdialog.gui.controller.filters.TextFilter;
 import best.tigers.tynkdialog.gui.model.PrimaryListModel;
 import best.tigers.tynkdialog.gui.view.PrimaryListView;
+import best.tigers.tynkdialog.gui.view.components.DynamicFileChooser;
 import best.tigers.tynkdialog.gui.view.components.MenuBar;
 import best.tigers.tynkdialog.util.DialogFile;
 import best.tigers.tynkdialog.util.Log;
-
-import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.prefs.Preferences;
+import javax.swing.JFileChooser;
+import javax.swing.SwingUtilities;
+import lombok.Getter;
 
 public class PrimaryListController {
 
+  private static PrimaryListController singleInstance = null;
   private final Preferences prefs = Preferences.userRoot().node(this.getClass().getName());
+  @Getter
   private final PrimaryListView view;
   private final DialogFile fileHandle;
   private PrimaryListModel model;
 
-  public PrimaryListController(ArrayList<Dialog> dialogFiles) {
+  private PrimaryListController(ArrayList<Dialog> dialogFiles) {
     model = new PrimaryListModel(dialogFiles);
     view = PrimaryListView.fromModel(model);
     fileHandle = new DialogFile();
     addMenuItem(
-            e -> addDialog(),
-            "Add DialogFile",
-            "Adds a DialogFile to the list, which may be populated with individual Pages",
-            MenuBar.Menu.EDIT);
+        e -> addDialog(),
+        "Add DialogFile",
+        "Adds a DialogFile to the list, which may be populated with individual Pages",
+        MenuBar.Menu.EDIT);
     addMenuItem(
-            e -> removeCurrentDialog(),
-            "Remove selected DialogFile",
-            "Removes the DialogFile that is highlighted in the list on the left",
-            MenuBar.Menu.EDIT);
+        e -> removeCurrentDialog(),
+        "Remove selected DialogFile",
+        "Removes the DialogFile that is highlighted in the list on the left",
+        MenuBar.Menu.EDIT);
     addMenuItem(
-            e -> newFile(),
-            "New file",
-            "Creates a new JSON dialog file for editing",
-            MenuBar.Menu.FILE);
+        e -> newFile(),
+        "New file",
+        "Creates a new JSON dialog file for editing",
+        MenuBar.Menu.FILE);
     addMenuItem(
-            e -> openFile(),
-            "Open file",
-            "Open a JSON dialog file from disk for editing",
-            MenuBar.Menu.FILE);
+        e -> openFile(),
+        "Open file",
+        "Open a JSON dialog file from disk for editing",
+        MenuBar.Menu.FILE);
     addMenuItem(e -> saveInPlace(), "Save", "Save the current file in place", MenuBar.Menu.FILE);
     addMenuItem(
-            e -> saveAs(),
-            "Save as...",
-            "Select a new location and name for the current file",
-            MenuBar.Menu.FILE);
+        e -> saveAs(),
+        "Save as...",
+        "Select a new location and name for the current file",
+        MenuBar.Menu.FILE);
     view.attachWindowEvent(
-            new WindowAdapter() {
-              @Override
-              public void windowClosing(WindowEvent e) {
-                exitOperation();
-              }
-            });
+        new WindowAdapter() {
+          @Override
+          public void windowClosing(WindowEvent e) {
+            exitOperation();
+          }
+        });
   }
 
-  public PrimaryListController() {
+  private PrimaryListController() {
     this(new ArrayList<>());
   }
 
-  public static void launch() {
-    var primaryController = new PrimaryListController();
+  public static PrimaryListController getInstance() {
+    if (singleInstance == null) {
+      singleInstance = new PrimaryListController();
+    }
+    return singleInstance;
   }
 
   public void exitOperation() {
@@ -100,13 +107,18 @@ public class PrimaryListController {
     view.update();
   }
 
+  public void updateUI() {
+    SwingUtilities.updateComponentTreeUI(PrimaryListController.getInstance().getView().getFrame());
+  }
+
   public String selectFile() {
-    JFileChooser chooser = new JFileChooser();
+    JFileChooser chooser = new DynamicFileChooser();
     chooser.setDialogType(JFileChooser.SAVE_DIALOG);
     JSONFilter jFilter = new JSONFilter();
     TextFilter tFilter = new TextFilter();
     chooser.addChoosableFileFilter(jFilter);
     chooser.addChoosableFileFilter(tFilter);
+    chooser.setFileFilter(jFilter);
     chooser.showDialog(null, "Select or Create");
     String newPath = chooser.getSelectedFile().getAbsolutePath();
     model.setPath(newPath);
@@ -130,7 +142,7 @@ public class PrimaryListController {
   }
 
   public void addMenuItem(
-          ActionListener action, String shortText, String longText, MenuBar.Menu menu) {
+      ActionListener action, String shortText, String longText, MenuBar.Menu menu) {
     view.addMenuItem(action, shortText, longText, menu);
   }
 

@@ -1,14 +1,23 @@
 package best.tigers.tynkdialog.util;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.text.DefaultEditorKit;
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
+import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
+import javax.swing.InputMap;
+import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
+import javax.swing.text.DefaultEditorKit;
 
 public class Assets {
 
@@ -18,17 +27,17 @@ public class Assets {
   public static final String APPLICATION_AUTHOR = "Jade Vogt @tigerstyping";
   private static Assets singleInstance = null;
   private final Font terminus;
+  private final UIDefaults defaults;
   private BufferedImage timer;
 
   private Assets() {
     ClassLoader classLoader = getClass().getClassLoader();
     File file = new File(Objects.requireNonNull(classLoader.getResource("terminus.ttf")).getFile());
     terminus = new Font("Terminus (TTF)", Font.PLAIN, 20);
+    defaults = UIManager.getDefaults();
     try {
       GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
       ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, file));
-      BufferedImage timer = ImageIO.read(
-              Objects.requireNonNull(classLoader.getResource("timer.png")).openStream());
     } catch (IOException | FontFormatException e) {
       e.printStackTrace();
     }
@@ -43,16 +52,16 @@ public class Assets {
 
   private static void addOSXKeyStrokes(InputMap inputMap) {
     inputMap.put(
-            KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK),
-            DefaultEditorKit.copyAction);
+        KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK),
+        DefaultEditorKit.copyAction);
     inputMap.put(
-            KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
+        KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
     inputMap.put(
-            KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK),
-            DefaultEditorKit.pasteAction);
+        KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK),
+        DefaultEditorKit.pasteAction);
     inputMap.put(
-            KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK),
-            DefaultEditorKit.selectAllAction);
+        KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK),
+        DefaultEditorKit.selectAllAction);
   }
 
   public static void runIntegrations() {
@@ -73,11 +82,21 @@ public class Assets {
     }
   }
 
-  public Image getTimer() {
-    return timer;
+  public static Font getFont() {
+    return getInstance().terminus;
   }
 
-  public Font getFont() {
-    return terminus;
+  public static UIDefaults getDefaults() {
+    return getInstance().defaults;
+  }
+
+  public static Window findWindow(Component c) {
+    if (c == null) {
+      return JOptionPane.getRootFrame();
+    } else if (c instanceof Window) {
+      return (Window) c;
+    } else {
+      return findWindow(c.getParent());
+    }
   }
 }

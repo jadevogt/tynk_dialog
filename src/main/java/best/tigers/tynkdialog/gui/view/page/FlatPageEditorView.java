@@ -1,10 +1,14 @@
 package best.tigers.tynkdialog.gui.view.page;
 
 import best.tigers.tynkdialog.gui.model.page.FlatPageModel;
-
-import javax.swing.*;
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
+import javax.swing.JTextField;
+import lombok.Getter;
 
 public class FlatPageEditorView extends AbstractPageEditorView {
+
+  @Getter
   private final FlatPageModel model;
   private final JTextField flatField;
   private final JButton saveButton;
@@ -20,18 +24,19 @@ public class FlatPageEditorView extends AbstractPageEditorView {
     var layout = createGroupLayout(getPanel());
 
     layout.setHorizontalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                    .addGroup(layout.createSequentialGroup()
-                            .addComponent(flatLabel)
-                            .addComponent(flatField, 10, 20, 999))
-                    .addComponent(saveButton)
+        layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(flatLabel)
+                .addComponent(flatField, 10, 20, 999))
+            .addComponent(saveButton)
     );
     layout.setVerticalGroup(
-            layout.createSequentialGroup()
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                            .addComponent(flatLabel)
-                            .addComponent(flatField, flatField.getPreferredSize().height, flatField.getPreferredSize().height, flatField.getPreferredSize().height))
-                    .addComponent(saveButton)
+        layout.createSequentialGroup()
+            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                .addComponent(flatLabel)
+                .addComponent(flatField, flatField.getPreferredSize().height,
+                    flatField.getPreferredSize().height, flatField.getPreferredSize().height))
+            .addComponent(saveButton)
     );
     getPanel().setLayout(layout);
   }
@@ -55,8 +60,4 @@ public class FlatPageEditorView extends AbstractPageEditorView {
     saveButton.addActionListener(getSaveAction());
   }
 
-  @Override
-  FlatPageModel getModel() {
-    return model;
-  }
 }

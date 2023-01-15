@@ -1,7 +1,7 @@
 package best.tigers.tynkdialog.gui.controller.filters;
 
-import javax.swing.filechooser.FileFilter;
 import java.io.File;
+import javax.swing.filechooser.FileFilter;
 
 public class TextFilter extends FileFilter {
 
