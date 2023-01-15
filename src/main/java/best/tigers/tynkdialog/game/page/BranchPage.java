@@ -4,7 +4,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import java.util.ArrayList;
 
-public class BranchPage implements Page {
+public class BranchPage extends AbstractPage {
 
   private Leaf leaf;
   private String branchResult;

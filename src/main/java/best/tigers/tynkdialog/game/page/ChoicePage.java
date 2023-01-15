@@ -6,7 +6,7 @@ import javax.json.JsonObjectBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChoicePage implements Page {
+public class ChoicePage extends AbstractPage {
 
   private String speaker;
   private String content;

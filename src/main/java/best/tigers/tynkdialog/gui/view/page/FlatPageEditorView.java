@@ -1,53 +1,39 @@
 package best.tigers.tynkdialog.gui.view.page;
 
 import best.tigers.tynkdialog.gui.model.page.FlatPageModel;
-import best.tigers.tynkdialog.gui.view.TObserver;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
-public class FlatPageEditorView implements PageView, TObserver {
+public class FlatPageEditorView extends AbstractPageEditorView {
   private final FlatPageModel model;
-  private final JPanel panel;
-  private final JFrame frame;
-  private final JLabel flatLabel;
   private final JTextField flatField;
   private final JButton saveButton;
 
   public FlatPageEditorView(FlatPageModel model) {
+    super();
     this.model = model;
-    panel = new JPanel();
-    frame = new JFrame();
 
-    flatLabel = new JLabel("Flat");
-    flatField = new JTextField();
+    var flatLabel = createLabel("Flat");
+    flatField = createField();
+    saveButton = new JButton("Save Changes (Shift + Enter)");
 
-    saveButton = new JButton("Save");
-    var layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
-    panel.setLayout(layout);
-    panel.add(flatLabel);
-    panel.add(flatField);
-    panel.add(saveButton);
-    frame.add(panel);
-  }
+    var layout = createGroupLayout(getPanel());
 
-  public FlatPageEditorView init() {
-    model.attachSubscriber(this);
-    frame.addWindowListener(new WindowAdapter() {
-      @Override
-      public void windowClosing(WindowEvent e) {
-        unsubscribe(model);
-        super.windowClosing(e);
-      }
-    });
-    frame.setTitle("FlatPage Editor (" + model.getFlat() + ")");
-    frame.setLocationRelativeTo(null);
-    frame.setVisible(true);
-    frame.pack();
-    update();
-    return this;
+    layout.setHorizontalGroup(
+            layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                    .addGroup(layout.createSequentialGroup()
+                            .addComponent(flatLabel)
+                            .addComponent(flatField, 10, 20, 999))
+                    .addComponent(saveButton)
+    );
+    layout.setVerticalGroup(
+            layout.createSequentialGroup()
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                            .addComponent(flatLabel)
+                            .addComponent(flatField, flatField.getPreferredSize().height, flatField.getPreferredSize().height, flatField.getPreferredSize().height))
+                    .addComponent(saveButton)
+    );
+    getPanel().setLayout(layout);
   }
 
   public String getFlat() {
@@ -60,32 +46,17 @@ public class FlatPageEditorView implements PageView, TObserver {
 
   @Override
   public void update() {
-    frame.setTitle("FlatPage Editor (" + model.getFlat() + ")");
+    getFrame().setTitle("FlatPage Editor (" + model.getFlat() + ")");
     setFlat(model.getFlat());
   }
 
   @Override
-  public void attachSaveAction(Runnable action) {
-    var actionInstance = new AbstractAction() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        action.run();
-      }
-    };
-    saveButton.addActionListener(actionInstance);
+  public void setupSaveActions() {
+    saveButton.addActionListener(getSaveAction());
   }
 
   @Override
-  public void attachContinueAction(Runnable action) {
-  }
-
-  @Override
-  public JPanel getPanel() {
-    return panel;
-  }
-
-  @Override
-  public JFrame getFrame() {
-    return frame;
+  FlatPageModel getModel() {
+    return model;
   }
 }

@@ -1,7 +1,7 @@
 package best.tigers.tynkdialog.util.page;
 
 import best.tigers.tynkdialog.exceptions.PageParseException;
-import best.tigers.tynkdialog.game.page.Page;
+import best.tigers.tynkdialog.game.page.AbstractPage;
 
 import javax.json.JsonObject;
 
@@ -11,5 +11,5 @@ public interface PageBuilder {
 
   boolean verify();
 
-  Page build();
+  AbstractPage build();
 }

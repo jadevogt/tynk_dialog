@@ -2,7 +2,7 @@ package best.tigers.tynkdialog.util.page;
 
 import best.tigers.tynkdialog.exceptions.PageParseException;
 import best.tigers.tynkdialog.game.page.FlatPage;
-import best.tigers.tynkdialog.game.page.Page;
+import best.tigers.tynkdialog.game.page.AbstractPage;
 
 import javax.json.JsonObject;
 
@@ -20,7 +20,7 @@ public class FlatPageBuilder implements PageBuilder {
   }
 
   @Override
-  public Page build() {
+  public AbstractPage build() {
     return new FlatPage(flat);
   }
 }

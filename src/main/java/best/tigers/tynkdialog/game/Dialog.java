@@ -1,6 +1,6 @@
 package best.tigers.tynkdialog.game;
 
-import best.tigers.tynkdialog.game.page.Page;
+import best.tigers.tynkdialog.game.page.AbstractPage;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -10,16 +10,16 @@ import java.util.ArrayList;
  * Represents what the internal documentation refers to as a "Dialog File," essentially a titled
  * collection of objects implementing the Page interface.
  *
- * @see Page
+ * @see AbstractPage
  */
 public class Dialog {
 
   private static final String DEFAULT_TITLE = "Untitled";
   private static int untitledDialogCount = 0;
-  private final ArrayList<Page> contents;
+  private final ArrayList<AbstractPage> contents;
   private String title;
 
-  public Dialog(String title, ArrayList<Page> contents) {
+  public Dialog(String title, ArrayList<AbstractPage> contents) {
     this.title = title;
     this.contents = contents;
   }
@@ -50,7 +50,7 @@ public class Dialog {
    *
    * @param newPage a DialogPage object to be added
    */
-  public void addPage(Page newPage) {
+  public void addPage(AbstractPage newPage) {
     contents.add(newPage);
   }
 
@@ -61,7 +61,7 @@ public class Dialog {
    */
   public JsonObject serialize() {
     javax.json.JsonArrayBuilder pageArray = Json.createArrayBuilder();
-    for (Page currentPage : contents) {
+    for (AbstractPage currentPage : contents) {
       pageArray.add(currentPage.asPage());
     }
     return Json.createObjectBuilder()
@@ -70,7 +70,7 @@ public class Dialog {
             .build();
   }
 
-  public ArrayList<Page> getPages() {
+  public ArrayList<AbstractPage> getPages() {
     return contents;
   }
 

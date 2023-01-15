@@ -1,6 +1,6 @@
 package best.tigers.tynkdialog.gui.model.page;
 
-import best.tigers.tynkdialog.game.page.Page;
+import best.tigers.tynkdialog.game.page.AbstractPage;
 import best.tigers.tynkdialog.game.page.TalkPage;
 
 import javax.json.JsonObject;
@@ -88,7 +88,7 @@ public class TalkPageModel extends AbstractPageModel {
     return page;
   }
 
-  public Page getPage() {
+  public AbstractPage getPage() {
     return page;
   }
 

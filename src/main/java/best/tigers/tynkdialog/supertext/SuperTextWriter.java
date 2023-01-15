@@ -52,7 +52,7 @@ public class SuperTextWriter {
               .getAttribute(SuperTextDocument.FUNCTION_CALL_NAME);
       String function_param = (String) text.getAttributes()
               .getAttribute(SuperTextDocument.FUNCTION_PARAM_NAME);
-      out.write("<f=" + function_name + "," + function_param + ">");
+      out.write("<f=" + function_name + "(" + function_param + ")>");
       return;
     }
     var color = StyleConstants.getForeground(text.getAttributes());

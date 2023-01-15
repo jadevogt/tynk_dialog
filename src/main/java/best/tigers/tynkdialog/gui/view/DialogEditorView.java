@@ -15,7 +15,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.Arrays;
 
-public class DialogEditorView implements ShortcutSupport, DialogViewer, TObserver {
+public class DialogEditorView implements ShortcutSupport, TObserver {
 
   private final JPanel panel;
   private final JToolBar editorToolBar;
@@ -100,12 +100,10 @@ public class DialogEditorView implements ShortcutSupport, DialogViewer, TObserve
     pageList.validate();
   }
 
-  @Override
   public String getTitle() {
     return titleField.getText();
   }
 
-  @Override
   public void setTitle(String newTitle) {
     if (!newTitle.equals(titleField.getText())) {
       titleField.setText(newTitle);

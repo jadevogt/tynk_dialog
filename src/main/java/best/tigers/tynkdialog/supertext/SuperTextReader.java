@@ -5,6 +5,7 @@ import best.tigers.tynkdialog.supertext.tokens.SuperTextCharacterToken;
 import best.tigers.tynkdialog.supertext.tokens.SuperTextTagToken;
 import best.tigers.tynkdialog.supertext.tokens.SuperTextToken;
 import best.tigers.tynkdialog.supertext.tokens.SuperTextTokenizer;
+import best.tigers.tynkdialog.util.Log;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -59,8 +60,17 @@ public class SuperTextReader {
     if (document instanceof SuperTextDocument doc) {
       switch (entity.getTagName().toLowerCase()) {
         case "t", "wait", "time" -> doc.insertTimeDelay(position++, Integer.parseInt(entity.getTagValue()));
-        case "f", "function" -> doc.insertFunctionCall(position++, entity.getTagValue().split(",")[0],
-                entity.getTagValue().split(",")[1]);
+        case "f", "function" -> {
+          try {
+            doc.insertFunctionCall(position++, entity.getTagValue().split("\\(")[0],
+                    entity.getTagValue().split("\\(")[1].replace(")", ""));
+          } catch (ArrayIndexOutOfBoundsException e) {
+            Log.infoOnce("Encountered an old style function call at position " + position + "! Converting to new format.");
+            position--;
+            doc.insertFunctionCall(position++, entity.getTagValue().split(",")[0],
+                    entity.getTagValue().split(",")[1]);
+          }
+        }
         case "n" -> doc.insertString(position++, "\n".repeat(Integer.parseInt(entity.getTagValue())),
                 tagStack.peek());
         default -> throw new IllegalStateException(

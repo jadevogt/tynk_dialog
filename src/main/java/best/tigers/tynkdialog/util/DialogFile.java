@@ -74,7 +74,6 @@ public class DialogFile {
       Log.info("Attempting to save JSON file to disk: " + path);
       writer = Json.createWriter(new FileWriter(path));
     } catch (IOException ioe) {
-      System.err.println(ioe.getLocalizedMessage());
       Log.error(
               "(FATAL) IOException encountered while trying to save file " + ioe.getLocalizedMessage());
       System.exit(1);

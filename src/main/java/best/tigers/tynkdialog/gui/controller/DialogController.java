@@ -1,11 +1,15 @@
 package best.tigers.tynkdialog.gui.controller;
 
-import best.tigers.tynkdialog.gui.controller.page.FlatPageControllerFactory;
-import best.tigers.tynkdialog.gui.controller.page.PageControllerFactory;
-import best.tigers.tynkdialog.gui.controller.page.TalkPageControllerFactory;
+import best.tigers.tynkdialog.gui.controller.page.AbstractPageController;
+import best.tigers.tynkdialog.gui.factories.AbstractPageMvcFactory;
+import best.tigers.tynkdialog.gui.factories.FlatPageMvcFactory;
+import best.tigers.tynkdialog.gui.factories.TalkPageMvcFactory;
 import best.tigers.tynkdialog.gui.model.DialogModel;
 import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
 import best.tigers.tynkdialog.gui.view.DialogEditorView;
+import best.tigers.tynkdialog.gui.view.components.AutoResizingTable;
+import best.tigers.tynkdialog.gui.view.page.AbstractPageEditorView;
+import best.tigers.tynkdialog.util.Log;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -30,35 +34,41 @@ public class DialogController {
     return DialogController.fromModel(new DialogModel());
   }
 
-  static PageControllerFactory getFactory(String pageKind) {
-    PageControllerFactory factory;
+  static AbstractPageMvcFactory getMvcFactory(String pageKind) {
+    AbstractPageMvcFactory factory;
     switch (pageKind) {
-      case "flat" -> factory = new FlatPageControllerFactory();
-      default -> factory = new TalkPageControllerFactory();
+      case "flat" -> factory = new FlatPageMvcFactory();
+      case "talk" -> factory = new TalkPageMvcFactory();
+      default -> {
+        Log.info("Couldn't find a MvcFactory for pageKind \"" + pageKind + ",\" falling back to talkKind.");
+        factory = new TalkPageMvcFactory();
+      }
     }
     return factory;
   }
 
-  static PageControllerFactory getFactory(AbstractPageModel model) {
-    return getFactory(model.getPage().getPageKind());
+  static AbstractPageMvcFactory getMvcFactory(AbstractPageModel pageModel) {
+    return getMvcFactory(pageModel.getPage().getPageKind());
   }
 
   private void initDialogController() {
     // Setup view and shortcuts
-    var ctrlN = KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK, true);
-    var ctrlNKey = "Ctrl+N released";
-    view.attachFunctionalKeyboardShortcut(ctrlN, ctrlNKey, this::addPage);
-    view.addEditorActions(new EditAction(), new AddAction(), new DeleteAction(), new SwapUpAction(),
-            new SwapDownAction());
-    view.attachFocusListener(this::saveTitle);
-
-    var table = view.getTable();
+    AutoResizingTable table = view.getTable();
     table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-    var doubleClickAdapter = buildDoubleClickAdapter();
-    table.addMouseListener(doubleClickAdapter);
-    var enterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+
+    KeyStroke ctrlN = KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK, true);
+    var ctrlNKey = "Ctrl+N released";
+    view.attachFunctionalKeyboardShortcut(ctrlN, ctrlNKey, () -> addPage("talk"));
+
+    KeyStroke enterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
     var enterMapKey = "Enter";
     table.attachFunctionalKeyboardShortcut(enterKey, enterMapKey, this::editPage);
+
+    view.addEditorActions(new EditAction(), buildAddAction("talk"), buildAddAction("flat"), new DeleteAction(), new SwapUpAction(), new SwapDownAction());
+    view.attachFocusListener(this::saveTitle);
+
+    MouseAdapter doubleClickAdapter = buildDoubleClickAdapter();
+    table.addMouseListener(doubleClickAdapter);
   }
 
   MouseAdapter buildDoubleClickAdapter() {
@@ -73,7 +83,7 @@ public class DialogController {
         int index = table.rowAtPoint(e.getPoint());
         // add a new page if the user clicked outside the rows
         if (index < 0) {
-          addPage();
+          addPage("talk");
           return;
         }
         editPage();
@@ -116,59 +126,57 @@ public class DialogController {
     model.setTitle(newTitle);
   }
 
-  public void addPage(String kind) {
-    AbstractPageModel newModel;
-    var factory = getFactory(kind);
-    newModel = factory.createModel();
-    model.addPage(newModel);
-    var newController = factory.fromModel(newModel);
-    var newView = newController.getView();
-
-    newView.attachContinueAction(() -> {
-      newController.saveAndExit();
-      this.duplicateAndEditPage(newModel);
+  void bindPageEditorShortcuts(AbstractPageModel model, AbstractPageEditorView view, AbstractPageController controller) {
+    view.attachContinueAction(() -> {
+      controller.saveAndExit();
+      duplicateAndEditPage(model);
     });
+    controller.setupViewShortcuts();
+  }
+
+  public void addPage(String kind) {
+    var factory = getMvcFactory(kind);
+    var newModel = factory.createNewPageModel();
+
+    model.addPage(newModel);
+
+    var newView = factory.createPageView(newModel);
+    var newController = factory.createPageController(newModel, newView);
+    bindPageEditorShortcuts(newModel, newView, newController);
 
     revalidateTable();
   }
 
-  public void addPage() {
-    addPage("talk");
-  }
-
   public void duplicateAndEditPage(AbstractPageModel oldModel) {
     var newModel = oldModel.clone();
+
     model.addPage(newModel);
+
     var oldIndex = model.getPageIndex(oldModel);
     var newIndex = model.getPageIndex(newModel);
+
     while (newIndex > oldIndex + 1) {
       model.swapListItems(newIndex--, newIndex);
     }
 
-    var factory = getFactory(oldModel);
-    var newController = factory.fromModelProceeding(newModel);
-    var newView = newController.getView();
-    newView.attachContinueAction(() -> {
-      newController.saveAndExit();
-      this.duplicateAndEditPage(newModel);
-    });
-    // newView.getContentField().requestFocus();
+    var factory = getMvcFactory(oldModel);
+    var newView = factory.createPageView(newModel);
+    var newController = factory.createPageController(newModel, newView);
+    bindPageEditorShortcuts(newModel, newView, newController);
+
     revalidateTable();
   }
 
   public void editPage() {
     var selectedModel = view.getSelectedModel();
-    if (selectedModel != null) {
-      var factory = getFactory(selectedModel);
-      var newController = factory.fromModel(selectedModel);
-      var newView = newController.getView();
-      newView.attachContinueAction(() -> {
-        newController.saveAndExit();
-        this.duplicateAndEditPage(selectedModel);
-      });
-    } else {
+    if (selectedModel == null) {
       java.awt.Toolkit.getDefaultToolkit().beep();
+      return;
     }
+    var factory = getMvcFactory(selectedModel);
+    var newView = factory.createPageView(selectedModel);
+    var newController = factory.createPageController(selectedModel, newView);
+    bindPageEditorShortcuts(selectedModel, newView, newController);
   }
 
   public void deletePage() {
@@ -189,17 +197,16 @@ public class DialogController {
     return this.model.getTitle();
   }
 
-  class AddAction extends AbstractAction {
-
-    public AddAction() {
-      putValue(Action.NAME, "Add");
-      putValue(Action.SHORT_DESCRIPTION, "Create a new page and open it in the editor");
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-      addPage();
-    }
+  private AbstractAction buildAddAction(String pageKind) {
+    var newAction = new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        addPage(pageKind);
+      }
+    };
+    newAction.putValue(Action.NAME, "Add " + pageKind + " page");
+    newAction.putValue(Action.SHORT_DESCRIPTION, "Create a new " + pageKind + " page and open it in the editor");
+    return newAction;
   }
 
   class EditAction extends AbstractAction {

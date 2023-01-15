@@ -2,8 +2,6 @@ package best.tigers.tynkdialog.gui.view.page;
 
 import best.tigers.tynkdialog.game.Constants;
 import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
-import best.tigers.tynkdialog.gui.view.ShortcutSupport;
-import best.tigers.tynkdialog.gui.view.TObserver;
 import best.tigers.tynkdialog.gui.view.components.FunctionCallDialog;
 import best.tigers.tynkdialog.gui.view.components.IntegerDialog;
 import best.tigers.tynkdialog.supertext.SuperTextEditorKit;
@@ -12,13 +10,12 @@ import best.tigers.tynkdialog.util.Assets;
 import javax.swing.*;
 import javax.swing.text.DefaultEditorKit;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.util.Arrays;
 
-public class TalkPageEditorView implements TObserver, TalkPageViewer, ShortcutSupport, PageView {
+public class TalkPageEditorView extends AbstractPageEditorView {
 
   private final TalkPageModel model;
-  private final JPanel panel;
-  private final JFrame frame;
 
   private final JLabel characterLabel;
   private final JTextField characterField;
@@ -42,10 +39,8 @@ public class TalkPageEditorView implements TObserver, TalkPageViewer, ShortcutSu
   private final Font font = Assets.getInstance().getFont();
 
   public TalkPageEditorView(TalkPageModel model) {
+    super();
     this.model = model;
-    panel = new JPanel();
-    frame = new JFrame();
-
     characterLabel = createLabel("Character");
     characterField = createField();
 
@@ -63,21 +58,12 @@ public class TalkPageEditorView implements TObserver, TalkPageViewer, ShortcutSu
 
     saveButton = new JButton("Save Changes (Shift + Enter)");
     createAnotherButton = new JButton("Make Next Textbox (Ctrl + Enter)");
-    panel.setLayout(setupLayout());
-    frame.setJMenuBar(createContentMenubar());
-    frame.add(panel);
-  }
-
-  public static TalkPageEditorView fromModelProceeding(TalkPageModel model) {
-    var newView = new TalkPageEditorView(model);
-    newView.getContentField().requestFocus();
-    return newView;
+    getPanel().setLayout(setupLayout());
+    getFrame().setJMenuBar(createContentMenubar());
   }
 
   private GroupLayout setupLayout() {
-    GroupLayout layout = new GroupLayout(panel);
-    layout.setAutoCreateGaps(true);
-    layout.setAutoCreateContainerGaps(true);
+    var layout = createGroupLayout(getPanel());
     layout.setHorizontalGroup(
             layout.createParallelGroup(GroupLayout.Alignment.CENTER)
                     .addGroup(layout.createSequentialGroup()
@@ -134,36 +120,20 @@ public class TalkPageEditorView implements TObserver, TalkPageViewer, ShortcutSu
     return layout;
   }
 
-  public TalkPageEditorView init() {
-    model.attachSubscriber(this);
-    frame.addWindowListener(new WindowAdapter() {
-      @Override
-      public void windowClosing(WindowEvent e) {
-        unsubscribe(model);
-        super.windowClosing(e);
-      }
-    });
+  public void init() {
+    super.init();
     blipCheck.addActionListener(e -> blipField.setEnabled(blipCheck.isSelected()));
     styleCheck.addActionListener(e -> styleField.setEnabled(styleCheck.isSelected()));
-    frame.setTitle("DialogPage Editor (" + model.getSpeaker() + ')');
-    frame.setLocationRelativeTo(null);
-    frame.setVisible(true);
-    frame.pack();
-    update();
-    return this;
   }
 
-  public JPanel getPanel() {
-    return panel;
-  }
-
-  public JFrame getFrame() {
-    return frame;
+  @Override
+  TalkPageModel getModel() {
+    return model;
   }
 
   @Override
   public void update() {
-    frame.setTitle("DialogPage Editor (" + model.getSpeaker() + ")");
+    getFrame().setTitle("DialogPage Editor (" + model.getSpeaker() + ")");
     blipField.setEnabled(model.getBlipEnabled());
     styleField.setEnabled(model.getStyleEnabled());
     blipCheck.setSelected(model.getBlipEnabled());
@@ -175,40 +145,26 @@ public class TalkPageEditorView implements TObserver, TalkPageViewer, ShortcutSu
   }
 
 
-  public void attachBlipCheckFunction(ActionListener al) {
-    blipCheck.addActionListener(al);
-  }
-
-  public void attachStyleCheckFunction(ActionListener al) {
-    styleCheck.addActionListener(al);
-  }
-
-  @Override
   public String getSpeaker() {
     return characterField.getText();
   }
 
-  @Override
   public void setSpeaker(String newSpeaker) {
     characterField.setText(newSpeaker);
   }
 
-  @Override
   public String getContent() {
     return contentField.getText();
   }
 
-  @Override
   public void setContent(String newContent) {
     contentField.setText(newContent);
   }
 
-  @Override
   public String getBlip() {
     return blipField.getText();
   }
 
-  @Override
   public void setBlip(String newBlip) {
     blipField.setText(newBlip);
   }
@@ -217,12 +173,10 @@ public class TalkPageEditorView implements TObserver, TalkPageViewer, ShortcutSu
     return blipCheck.isSelected();
   }
 
-  @Override
   public String getStyle() {
     return styleField.getText();
   }
 
-  @Override
   public void setStyle(String newStyle) {
     styleField.setText(newStyle);
   }
@@ -252,61 +206,63 @@ public class TalkPageEditorView implements TObserver, TalkPageViewer, ShortcutSu
   }
 
   protected JToolBar createContentToolbar() {
-    var toolbar = new JToolBar();
-    var tb = getContentField();
+    var toolbar = createToolbar();
+    var cf = getContentField();
+    var map = cf.getActionMap();
     var function = new JButton(new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
         String[] details = FunctionCallDialog.promptForFunctionDetails();
-        SuperTextEditorKit.addFunctionCall(tb, details[0], details[1]);
+        SuperTextEditorKit.addFunctionCall(cf, details[0], details[1]);
       }
     });
     function.setText("Function call...");
-    toolbar.add(tb.getActionMap().get(SuperTextEditorKit.TYNK_RED_TEXT));
-    toolbar.add(tb.getActionMap().get(SuperTextEditorKit.TYNK_YELLOW_TEXT));
-    toolbar.add(tb.getActionMap().get(SuperTextEditorKit.TYNK_BLUE_TEXT));
-    toolbar.add(tb.getActionMap().get(SuperTextEditorKit.TYNK_GREEN_TEXT));
-    toolbar.add(tb.getActionMap().get(SuperTextEditorKit.TYNK_GREY_TEXT));
-    toolbar.add(tb.getActionMap().get(SuperTextEditorKit.TYNK_WHITE_TEXT));
-    toolbar.add(tb.getActionMap().get(SuperTextEditorKit.DELAY_ACTION_FIVE));
-    toolbar.add(tb.getActionMap().get(SuperTextEditorKit.DELAY_ACTION_FIFTEEN));
-    toolbar.add(tb.getActionMap().get(SuperTextEditorKit.DELAY_ACTION_SIXTY));
+    var actions = new Object[] {
+            SuperTextEditorKit.TYNK_RED_TEXT,
+            SuperTextEditorKit.TYNK_YELLOW_TEXT,
+            SuperTextEditorKit.TYNK_BLUE_TEXT,
+            SuperTextEditorKit.TYNK_GREEN_TEXT,
+            SuperTextEditorKit.TYNK_GREY_TEXT,
+            SuperTextEditorKit.TYNK_WHITE_TEXT,
+            SuperTextEditorKit.DELAY_ACTION_FIVE,
+            SuperTextEditorKit.DELAY_ACTION_FIFTEEN,
+            SuperTextEditorKit.DELAY_ACTION_SIXTY
+    };
+    Arrays.stream(actions).forEach(action -> toolbar.add(map.get(action)));
     toolbar.add(function);
-    toolbar.setFloatable(false);
     return toolbar;
   }
 
   protected JMenuBar createContentMenubar() {
     var menubar = new JMenuBar();
-    var tb = getContentField();
+    var cf = getContentField();
     var editMenu = new JMenu("Edit");
     var insertMenu = new JMenu("Insert");
     var colorMenu = new JMenu("Colors");
     var behaviorMenu = new JMenu("Behaviors");
 
-    if (tb.getEditorKit() instanceof SuperTextEditorKit kit) {
-      kit.getColorActions().forEach(colorMenu::add);
-      kit.getBehaviorActions().forEach(behaviorMenu::add);
-      behaviorMenu.add(kit.getClearBehaviorAction());
-      var delay = new JMenuItem(new AbstractAction() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          int magnitude = IntegerDialog.promptForInteger();
-          SuperTextEditorKit.addTimeDelay(tb, magnitude);
-        }
-      });
-      delay.setText("Delay...");
-      var function = new JMenuItem(new AbstractAction() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          String[] details = FunctionCallDialog.promptForFunctionDetails();
-          SuperTextEditorKit.addFunctionCall(tb, details[0], details[1]);
-        }
-      });
-      function.setText("Function call...");
-      insertMenu.add(delay);
-      insertMenu.add(function);
+    var kit = getEditorKit();
+    kit.getColorActions().forEach(colorMenu::add);
+    kit.getBehaviorActions().forEach(behaviorMenu::add);
+    behaviorMenu.add(kit.getClearBehaviorAction());
+    var delay = new JMenuItem(new AbstractAction() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+        int magnitude = IntegerDialog.promptForInteger();
+        SuperTextEditorKit.addTimeDelay(cf, magnitude);
     }
+  });
+    delay.setText("Delay...");
+    var function = new JMenuItem(new AbstractAction() {
+                               @Override
+                               public void actionPerformed(ActionEvent e) {
+        String[] details = FunctionCallDialog.promptForFunctionDetails();
+        SuperTextEditorKit.addFunctionCall(cf, details[0], details[1]);
+    }
+  });
+    function.setText("Function call...");
+    insertMenu.add(delay);
+    insertMenu.add(function);
 
     var cut = new DefaultEditorKit.CutAction();
     cut.putValue(Action.NAME, "Cut");
@@ -327,64 +283,9 @@ public class TalkPageEditorView implements TObserver, TalkPageViewer, ShortcutSu
     return menubar;
   }
 
-  protected JTextField createField() {
-    var field = new JTextField();
-    field.setColumns(40);
-    return field;
-  }
-
-  protected JLabel createLabel(String text) {
-    var label = new JLabel(text);
-    label.setHorizontalAlignment(JLabel.LEFT);
-    return label;
-  }
-
   @Override
-  public void attachFunctionalKeyboardShortcut(KeyStroke keyStroke, String actionMapKey,
-                                               Runnable action) {
-    var inputMap = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-    inputMap.put(keyStroke, actionMapKey);
-    var actionMap = panel.getActionMap();
-    var actionInstance = new AbstractAction() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        action.run();
-      }
-    };
-    actionMap.put(actionMapKey, actionInstance);
-  }
-
-  @Override
-  public void attachKeyboardShortcut(KeyStroke keyStroke, String actionMapKey,
-                                     AbstractAction action) {
-    var inputMap = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-    inputMap.put(keyStroke, actionMapKey);
-    var actionMap = panel.getActionMap();
-    actionMap.put(actionMapKey, action);
-  }
-
-  @Override
-  public void attachSaveAction(Runnable action) {
-    var actionInstance = new AbstractAction() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        action.run();
-      }
-    };
-    saveButton.addActionListener(actionInstance);
-  }
-
-  @Override
-  public void attachContinueAction(Runnable action) {
-    var actionInstance = new AbstractAction() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        action.run();
-      }
-    };
-    createAnotherButton.addActionListener(actionInstance);
-    attachKeyboardShortcut(
-            KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK, true),
-            "Ctrl+Enter released", actionInstance);
+  public void setupSaveActions() {
+    saveButton.addActionListener(getSaveAction());
+    createAnotherButton.addActionListener(getContinueAction());
   }
 }

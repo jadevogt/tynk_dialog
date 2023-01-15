@@ -3,7 +3,7 @@ package best.tigers.tynkdialog.game.page;
 import javax.json.Json;
 import javax.json.JsonObject;
 
-public class FlatPage implements Page {
+public class FlatPage extends AbstractPage {
 
   private String flat;
 

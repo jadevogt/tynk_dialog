@@ -2,7 +2,7 @@ package best.tigers.tynkdialog.util;
 
 import best.tigers.tynkdialog.exceptions.PageParseException;
 import best.tigers.tynkdialog.game.Dialog;
-import best.tigers.tynkdialog.game.page.Page;
+import best.tigers.tynkdialog.game.page.AbstractPage;
 import best.tigers.tynkdialog.util.page.ChoicePageBuilder;
 import best.tigers.tynkdialog.util.page.FlatPageBuilder;
 import best.tigers.tynkdialog.util.page.PageBuilder;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class DialogBuilder {
 
   private String title;
-  private ArrayList<Page> contents;
+  private ArrayList<AbstractPage> contents;
 
   public DialogBuilder() {
   }

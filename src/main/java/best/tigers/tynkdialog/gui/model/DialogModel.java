@@ -3,7 +3,7 @@ package best.tigers.tynkdialog.gui.model;
 import best.tigers.tynkdialog.exceptions.PageModelException;
 import best.tigers.tynkdialog.game.Dialog;
 import best.tigers.tynkdialog.game.page.FlatPage;
-import best.tigers.tynkdialog.game.page.Page;
+import best.tigers.tynkdialog.game.page.AbstractPage;
 import best.tigers.tynkdialog.game.page.TalkPage;
 import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
 import best.tigers.tynkdialog.gui.model.page.FlatPageModel;
@@ -32,7 +32,7 @@ public class DialogModel extends AbstractModel implements ListModel<AbstractPage
     dptm = new PageTableModel(pages);
     listDataListeners = new ArrayList<>();
     setTitle(dialog.getTitle());
-    for (Page page : dialog.getPages()) {
+    for (AbstractPage page : dialog.getPages()) {
       var pageKind = page.getPageKind();
       switch (pageKind) {
         case "talk" -> addPage(new TalkPageModel((TalkPage) page));
@@ -121,7 +121,7 @@ public class DialogModel extends AbstractModel implements ListModel<AbstractPage
   }
 
   public Dialog getDialog() {
-    ArrayList<Page> contents = new ArrayList<>();
+    ArrayList<AbstractPage> contents = new ArrayList<>();
     for (AbstractPageModel page : pages) {
       contents.add(page.getPage());
     }

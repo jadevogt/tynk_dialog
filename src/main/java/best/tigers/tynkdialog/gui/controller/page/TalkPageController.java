@@ -7,56 +7,25 @@ import best.tigers.tynkdialog.supertext.SuperTextEditorKit;
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
 
-import static java.awt.event.WindowEvent.WINDOW_CLOSING;
-
-public class TalkPageController implements PageController {
+public class TalkPageController extends AbstractPageController {
   private final TalkPageEditorView view;
   private final TalkPageModel model;
 
-  TalkPageController(TalkPageModel model, boolean proceeding) {
+  public TalkPageController(TalkPageModel model, TalkPageEditorView view) {
     this.model = model;
-    if (proceeding) {
-      view = TalkPageEditorView.fromModelProceeding(model).init();
-    } else {
-      view = new TalkPageEditorView(model).init();
-    }
+    this.view = view;
+    initView();
   }
 
-  TalkPageController(TalkPageModel model) {
-    this(model, false);
-  }
-
-  public static TalkPageController fromModel(TalkPageModel model) {
-    var controller = new TalkPageController(model);
-    controller.setupViewShortcuts();
-    return controller;
-  }
-
-  public static void editModel(TalkPageModel model) {
-    TalkPageController.fromModel(model);
-  }
-
-  public TalkPageControllerFactory getFactory() {
-    return new TalkPageControllerFactory();
-  }
-
-  public TalkPageModel getModel() {
-    return this.model;
-  }
-
-  public TalkPageEditorView getView() {
+  @Override
+  TalkPageEditorView getView() {
     return view;
   }
 
   @Override
   public void setupViewShortcuts() {
-    var enterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK, true);
-    var enterMapKey = "Shift+Enter released";
-
-    view.attachFunctionalKeyboardShortcut(enterKey, enterMapKey, this::saveAndExit);
-    view.attachSaveAction(this::saveAndExit);
+    super.setupViewShortcuts();
 
     var oneKey = KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.CTRL_DOWN_MASK, true);
     var oneMapKey = "One+Enter released";
@@ -110,12 +79,5 @@ public class TalkPageController implements PageController {
     if (model.getStyleEnabled()) {
       model.setTextBoxStyle(newStyle);
     }
-  }
-
-  @Override
-  public void saveAndExit() {
-    saveChanges();
-    view.getPanel().dispatchEvent(new WindowEvent(view.getFrame(), WINDOW_CLOSING));
-    view.getFrame().dispose();
   }
 }

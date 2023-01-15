@@ -1,6 +1,6 @@
 package best.tigers.tynkdialog;
 
-class DialogPageTest {
+class DialogAbstractPageTest {
 
   @org.junit.jupiter.api.Test
   void testToString() {

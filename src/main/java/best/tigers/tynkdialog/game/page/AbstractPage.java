@@ -3,13 +3,13 @@ package best.tigers.tynkdialog.game.page;
 import javax.json.Json;
 import javax.json.JsonObject;
 
-public interface Page {
+public abstract class AbstractPage {
 
-  String getPageKind();
+  public abstract String getPageKind();
 
-  JsonObject serialize();
+  public abstract JsonObject serialize();
 
-  default JsonObject asPage() {
+  public JsonObject asPage() {
     var builder = Json.createObjectBuilder(serialize());
     builder.add("pageKind", getPageKind());
     return builder.build();
