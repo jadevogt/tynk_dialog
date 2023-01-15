@@ -6,11 +6,13 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Objects;
 import javax.swing.InputMap;
 import javax.swing.JOptionPane;
@@ -26,18 +28,25 @@ public class Assets {
   public static final Dimension INTEGRATION_WINDOW_SIZE = new Dimension(300, 300);
   public static final String APPLICATION_AUTHOR = "Jade Vogt @tigerstyping";
   private static Assets singleInstance = null;
-  private final Font terminus;
+  private Font terminus;
+  private Font little;
   private final UIDefaults defaults;
   private BufferedImage timer;
 
+
   private Assets() {
     ClassLoader classLoader = getClass().getClassLoader();
-    File file = new File(Objects.requireNonNull(classLoader.getResource("terminus.ttf")).getFile());
-    terminus = new Font("Terminus (TTF)", Font.PLAIN, 20);
+    File terminusFile = new File(Objects.requireNonNull(classLoader.getResource("terminus.ttf")).getFile());
+    File littleFile = new File(Objects.requireNonNull(classLoader.getResource("little.ttf")).getFile());
     defaults = UIManager.getDefaults();
+    terminus = null;
+    little = null;
     try {
       GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-      ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, file));
+      terminus = Font.createFont(Font.TRUETYPE_FONT, terminusFile).deriveFont(20F);
+      ge.registerFont(terminus);
+      little = Font.createFont(Font.TRUETYPE_FONT, littleFile).deriveFont(10F);
+      ge.registerFont(little);
     } catch (IOException | FontFormatException e) {
       e.printStackTrace();
     }
@@ -82,9 +91,10 @@ public class Assets {
     }
   }
 
-  public static Font getFont() {
+  public static Font getTerminus() {
     return getInstance().terminus;
   }
+  public static Font getLittle() {return getInstance().little;}
 
   public static UIDefaults getDefaults() {
     return getInstance().defaults;

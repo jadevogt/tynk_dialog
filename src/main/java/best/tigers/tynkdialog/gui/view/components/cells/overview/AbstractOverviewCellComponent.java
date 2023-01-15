@@ -14,11 +14,11 @@ public abstract class AbstractOverviewCellComponent extends JPanel {
     abstractPageModel = pageModel;
     setBorder(Assets.getDefaults().getBorder("MenuBar.border"));
     if (isSelected) {
-      setBackground(Assets.getInstance().getDefaults().getColor("List.selectionBackground"));
-      setForeground(Assets.getInstance().getDefaults().getColor("List.selectionForeground"));
+      setBackground(Assets.getDefaults().getColor("List.selectionBackground"));
+      setForeground(Assets.getDefaults().getColor("List.selectionForeground"));
     } else {
-      setBackground(Assets.getInstance().getDefaults().getColor("List.background"));
-      setForeground(Assets.getInstance().getDefaults().getColor("List.foreground"));
+      setBackground(Assets.getDefaults().getColor("List.background"));
+      setForeground(Assets.getDefaults().getColor("List.foreground"));
     }
     var layout = new BoxLayout(this, BoxLayout.Y_AXIS);
     setLayout(layout);

@@ -20,8 +20,7 @@ public abstract class AbstractModel {
   }
 
   public void notifySubscribers() {
-    for (TObserver TObserver : tObservers) {
-      TObserver.update();
-    }
+    var observersClone = new ArrayList<>(tObservers);
+    observersClone.forEach(TObserver::update);
   }
 }

@@ -10,7 +10,7 @@ import javax.swing.table.TableCellRenderer;
 
 public class OverviewCellRenderer implements TableCellRenderer {
 
-  public static Font font = Assets.getInstance().getFont();
+  public static Font font = Assets.getInstance().getTerminus();
 
   @Override
   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,

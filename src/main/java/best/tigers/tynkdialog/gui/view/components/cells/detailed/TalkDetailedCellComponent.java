@@ -26,7 +26,7 @@ public class TalkDetailedCellComponent extends AbstractDetailedCellComponent {
     scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
     contentField.setMargin(new Insets(0, 0, 0, 0));
-    contentField.setFont(Assets.getInstance().getFont());
+    contentField.setFont(Assets.getInstance().getTerminus());
     contentField.setForeground(Constants.TextColor.WHITE.toAWT());
     contentField.setBackground(Constants.TextColor.BACKGROUND.toAWT());
     contentField.setContentType("supertext/supertext");

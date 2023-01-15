@@ -1,6 +1,9 @@
 package best.tigers.tynkdialog.gui.view.page;
 
+import best.tigers.tynkdialog.game.page.AbstractPage;
+import best.tigers.tynkdialog.game.page.FlatPage;
 import best.tigers.tynkdialog.gui.model.page.FlatPageModel;
+import best.tigers.tynkdialog.gui.view.components.LabeledField;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JTextField;
@@ -21,7 +24,7 @@ public class FlatPageEditorView extends AbstractPageEditorView {
     flatField = createField();
     saveButton = new JButton("Save Changes (Shift + Enter)");
 
-    var layout = createGroupLayout(getPanel());
+    var layout = createGroupLayout();
 
     layout.setHorizontalGroup(
         layout.createParallelGroup(GroupLayout.Alignment.CENTER)
@@ -41,18 +44,16 @@ public class FlatPageEditorView extends AbstractPageEditorView {
     getPanel().setLayout(layout);
   }
 
-  public String getFlat() {
-    return flatField.getText();
-  }
-
-  public void setFlat(String newFlat) {
-    flatField.setText(newFlat);
+  @Override
+  public void update() {
+    super.update();
+    getFrame().setTitle("FlatPage Editor (" + model.getFlat() + ")");
+    flatField.setText(model.getFlat());
   }
 
   @Override
-  public void update() {
-    getFrame().setTitle("FlatPage Editor (" + model.getFlat() + ")");
-    setFlat(model.getFlat());
+  public AbstractPage asPage() {
+    return new FlatPage(flatField.getText());
   }
 
   @Override

@@ -1,11 +1,17 @@
 package best.tigers.tynkdialog.gui.view.page;
 
 import best.tigers.tynkdialog.game.Constants;
-import best.tigers.tynkdialog.game.page.TalkPage;
-import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
+import best.tigers.tynkdialog.game.page.ChoicePage;
+import best.tigers.tynkdialog.game.page.ChoiceResponse;
+import best.tigers.tynkdialog.gui.model.ResponseChoiceListModel;
+import best.tigers.tynkdialog.gui.model.page.ChoicePageModel;
+import best.tigers.tynkdialog.gui.view.components.ChoiceResponseDialog;
 import best.tigers.tynkdialog.gui.view.components.FunctionCallDialog;
 import best.tigers.tynkdialog.gui.view.components.IntegerDialog;
 import best.tigers.tynkdialog.gui.view.components.LabeledField;
+import best.tigers.tynkdialog.gui.view.components.QuickPair;
+import best.tigers.tynkdialog.gui.view.components.SuperTextDisplayPane;
+import best.tigers.tynkdialog.supertext.SuperTextDocument;
 import best.tigers.tynkdialog.supertext.SuperTextEditorKit;
 import best.tigers.tynkdialog.util.Assets;
 import java.awt.Color;
@@ -14,6 +20,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -24,16 +31,19 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
+import javax.swing.ListCellRenderer;
 import javax.swing.text.DefaultEditorKit;
 
-public class TalkPageEditorView extends AbstractPageEditorView {
+public class ChoicePageEditorView extends AbstractPageEditorView {
 
-  private final TalkPageModel model;
+  private final ChoicePageModel model;
   private final LabeledField character;
   private final JLabel contentLabel;
   private final JEditorPane contentField;
@@ -42,13 +52,16 @@ public class TalkPageEditorView extends AbstractPageEditorView {
   private final JButton createAnotherButton;
   private final JCheckBox blipCheck;
   private final LabeledField blip;
-  private final JCheckBox styleCheck;
-  private final LabeledField style;
   private final JLabel skipWarningLabel;
   private final JPanel skipLabelPanel;
   private final JCheckBox skipCheck;
 
-  public TalkPageEditorView(TalkPageModel model) {
+  private final JList<ChoiceResponse> responseList;
+  private final JScrollPane scrollPane;
+
+
+
+  public ChoicePageEditorView(ChoicePageModel model) {
     super();
     this.model = model;
     character = new LabeledField("Character");
@@ -57,9 +70,12 @@ public class TalkPageEditorView extends AbstractPageEditorView {
     contentField = createContentField();
     contentToolbar = createContentToolbar();
     blip = new LabeledField("Blip");
+    responseList = new JList<>();
+    responseList.setModel(new ResponseChoiceListModel(model.getResponses()));
+    responseList.setCellRenderer(new ResponseCellRenderer());
+    scrollPane = new JScrollPane();
+    scrollPane.setViewportView(responseList);
     blipCheck = new JCheckBox();
-    style = new LabeledField("Style");
-    styleCheck = new JCheckBox();
     JLabel skipLabel = createLabel("Skippable");
     skipWarningLabel = createLabel("");
     skipLabelPanel = new JPanel();
@@ -75,6 +91,7 @@ public class TalkPageEditorView extends AbstractPageEditorView {
     createAnotherButton = new JButton("Make Next Textbox (Ctrl + Enter)");
     getPanel().setLayout(setupLayout());
     getFrame().setJMenuBar(createContentMenubar());
+
   }
 
   private GroupLayout setupLayout() {
@@ -86,7 +103,6 @@ public class TalkPageEditorView extends AbstractPageEditorView {
                     .addComponent(character.getLabel())
                     .addComponent(contentLabel)
                     .addComponent(blip.getLabel())
-                    .addComponent(style.getLabel())
                     .addComponent(skipCheck))
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(character.getField())
@@ -95,12 +111,14 @@ public class TalkPageEditorView extends AbstractPageEditorView {
                         contentField.getPreferredSize().width,
                         contentField.getPreferredSize().width,
                         contentField.getPreferredSize().width)
+                    .addComponent(scrollPane, Alignment.CENTER,
+                        contentField.getPreferredSize().width,
+                        contentField.getPreferredSize().width,
+                        contentField.getPreferredSize().width)
                     .addComponent(blip.getField())
-                    .addComponent(style.getField())
                     .addComponent(skipLabelPanel, Alignment.LEADING))
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(blipCheck)
-                    .addComponent(styleCheck)))
+                    .addComponent(blipCheck)))
             .addGroup(layout.createSequentialGroup()
                 .addComponent(saveButton)
                 .addComponent(createAnotherButton)));
@@ -119,15 +137,12 @@ public class TalkPageEditorView extends AbstractPageEditorView {
                 .addComponent(contentField, GroupLayout.Alignment.CENTER,
                     contentField.getPreferredSize().height, contentField.getPreferredSize().height,
                     contentField.getPreferredSize().height))
+            .addComponent(scrollPane)
             .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
                 .addComponent(blipCheck)
                 .addComponent(blip.getLabel())
                 .addComponent(blip.getField(), blip.getHeight(), blip.getHeight(),
                     blip.getHeight()))
-            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                .addComponent(styleCheck)
-                .addComponent(style.getLabel())
-                .addComponent(style.getField(), style.getHeight(), style.getHeight(), style.getHeight()))
             .addGroup(layout.createParallelGroup(Alignment.CENTER)
                 .addComponent(skipCheck)
                 .addComponent(skipLabelPanel))
@@ -142,42 +157,34 @@ public class TalkPageEditorView extends AbstractPageEditorView {
   public void init() {
     super.init();
     blipCheck.addActionListener(e -> blip.setEnabled(blipCheck.isSelected()));
-    styleCheck.addActionListener(e -> style.setEnabled(styleCheck.isSelected()));
   }
 
   @Override
-  TalkPageModel getModel() {
+  ChoicePageModel getModel() {
     return model;
   }
 
   @Override
   public void update() {
     super.update();
-    getFrame().setTitle("DialogPage Editor (" + model.getSpeaker() + ")");
+    getFrame().setTitle("ChoicePage Editor (" + model.getSpeaker() + ")");
     var isBlipEnabled = model.getBlip() != null;
-    var isStyleEnabled = model.getTextStyle() != null;
     blip.setEnabled(isBlipEnabled);
-    style.setEnabled(isStyleEnabled);
     blipCheck.setSelected(isBlipEnabled);
-    styleCheck.setSelected(isStyleEnabled);
     character.setText(model.getSpeaker());
     contentField.setText(model.getContent());
     blip.setText(model.getBlip());
-    style.setText(model.getTextStyle());
     skipCheck.setSelected(model.isCanSkip());
+    responseList.setModel(new ResponseChoiceListModel(model.getResponses()));
   }
 
-  public TalkPage asPage() {
+  public ChoicePage asPage() {
     var blipValue = blip.getText();
     if (!blipCheck.isSelected()) {
       blipValue = null;
     }
-    var styleValue = style.getText();
-    if (!styleCheck.isSelected()) {
-      styleValue = null;
-    }
-    return new TalkPage(character.getText(), contentField.getText(), styleValue, blipValue,
-        skipCheck.isSelected());
+    return new ChoicePage(character.getText(), contentField.getText(), blipValue,
+        skipCheck.isSelected(), new ArrayList<String>(), ((ResponseChoiceListModel) responseList.getModel()).getContent());
   }
 
   private JEditorPane createContentField() {
@@ -187,7 +194,10 @@ public class TalkPageEditorView extends AbstractPageEditorView {
     field.setForeground(Constants.TextColor.WHITE.toAWT());
     field.setBackground(Constants.TextColor.BACKGROUND.toAWT());
     field.setContentType("supertext/supertext");
-    field.setPreferredSize(new Dimension(600, 100));
+    field.setPreferredSize(new Dimension(600, 25));
+    if (field.getDocument() instanceof SuperTextDocument superTextDocument) {
+      superTextDocument.setMaxLines(1);
+    }
     return field;
   }
 
@@ -288,6 +298,37 @@ public class TalkPageEditorView extends AbstractPageEditorView {
   @Override
   public void setupSaveActions() {
     saveButton.addActionListener(getSaveAction());
-    createAnotherButton.addActionListener(getContinueAction());
+    createAnotherButton.addActionListener(new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        ((ResponseChoiceListModel) responseList.getModel()).addResponse(ChoiceResponseDialog.promptForResponseDetails());
+      }
+    });
+  }
+
+  class ResponseCellRenderer implements ListCellRenderer<ChoiceResponse> {
+    @Override
+    public Component getListCellRendererComponent(JList<? extends ChoiceResponse> list,
+        ChoiceResponse value, int index, boolean isSelected, boolean cellHasFocus) {
+      var component = new JPanel();
+      component.setLayout(new BoxLayout(component, BoxLayout.Y_AXIS));
+      var subPanel = new JPanel();
+      subPanel.setLayout(new BoxLayout(subPanel, BoxLayout.X_AXIS));
+      var textPane = new SuperTextDisplayPane(1);
+      textPane.setText(value.getContent());
+      textPane.setFont(Assets.getLittle());
+      textPane.setLightestBackground();
+      component.add(textPane);
+      subPanel.add(new QuickPair("Result", value.getChoiceResult()), Component.LEFT_ALIGNMENT);
+      subPanel.add(new QuickPair("Icon", value.getIcon().name()), Component.RIGHT_ALIGNMENT);
+      subPanel.setBackground(null);
+      component.add(subPanel, Component.LEFT_ALIGNMENT);
+      if (isSelected) {
+        textPane.setLighterBackground();
+        component.setBackground(Assets.getDefaults().getColor("List.selectionBackground"));
+        component.setForeground(Assets.getDefaults().getColor("List.selectionForeground"));
+      }
+      return component;
+    }
   }
 }

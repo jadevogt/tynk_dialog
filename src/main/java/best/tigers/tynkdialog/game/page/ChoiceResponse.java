@@ -18,6 +18,11 @@ public class ChoiceResponse {
   @Setter
   private ResponseIcon icon;
 
+  @Override
+  public String toString() {
+    return content;
+  }
+
   public ChoiceResponse(String content, String choiceResult, ResponseIcon icon) {
     this.content = content;
     this.choiceResult = choiceResult;

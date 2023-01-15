@@ -2,6 +2,7 @@ package best.tigers.tynkdialog.gui.view.page;
 
 import static java.awt.event.WindowEvent.WINDOW_CLOSING;
 
+import best.tigers.tynkdialog.game.page.AbstractPage;
 import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
 import best.tigers.tynkdialog.gui.view.ShortcutSupport;
 import best.tigers.tynkdialog.gui.view.TObserver;
@@ -32,6 +33,8 @@ public abstract class AbstractPageEditorView implements TObserver, ShortcutSuppo
   private AbstractAction saveAction;
   @Getter
   private AbstractAction continueAction;
+
+  public abstract AbstractPage asPage();
 
   public AbstractPageEditorView() {
     panel = new JPanel();
@@ -125,10 +128,18 @@ public abstract class AbstractPageEditorView implements TObserver, ShortcutSuppo
     return toolbar;
   }
 
-  GroupLayout createGroupLayout(JPanel panel) {
+  GroupLayout createGroupLayout() {
     GroupLayout layout = new GroupLayout(getPanel());
     layout.setAutoCreateGaps(true);
     layout.setAutoCreateContainerGaps(true);
     return layout;
+  }
+
+  @Override
+  public void update() {
+    var model = getModel();
+    if (model.isDeleted()) {
+      frame.dispatchEvent(new WindowEvent(frame, WINDOW_CLOSING));
+    }
   }
 }

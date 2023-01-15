@@ -2,6 +2,7 @@ package best.tigers.tynkdialog.gui.controller;
 
 import best.tigers.tynkdialog.gui.controller.page.AbstractPageController;
 import best.tigers.tynkdialog.gui.factories.AbstractPageMvcFactory;
+import best.tigers.tynkdialog.gui.factories.ChoicePageMvcFactory;
 import best.tigers.tynkdialog.gui.factories.FlatPageMvcFactory;
 import best.tigers.tynkdialog.gui.factories.TalkPageMvcFactory;
 import best.tigers.tynkdialog.gui.model.DialogModel;
@@ -48,6 +49,7 @@ public class DialogController {
     switch (pageKind) {
       case "flat" -> factory = new FlatPageMvcFactory();
       case "talk" -> factory = new TalkPageMvcFactory();
+      case "choice" -> factory = new ChoicePageMvcFactory();
       default -> {
         Log.info("Couldn't find a MvcFactory for pageKind \"" + pageKind
             + ",\" falling back to talkKind.");
@@ -74,7 +76,7 @@ public class DialogController {
     var enterMapKey = "Enter";
     table.attachFunctionalKeyboardShortcut(enterKey, enterMapKey, this::editPage);
 
-    view.addEditorActions(new EditAction(), buildAddAction("talk"), buildAddAction("flat"),
+    view.addEditorActions(new EditAction(), buildAddAction("talk"), buildAddAction("flat"), buildAddAction("choice"),
         new DeleteAction(), new SwapUpAction(), new SwapDownAction());
     view.attachFocusListener(this::saveTitle);
 
@@ -156,7 +158,8 @@ public class DialogController {
   }
 
   public void duplicateAndEditPage(AbstractPageModel oldModel) {
-    var newModel = oldModel.clone();
+    var newModel = oldModel.continuationModel();
+    Log.info(newModel.getPage().toString());
 
     model.addPage(newModel);
 
@@ -167,7 +170,7 @@ public class DialogController {
       model.swapListItems(newIndex--, newIndex);
     }
 
-    var factory = getMvcFactory(oldModel);
+    var factory = getMvcFactory(newModel);
     var newView = factory.createPageView(newModel);
     var newController = factory.createPageController(newModel, newView);
     bindPageEditorShortcuts(newModel, newView, newController);
@@ -189,7 +192,8 @@ public class DialogController {
 
   public void deletePage() {
     if (view.getSelectedModel() != null) {
-      model.deletePage(view.getSelectedModel());
+      var deletedModel = view.getSelectedModel();
+      model.deletePage(deletedModel);
     } else {
       java.awt.Toolkit.getDefaultToolkit().beep();
     }

@@ -1,12 +1,16 @@
 package best.tigers.tynkdialog.gui.model.page;
 
+import best.tigers.tynkdialog.game.page.AbstractPage;
 import best.tigers.tynkdialog.game.page.FlatPage;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Delegate;
 
 public class FlatPageModel extends AbstractPageModel {
 
   @Getter
-  private final FlatPage page;
+  @Delegate
+  private FlatPage page;
 
   public FlatPageModel(FlatPage flatPage) {
     this.page = flatPage;
@@ -16,17 +20,13 @@ public class FlatPageModel extends AbstractPageModel {
     this(new FlatPage(null));
   }
 
-  public String getFlat() {
-    return page.getFlat();
-  }
-
-  public void setFlat(String newFlat) {
-    page.setFlat(newFlat);
-    notifySubscribers();
+  @Override
+  public void setPage(AbstractPage page) {
+    this.page = (FlatPage) page;
   }
 
   @Override
-  public FlatPageModel clone() {
+  public FlatPageModel continuationModel() {
     var newModel = new FlatPageModel();
     newModel.setFlat(getFlat());
     return newModel;

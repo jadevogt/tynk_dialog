@@ -2,6 +2,7 @@ package best.tigers.tynkdialog.gui.view.components.cells;
 
 import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
 import best.tigers.tynkdialog.gui.view.components.cells.detailed.AbstractDetailedCellComponent;
+import best.tigers.tynkdialog.gui.view.components.cells.factories.ChoicePageCellFactory;
 import best.tigers.tynkdialog.gui.view.components.cells.factories.TalkPageCellFactory;
 import best.tigers.tynkdialog.gui.view.components.cells.overview.AbstractOverviewCellComponent;
 import best.tigers.tynkdialog.util.Log;
@@ -14,6 +15,7 @@ public abstract class AbstractPageCellFactory {
     switch (pageKind) {
       case "talk" -> factory = new TalkPageCellFactory();
       case "flat" -> factory = new FlatPageCellFactory();
+      case "choice" -> factory = new ChoicePageCellFactory();
       default -> {
         factory = null;
         Log.error("Could not render table! Unknown pageKind: " + pageKind);

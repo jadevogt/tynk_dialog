@@ -36,6 +36,11 @@ public class SuperTextDocument extends DefaultStyledDocument {
   public static final String FUNCTION_PARAM_NAME = "FunctionParamName";
 
   private boolean lengthLock = true;
+  private int maxLines = 4;
+
+  public void setMaxLines(int maxLines) {
+    this.maxLines = maxLines;
+  }
 
   public void insertTimeDelay(int offset, int timeDelayQuantity) {
     if (timeDelayQuantity == 0) {
@@ -138,12 +143,12 @@ public class SuperTextDocument extends DefaultStyledDocument {
       if ((currentElement.getEndOffset() - currentElement.getStartOffset() < (45 + timerCount)
           && (!(str.contains("\n"))
           || (!(str.equals("\n"))
-          && stringLines.length <= (4 - paragraphCount)
+          && stringLines.length <= (maxLines - paragraphCount)
           && strLongestLine
           .orElse("")
           .length()
           <= (45 + timerCount))))
-          || (str.equals("\n") && paragraphCount <= 3)) {
+          || (str.equals("\n") && paragraphCount <= maxLines - 1)) {
         super.insertString(offs, str, a);
       }
     } catch (BadLocationException e) {

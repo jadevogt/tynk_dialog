@@ -1,15 +1,18 @@
 package best.tigers.tynkdialog.gui.controller.page;
 
+import best.tigers.tynkdialog.game.page.TalkPage;
 import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
 import best.tigers.tynkdialog.gui.view.page.TalkPageEditorView;
 import best.tigers.tynkdialog.supertext.SuperTextEditorKit;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
+import lombok.Getter;
 
 public class TalkPageController extends AbstractPageController {
 
   private final TalkPageEditorView view;
+  @Getter
   private final TalkPageModel model;
 
   public TalkPageController(TalkPageModel model, TalkPageEditorView view) {
@@ -50,38 +53,5 @@ public class TalkPageController extends AbstractPageController {
       var keyMapName = a.getKeyMapName();
       view.attachKeyboardShortcut(keystroke, keyMapName, a);
     });
-  }
-
-  @Override
-  public void saveChanges() {
-    javax.swing.ToolTipManager.sharedInstance().setInitialDelay(1000);
-    String newSpeaker = view.getSpeaker();
-    String newContent = view.getContent();
-    String newBlip = view.getBlip();
-    String newStyle = view.getStyle();
-    boolean blipEnabled = view.getBlipEnabled();
-    boolean styleEnabled = view.getStyleEnabled();
-    boolean newSkip = view.getCanSkip();
-    if (!model.getSpeaker().equals(newSpeaker)) {
-      model.setSpeaker(newSpeaker);
-    }
-    if (!model.getContent().equals(newContent)) {
-      model.setContent(newContent);
-    }
-    if (model.isBlipEnabled() != blipEnabled) {
-      model.setBlipEnabled(blipEnabled);
-    }
-    if (model.isBlipEnabled()) {
-      model.setBlip(newBlip);
-    }
-    if (model.isStyleEnabled() != styleEnabled) {
-      model.setStyleEnabled(styleEnabled);
-    }
-    if (model.isStyleEnabled()) {
-      model.setTextBoxStyle(newStyle);
-    }
-    if (newSkip != model.isCanSkip()) {
-      model.setCanSkip(newSkip);
-    }
   }
 }

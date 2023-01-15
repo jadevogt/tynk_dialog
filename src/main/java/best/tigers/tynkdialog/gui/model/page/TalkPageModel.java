@@ -1,12 +1,15 @@
 package best.tigers.tynkdialog.gui.model.page;
 
+import best.tigers.tynkdialog.game.page.AbstractPage;
 import best.tigers.tynkdialog.game.page.TalkPage;
 import lombok.Getter;
+import lombok.experimental.Delegate;
 
 public class TalkPageModel extends AbstractPageModel {
 
   @Getter
-  private final TalkPage page;
+  @Delegate
+  private TalkPage page;
   @Getter
   private boolean blipEnabled = true;
   @Getter
@@ -27,73 +30,30 @@ public class TalkPageModel extends AbstractPageModel {
     this(new TalkPage());
   }
 
-  public String getSpeaker() {
-    return page.getSpeaker();
-  }
-
-  public void setSpeaker(String newCharacter) {
-    page.setSpeaker(newCharacter);
-    notifySubscribers();
-  }
-
-  public String getContent() {
-    return page.getContent();
-  }
-
-  public void setContent(String newContent) {
-    page.setContent(newContent);
-    notifySubscribers();
-  }
-
-  public String getBlip() {
-    return page.getBlip();
-  }
-
-  public void setBlip(String newBlip) {
-    page.setBlip(newBlip);
-    notifySubscribers();
-  }
-
   public void setBlipEnabled(boolean newState) {
     blipEnabled = newState;
     page.setBlip(null);
-    notifySubscribers();
   }
 
   public void setStyleEnabled(boolean newState) {
     styleEnabled = newState;
     page.setTextStyle(null);
-    notifySubscribers();
   }
-
-  public String getTextBoxStyle() {
-    return page.getTextStyle();
-  }
-
-  public void setTextBoxStyle(String newStyle) {
-    page.setTextStyle(newStyle);
-    notifySubscribers();
-  }
-
-  public boolean isCanSkip() {
-    return page.isCanSkip();
-  }
-
-  public void setCanSkip(boolean canSkip) {
-    this.page.setCanSkip(canSkip);
-    notifySubscribers();
-  }
-
 
   @Override
-  public AbstractPageModel clone() {
+  public AbstractPageModel continuationModel() {
     var newModel = new TalkPageModel();
     newModel.setSpeaker(getSpeaker());
-    newModel.setBlip(getBlip());
     newModel.setBlipEnabled(isBlipEnabled());
+    newModel.setBlip(getBlip());
     newModel.setStyleEnabled(isStyleEnabled());
-    newModel.setTextBoxStyle(getTextBoxStyle());
+    newModel.setTextStyle(getTextStyle());
     return newModel;
+  }
+
+  @Override
+  public void setPage(AbstractPage page) {
+    this.page = (TalkPage) page;
   }
 
 }

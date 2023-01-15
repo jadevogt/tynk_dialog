@@ -3,9 +3,11 @@ package best.tigers.tynkdialog.gui.model;
 import best.tigers.tynkdialog.exceptions.PageModelException;
 import best.tigers.tynkdialog.game.Dialog;
 import best.tigers.tynkdialog.game.page.AbstractPage;
+import best.tigers.tynkdialog.game.page.ChoicePage;
 import best.tigers.tynkdialog.game.page.FlatPage;
 import best.tigers.tynkdialog.game.page.TalkPage;
 import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
+import best.tigers.tynkdialog.gui.model.page.ChoicePageModel;
 import best.tigers.tynkdialog.gui.model.page.FlatPageModel;
 import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
 import best.tigers.tynkdialog.gui.view.TObserver;
@@ -36,6 +38,7 @@ public class DialogModel extends AbstractModel implements ListModel<AbstractPage
       switch (pageKind) {
         case "talk" -> addPage(new TalkPageModel((TalkPage) page));
         case "flat" -> addPage(new FlatPageModel((FlatPage) page));
+        case "choice" -> addPage(new ChoicePageModel((ChoicePage) page));
         default -> throw new PageModelException("No models exists for page kind " + pageKind + ".");
       }
     }
@@ -49,6 +52,8 @@ public class DialogModel extends AbstractModel implements ListModel<AbstractPage
 
   public void deletePage(AbstractPageModel removedPage) {
     pages.remove(removedPage);
+    removedPage.setDeleted(true);
+    removedPage.notifySubscribers();
     notifyListeners();
   }
 
