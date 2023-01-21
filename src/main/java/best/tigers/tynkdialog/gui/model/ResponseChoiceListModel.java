@@ -3,6 +3,7 @@ package best.tigers.tynkdialog.gui.model;
 import best.tigers.tynkdialog.game.Dialog;
 import best.tigers.tynkdialog.game.page.ChoiceResponse;
 import best.tigers.tynkdialog.gui.controller.DialogController;
+import best.tigers.tynkdialog.gui.model.page.ResponseChoiceModel;
 import best.tigers.tynkdialog.gui.view.TObserver;
 import best.tigers.tynkdialog.gui.view.components.ChoiceResponseDialog;
 import java.util.ArrayList;
@@ -12,30 +13,26 @@ import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
 public class ResponseChoiceListModel extends AbstractModel
-    implements ListModel<ChoiceResponse>, TObserver {
+    implements ListModel<ResponseChoiceModel>, TObserver {
 
-  private final ArrayList<ChoiceResponse> responses;
+  private final ArrayList<ResponseChoiceModel> responses;
   private final ArrayList<ListDataListener> listDataListeners;
 
   public ResponseChoiceListModel() {
     this(new ArrayList<>());
   }
 
-  public ResponseChoiceListModel(ArrayList<ChoiceResponse> responses) {
-    this.responses = new ArrayList<>();
+  public ResponseChoiceListModel(ArrayList<ResponseChoiceModel> responses) {
+    this.responses = new ArrayList<>(responses);
     listDataListeners = new ArrayList<>();
-    for (ChoiceResponse response: responses) {
-      ChoiceResponse clone = new ChoiceResponse(response.getContent(), response.getChoiceResult(), response.getIcon());
-      addResponse(clone);
-    }
   }
 
-  public void addResponse(ChoiceResponse newResponse) {
+  public void addResponse(ResponseChoiceModel newResponse) {
     responses.add(newResponse);
     notifyListeners();
   }
 
-  public void deleteResponse(ChoiceResponse removedResponse) {
+  public void deleteResponse(ResponseChoiceModel removedResponse) {
     responses.remove(removedResponse);
     notifyListeners();
   }
@@ -46,7 +43,7 @@ public class ResponseChoiceListModel extends AbstractModel
   }
 
   @Override
-  public ChoiceResponse getElementAt(int index) {
+  public ResponseChoiceModel getElementAt(int index) {
     if (index >= 0 && index <= responses.size() - 1) {
       return responses.get(index);
     } else {
@@ -83,12 +80,7 @@ public class ResponseChoiceListModel extends AbstractModel
     notifyListeners();
   }
 
-  public ArrayList<ChoiceResponse> getContent() {
-    ArrayList<ChoiceResponse> contents = new ArrayList<>();
-    for (ChoiceResponse response : responses) {
-      var clone = new ChoiceResponse(response.getContent(), response.getChoiceResult(), response.getIcon());
-      contents.add(clone);
-    }
-    return contents;
+  public ArrayList<ResponseChoiceModel> getContent() {
+    return new ArrayList<>(responses);
   }
 }

@@ -5,6 +5,7 @@ import best.tigers.tynkdialog.game.page.ChoicePage;
 import best.tigers.tynkdialog.game.page.ChoiceResponse;
 import best.tigers.tynkdialog.gui.model.ResponseChoiceListModel;
 import best.tigers.tynkdialog.gui.model.page.ChoicePageModel;
+import best.tigers.tynkdialog.gui.model.page.ResponseChoiceModel;
 import best.tigers.tynkdialog.gui.view.components.ChoiceResponseDialog;
 import best.tigers.tynkdialog.gui.view.components.FunctionCallDialog;
 import best.tigers.tynkdialog.gui.view.components.IntegerDialog;
@@ -37,6 +38,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.ListCellRenderer;
 import javax.swing.text.DefaultEditorKit;
@@ -56,14 +58,15 @@ public class ChoicePageEditorView extends AbstractPageEditorView {
   private final JPanel skipLabelPanel;
   private final JCheckBox skipCheck;
 
-  private final JList<ChoiceResponse> responseList;
+  private final JList<ResponseChoiceModel> responseList;
   private final JScrollPane scrollPane;
-
+  private final JSplitPane splitPane;
 
 
   public ChoicePageEditorView(ChoicePageModel model) {
     super();
     this.model = model;
+    splitPane = new JSplitPane();
     character = new LabeledField("Character");
 
     contentLabel = new JLabel("Content");
@@ -75,6 +78,7 @@ public class ChoicePageEditorView extends AbstractPageEditorView {
     responseList.setCellRenderer(new ResponseCellRenderer());
     scrollPane = new JScrollPane();
     scrollPane.setViewportView(responseList);
+    splitPane.setLeftComponent(scrollPane);
     blipCheck = new JCheckBox();
     JLabel skipLabel = createLabel("Skippable");
     skipWarningLabel = createLabel("");
@@ -111,7 +115,7 @@ public class ChoicePageEditorView extends AbstractPageEditorView {
                         contentField.getPreferredSize().width,
                         contentField.getPreferredSize().width,
                         contentField.getPreferredSize().width)
-                    .addComponent(scrollPane, Alignment.CENTER,
+                    .addComponent(splitPane, Alignment.CENTER,
                         contentField.getPreferredSize().width,
                         contentField.getPreferredSize().width,
                         contentField.getPreferredSize().width)
@@ -137,7 +141,7 @@ public class ChoicePageEditorView extends AbstractPageEditorView {
                 .addComponent(contentField, GroupLayout.Alignment.CENTER,
                     contentField.getPreferredSize().height, contentField.getPreferredSize().height,
                     contentField.getPreferredSize().height))
-            .addComponent(scrollPane)
+            .addComponent(splitPane)
             .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
                 .addComponent(blipCheck)
                 .addComponent(blip.getLabel())
@@ -175,7 +179,7 @@ public class ChoicePageEditorView extends AbstractPageEditorView {
     contentField.setText(model.getContent());
     blip.setText(model.getBlip());
     skipCheck.setSelected(model.isCanSkip());
-    responseList.setModel(new ResponseChoiceListModel(model.getResponses()));
+    responseList.setModel(model.getResponseModels());
   }
 
   public ChoicePage asPage() {
@@ -184,7 +188,10 @@ public class ChoicePageEditorView extends AbstractPageEditorView {
       blipValue = null;
     }
     return new ChoicePage(character.getText(), contentField.getText(), blipValue,
-        skipCheck.isSelected(), new ArrayList<String>(), ((ResponseChoiceListModel) responseList.getModel()).getContent());
+        skipCheck.isSelected(),
+        new ArrayList<>(),
+        new ArrayList<>(((ResponseChoiceListModel) responseList.getModel()).getContent().stream()
+            .map(m -> new ChoiceResponse(m.getContent(), m.getContent(), m.getIcon())).toList()));
   }
 
   private JEditorPane createContentField() {
@@ -301,12 +308,14 @@ public class ChoicePageEditorView extends AbstractPageEditorView {
     createAnotherButton.addActionListener(new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        ((ResponseChoiceListModel) responseList.getModel()).addResponse(ChoiceResponseDialog.promptForResponseDetails());
+        ((ResponseChoiceListModel) responseList.getModel()).addResponse(
+            ChoiceResponseDialog.promptForResponseDetails());
       }
     });
   }
 
   class ResponseCellRenderer implements ListCellRenderer<ChoiceResponse> {
+
     @Override
     public Component getListCellRendererComponent(JList<? extends ChoiceResponse> list,
         ChoiceResponse value, int index, boolean isSelected, boolean cellHasFocus) {
