@@ -25,7 +25,6 @@ public class ChoicePage extends AbstractPage {
   @Setter
   private ArrayList<String> gifts;
   @Getter
-  @Setter
   private ArrayList<ChoiceResponse> responses;
   @Getter
   @Setter
@@ -70,5 +69,9 @@ public class ChoicePage extends AbstractPage {
     result.add("responses", responseArray);
 
     return result.build();
+  }
+
+  public void setResponses(List<ChoiceResponse> newResponses) {
+    this.responses = new ArrayList<>(newResponses);
   }
 }

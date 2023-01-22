@@ -15,15 +15,7 @@ import java.util.Objects;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.BoxView;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.Element;
-import javax.swing.text.ParagraphView;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
+import javax.swing.text.*;
 import javax.swing.tree.TreeNode;
 
 public class SuperTextDocument extends DefaultStyledDocument {
@@ -35,8 +27,22 @@ public class SuperTextDocument extends DefaultStyledDocument {
   public static final String FUNCTION_CALL_NAME = "FunctionCallName";
   public static final String FUNCTION_PARAM_NAME = "FunctionParamName";
 
+  private Color foregroundColor = Constants.TextColor.WHITE.toAWT();
+
   private boolean lengthLock = true;
   private int maxLines = 4;
+
+  public void setForegroundColor(Color newColor) {
+    for (int i = 0; i < getLength(); i++) {
+      var g = getCharacterElement(i).getAttributes();
+      if (g.getAttribute(StyleConstants.Foreground).equals(new Color(242, 233, 220))) {
+        var newAttrs = new SimpleAttributeSet(g);
+        StyleConstants.setForeground(newAttrs, newColor);
+        setCharacterAttributes(i, 1, newAttrs, true);
+      }
+      foregroundColor = newColor;
+    }
+  }
 
   public void setMaxLines(int maxLines) {
     this.maxLines = maxLines;
@@ -49,7 +55,7 @@ public class SuperTextDocument extends DefaultStyledDocument {
     }
     lengthLock = false;
     SimpleAttributeSet attrs = new SimpleAttributeSet(getCharacterElement(offset).getAttributes());
-    StyleConstants.setForeground(attrs, Constants.TextColor.WHITE.toAWT());
+    StyleConstants.setForeground(attrs, foregroundColor);
     BufferedImage icon = null;
     var classLoader = getClass().getClassLoader();
     try {
@@ -77,7 +83,7 @@ public class SuperTextDocument extends DefaultStyledDocument {
     }
     lengthLock = false;
     SimpleAttributeSet attrs = new SimpleAttributeSet(getCharacterElement(offset).getAttributes());
-    StyleConstants.setForeground(attrs, Constants.TextColor.WHITE.toAWT());
+    StyleConstants.setForeground(attrs, foregroundColor);
     BufferedImage icon = null;
     var classLoader = getClass().getClassLoader();
     try {

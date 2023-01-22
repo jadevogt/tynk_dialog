@@ -2,7 +2,6 @@ package best.tigers.tynkdialog.gui.model.page;
 
 import best.tigers.tynkdialog.game.page.AbstractPage;
 import best.tigers.tynkdialog.game.page.ChoicePage;
-import best.tigers.tynkdialog.game.page.ChoiceResponse;
 import best.tigers.tynkdialog.gui.model.ResponseChoiceListModel;
 import java.util.ArrayList;
 import javax.swing.event.ListDataEvent;
@@ -23,7 +22,7 @@ public class ChoicePageModel extends AbstractPageModel implements ListDataListen
     this.page = page;
     this.responseModels = new ResponseChoiceListModel();
     this.responseModels.addListDataListener(this);
-    page.getResponses().forEach(m -> responseModels.addResponse(new ResponseChoiceModel(m)));
+    page.getResponses().forEach(m -> responseModels.addResponse(new ChoiceResponseModel(m)));
   }
 
   public ChoicePageModel() {
@@ -32,7 +31,7 @@ public class ChoicePageModel extends AbstractPageModel implements ListDataListen
 
   @Override
   public AbstractPage getPage() {
-    return null;
+    return page;
   }
 
   @Override
@@ -65,7 +64,7 @@ public class ChoicePageModel extends AbstractPageModel implements ListDataListen
   }
 
   public void updateList() {
-    page.setResponses(new ArrayList<>(getResponseModels().getContent().stream().map(m -> new ChoiceResponse(m.getContent(), m.getResult(), m.getIcon())).toList()));
+    page.setResponses(getResponseModels().getContent().stream().map(ChoiceResponseModel::getResponse).toList());
   }
 
   @Override

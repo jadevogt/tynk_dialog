@@ -22,6 +22,23 @@ public class SuperTextDisplayPane extends JEditorPane {
     }
   }
 
+  public SuperTextDisplayPane(int maxLines, int insets) {
+    this(maxLines);
+    setMargin(new Insets(insets, insets, insets, insets));
+    if (insets == 0)
+      setPreferredSize(new Dimension(600, 14));
+    else
+      setPreferredSize(new Dimension(600, insets * 6));
+  }
+
+  @Override
+  public void setForeground(Color c) {
+    super.setForeground(c);
+    if (getDocument() instanceof SuperTextDocument doc) {
+      doc.setForegroundColor(c);
+    }
+  }
+
   public void setLighterBackground() {
     setBackground(Color.decode("#695156"));
     setForeground(Color.decode("#EAEFB8"));

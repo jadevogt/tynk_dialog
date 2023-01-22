@@ -14,11 +14,8 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Objects;
-import javax.swing.InputMap;
-import javax.swing.JOptionPane;
-import javax.swing.KeyStroke;
-import javax.swing.UIDefaults;
-import javax.swing.UIManager;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import javax.swing.text.DefaultEditorKit;
 
 public class Assets {
@@ -32,16 +29,25 @@ public class Assets {
   private Font little;
   private final UIDefaults defaults;
   private BufferedImage timer;
+  private BufferedImage imageIconsLit;
+  private BufferedImage imageIconsDim;
 
 
   private Assets() {
     ClassLoader classLoader = getClass().getClassLoader();
     File terminusFile = new File(Objects.requireNonNull(classLoader.getResource("terminus.ttf")).getFile());
     File littleFile = new File(Objects.requireNonNull(classLoader.getResource("little.ttf")).getFile());
+    File choiceIconsDimFile = new File(Objects.requireNonNull(classLoader.getResource("choice_icons_dim.png")).getFile());
+    File choiceIconsLitFile = new File(Objects.requireNonNull(classLoader.getResource("choice_icons_lit.png")).getFile());
+
     defaults = UIManager.getDefaults();
     terminus = null;
     little = null;
+    imageIconsDim = null;
+    imageIconsLit = null;
     try {
+      imageIconsDim = ImageIO.read(choiceIconsDimFile);
+      imageIconsLit = ImageIO.read(choiceIconsLitFile);
       GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
       terminus = Font.createFont(Font.TRUETYPE_FONT, terminusFile).deriveFont(20F);
       ge.registerFont(terminus);
@@ -95,6 +101,14 @@ public class Assets {
     return getInstance().terminus;
   }
   public static Font getLittle() {return getInstance().little;}
+
+  public static BufferedImage getChoiceIconsDim() {
+    return getInstance().imageIconsDim;
+  }
+
+  public static BufferedImage getChoiceIconsLit() {
+    return getInstance().imageIconsLit;
+  }
 
   public static UIDefaults getDefaults() {
     return getInstance().defaults;
