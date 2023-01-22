@@ -5,6 +5,7 @@ import javax.swing.JTextField;
 import lombok.Getter;
 
 public class LabeledField {
+
   @Getter
   private final JLabel label;
   @Getter

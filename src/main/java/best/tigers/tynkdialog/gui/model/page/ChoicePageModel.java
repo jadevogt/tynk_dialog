@@ -2,27 +2,27 @@ package best.tigers.tynkdialog.gui.model.page;
 
 import best.tigers.tynkdialog.game.page.AbstractPage;
 import best.tigers.tynkdialog.game.page.ChoicePage;
-import best.tigers.tynkdialog.gui.model.ResponseChoiceListModel;
+import best.tigers.tynkdialog.game.page.ChoiceResponse;
+import best.tigers.tynkdialog.gui.model.GenericListModel;
 import java.util.ArrayList;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
+import java.util.List;
 import lombok.Getter;
 import lombok.experimental.Delegate;
 
-public class ChoicePageModel extends AbstractPageModel implements ListDataListener {
+public class ChoicePageModel extends AbstractPageModel {
 
+  private GenericListModel<ChoiceResponseModel> responseModels;
+  private GenericListModel<String> giftModels;
   @Delegate
   private ChoicePage page;
-  private final ResponseChoiceListModel responseModels;
-
   @Getter
   private boolean blipEnabled;
 
   public ChoicePageModel(ChoicePage page) {
     this.page = page;
-    this.responseModels = new ResponseChoiceListModel();
-    this.responseModels.addListDataListener(this);
-    page.getResponses().forEach(m -> responseModels.addResponse(new ChoiceResponseModel(m)));
+    this.responseModels = new GenericListModel<>();
+    this.giftModels = new GenericListModel<>();
+    page.getResponses().forEach(m -> responseModels.addItem(new ChoiceResponseModel(m)));
   }
 
   public ChoicePageModel() {
@@ -46,8 +46,12 @@ public class ChoicePageModel extends AbstractPageModel implements ListDataListen
     }
   }
 
-  public ResponseChoiceListModel getResponseModels() {
+  public GenericListModel<ChoiceResponseModel> getResponseListModel() {
     return responseModels;
+  }
+
+  public GenericListModel<String> getGiftListModel() {
+    return giftModels;
   }
 
   @Override
@@ -63,22 +67,22 @@ public class ChoicePageModel extends AbstractPageModel implements ListDataListen
     return newModel;
   }
 
-  public void updateList() {
-    page.setResponses(getResponseModels().getContent().stream().map(ChoiceResponseModel::getResponse).toList());
+
+  public GenericListModel<ChoiceResponseModel> cloneChoiceResponses() {
+    return new GenericListModel<ChoiceResponseModel>(
+        getResponses().stream().map(r -> new ChoiceResponseModel(r.clone())).toList());
   }
 
-  @Override
-  public void intervalAdded(ListDataEvent e) {
-    updateList();
+  public void setResponseModels(List<ChoiceResponse> input) {
+    responseModels = new GenericListModel<>(
+        input.stream().map(r -> new ChoiceResponseModel(r.clone())).toList());
   }
 
-  @Override
-  public void intervalRemoved(ListDataEvent e) {
-    updateList();
+  public GenericListModel<String> cloneGifts() {
+    return new GenericListModel<String>(getGifts().stream().map(String::new).toList());
   }
 
-  @Override
-  public void contentsChanged(ListDataEvent e) {
-    updateList();
+  public void setGiftModels(List<String> input) {
+    giftModels = new GenericListModel<String>(input.stream().map(String::new).toList());
   }
 }

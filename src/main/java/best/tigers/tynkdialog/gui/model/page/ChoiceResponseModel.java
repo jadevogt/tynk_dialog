@@ -5,6 +5,7 @@ import best.tigers.tynkdialog.game.page.ChoiceResponse.ResponseIcon;
 import best.tigers.tynkdialog.gui.model.AbstractModel;
 
 public class ChoiceResponseModel extends AbstractModel {
+
   private final ChoiceResponse response;
 
   public ChoiceResponseModel(ChoiceResponse response) {
@@ -40,5 +41,9 @@ public class ChoiceResponseModel extends AbstractModel {
 
   public ChoiceResponse getResponse() {
     return response;
+  }
+
+  public ChoiceResponseModel clone() {
+    return new ChoiceResponseModel(response.clone());
   }
 }

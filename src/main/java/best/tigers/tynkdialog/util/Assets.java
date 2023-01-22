@@ -6,16 +6,18 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
-import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.Objects;
 import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.InputMap;
+import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
 import javax.swing.text.DefaultEditorKit;
 
 public class Assets {
@@ -25,9 +27,9 @@ public class Assets {
   public static final Dimension INTEGRATION_WINDOW_SIZE = new Dimension(300, 300);
   public static final String APPLICATION_AUTHOR = "Jade Vogt @tigerstyping";
   private static Assets singleInstance = null;
+  private final UIDefaults defaults;
   private Font terminus;
   private Font little;
-  private final UIDefaults defaults;
   private BufferedImage timer;
   private BufferedImage imageIconsLit;
   private BufferedImage imageIconsDim;
@@ -35,10 +37,14 @@ public class Assets {
 
   private Assets() {
     ClassLoader classLoader = getClass().getClassLoader();
-    File terminusFile = new File(Objects.requireNonNull(classLoader.getResource("terminus.ttf")).getFile());
-    File littleFile = new File(Objects.requireNonNull(classLoader.getResource("little.ttf")).getFile());
-    File choiceIconsDimFile = new File(Objects.requireNonNull(classLoader.getResource("choice_icons_dim.png")).getFile());
-    File choiceIconsLitFile = new File(Objects.requireNonNull(classLoader.getResource("choice_icons_lit.png")).getFile());
+    File terminusFile = new File(
+        Objects.requireNonNull(classLoader.getResource("terminus.ttf")).getFile());
+    File littleFile = new File(
+        Objects.requireNonNull(classLoader.getResource("little.ttf")).getFile());
+    File choiceIconsDimFile = new File(
+        Objects.requireNonNull(classLoader.getResource("choice_icons_dim.png")).getFile());
+    File choiceIconsLitFile = new File(
+        Objects.requireNonNull(classLoader.getResource("choice_icons_lit.png")).getFile());
 
     defaults = UIManager.getDefaults();
     terminus = null;
@@ -100,7 +106,10 @@ public class Assets {
   public static Font getTerminus() {
     return getInstance().terminus;
   }
-  public static Font getLittle() {return getInstance().little;}
+
+  public static Font getLittle() {
+    return getInstance().little;
+  }
 
   public static BufferedImage getChoiceIconsDim() {
     return getInstance().imageIconsDim;

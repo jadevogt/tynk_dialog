@@ -18,11 +18,6 @@ public class ChoiceResponse {
   @Setter
   private ResponseIcon icon;
 
-  @Override
-  public String toString() {
-    return content;
-  }
-
   public ChoiceResponse(String content, String choiceResult, ResponseIcon icon) {
     this.content = content;
     this.choiceResult = choiceResult;
@@ -49,6 +44,11 @@ public class ChoiceResponse {
     return responseIcon;
   }
 
+  @Override
+  public String toString() {
+    return content;
+  }
+
   public JsonObject serialize() {
     JsonObjectBuilder result = Json.createObjectBuilder();
     result.add("txt", content);
@@ -67,6 +67,10 @@ public class ChoiceResponse {
     }
     result.add("symbol", iconValue);
     return result.build();
+  }
+
+  public ChoiceResponse clone() {
+    return new ChoiceResponse(content, choiceResult, icon);
   }
 
   public enum ResponseIcon {

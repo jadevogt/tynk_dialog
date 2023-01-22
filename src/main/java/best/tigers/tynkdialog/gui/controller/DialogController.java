@@ -76,7 +76,8 @@ public class DialogController {
     var enterMapKey = "Enter";
     table.attachFunctionalKeyboardShortcut(enterKey, enterMapKey, this::editPage);
 
-    view.addEditorActions(new EditAction(), buildAddAction("talk"), buildAddAction("flat"), buildAddAction("choice"),
+    view.addEditorActions(new EditAction(), buildAddAction("talk"), buildAddAction("flat"),
+        buildAddAction("choice"),
         new DeleteAction(), new SwapUpAction(), new SwapDownAction());
     view.attachFocusListener(this::saveTitle);
 

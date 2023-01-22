@@ -34,13 +34,13 @@ public abstract class AbstractPageEditorView implements TObserver, ShortcutSuppo
   @Getter
   private AbstractAction continueAction;
 
-  public abstract AbstractPage asPage();
-
   public AbstractPageEditorView() {
     panel = new JPanel();
     frame = new DynamicFrame();
     frame.add(panel);
   }
+
+  public abstract AbstractPage asPage();
 
   public void close() {
     panel.dispatchEvent(new WindowEvent(frame, WINDOW_CLOSING));

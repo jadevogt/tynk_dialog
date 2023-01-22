@@ -3,7 +3,6 @@ package best.tigers.tynkdialog.gui.model.page;
 import best.tigers.tynkdialog.game.page.AbstractPage;
 import best.tigers.tynkdialog.game.page.FlatPage;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.Delegate;
 
 public class FlatPageModel extends AbstractPageModel {

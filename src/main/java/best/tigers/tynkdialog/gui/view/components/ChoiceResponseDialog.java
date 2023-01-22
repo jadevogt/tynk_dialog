@@ -1,14 +1,10 @@
 package best.tigers.tynkdialog.gui.view.components;
 
-import best.tigers.tynkdialog.game.Constants;
 import best.tigers.tynkdialog.game.page.ChoiceResponse;
 import best.tigers.tynkdialog.game.page.ChoiceResponse.ResponseIcon;
-import best.tigers.tynkdialog.supertext.SuperTextDocument;
 import best.tigers.tynkdialog.supertext.SuperTextEditorKit;
-import best.tigers.tynkdialog.util.Assets;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
@@ -20,7 +16,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -32,7 +27,7 @@ import javax.swing.border.EmptyBorder;
 public class ChoiceResponseDialog {
 
   private final JDialog dialog;
-  private final SuperTextDisplayPane textField;
+  private final SuperTextEditorPane textField;
   private final JTextField resultField;
   private final JComboBox<ChoiceResponse.ResponseIcon> iconSelector;
   private final JButton okayButton;
@@ -42,7 +37,7 @@ public class ChoiceResponseDialog {
   private JToolBar toolBar;
 
   public ChoiceResponseDialog(ChoiceResponse response) {
-    textField = new SuperTextDisplayPane(1);
+    textField = new SuperTextEditorPane(1);
     textField.setLighterBackground();
     textField.setText(response.getContent());
     resultField = new JTextField();
@@ -58,6 +53,22 @@ public class ChoiceResponseDialog {
     dialog = new DynamicDialog();
     dialog.setModal(true);
     okayButton = new JButton("OK (Enter)");
+  }
+
+  public ChoiceResponseDialog() {
+    this(new ChoiceResponse());
+  }
+
+  public static ChoiceResponse promptForResponseDetails() {
+    var prompt = new ChoiceResponseDialog();
+    prompt.init();
+    return prompt.getValue();
+  }
+
+  public static ChoiceResponse promptForResponseDetails(ChoiceResponse response) {
+    var prompt = new ChoiceResponseDialog(response);
+    prompt.init();
+    return prompt.getValue();
   }
 
   protected JToolBar createContentToolbar() {
@@ -86,22 +97,6 @@ public class ChoiceResponseDialog {
     Arrays.stream(actions).forEach(action -> toolbar.add(map.get(action)));
     toolbar.add(function);
     return toolbar;
-  }
-
-  public ChoiceResponseDialog() {
-    this(new ChoiceResponse());
-  }
-
-  public static ChoiceResponse promptForResponseDetails() {
-    var prompt = new ChoiceResponseDialog();
-    prompt.init();
-    return prompt.getValue();
-  }
-
-  public static ChoiceResponse promptForResponseDetails(ChoiceResponse response) {
-    var prompt = new ChoiceResponseDialog(response);
-    prompt.init();
-    return prompt.getValue();
   }
 
   public ChoiceResponse getValue() {

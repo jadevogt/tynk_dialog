@@ -1,6 +1,5 @@
 package best.tigers.tynkdialog.gui.controller.page;
 
-import best.tigers.tynkdialog.game.page.AbstractPage;
 import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
 import best.tigers.tynkdialog.gui.view.page.AbstractPageEditorView;
 import java.awt.event.InputEvent;
@@ -8,6 +7,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 public abstract class AbstractPageController {
+
   public abstract AbstractPageModel getModel();
 
   abstract AbstractPageEditorView getView();
@@ -25,7 +25,9 @@ public abstract class AbstractPageController {
   public void saveChanges() {
     getModel().setPage(getView().asPage());
     getModel().notifySubscribers();
-  };
+  }
+
+  ;
 
   void initView() {
     getView().attachSaveAction(this::saveAndExit);

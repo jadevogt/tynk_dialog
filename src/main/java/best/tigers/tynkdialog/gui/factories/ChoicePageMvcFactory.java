@@ -29,6 +29,6 @@ public class ChoicePageMvcFactory extends AbstractPageMvcFactory {
   @Override
   public AbstractPageController createPageController(AbstractPageModel pageModel,
       AbstractPageEditorView pageView) {
-    return new ChoicePageController((ChoicePageModel) pageModel, pageView);
+    return new ChoicePageController((ChoicePageModel) pageModel, (ChoicePageEditorView) pageView);
   }
 }

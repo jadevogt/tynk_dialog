@@ -5,6 +5,7 @@ import best.tigers.tynkdialog.gui.model.page.ChoicePageModel;
 import lombok.Getter;
 
 public class ChoiceOverviewCellComponent extends AbstractOverviewCellComponent {
+
   @Getter
   private ChoicePageModel pageModel;
 

@@ -1,20 +1,28 @@
 package best.tigers.tynkdialog.gui.view.page;
 
 import best.tigers.tynkdialog.gui.model.page.ChoiceResponseModel;
-import best.tigers.tynkdialog.gui.view.components.SuperTextDisplayPane;
+import best.tigers.tynkdialog.gui.view.components.SuperTextEditorPane;
 import best.tigers.tynkdialog.util.Assets;
-
-import javax.swing.*;
-import javax.swing.border.LineBorder;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.ListCellRenderer;
+import javax.swing.border.LineBorder;
 
 class ChoiceRenderer implements ListCellRenderer<ChoiceResponseModel> {
+
   @Override
-  public Component getListCellRendererComponent(JList<? extends ChoiceResponseModel> list, ChoiceResponseModel value, int index, boolean isSelected, boolean cellHasFocus) {
+  public Component getListCellRendererComponent(JList<? extends ChoiceResponseModel> list,
+      ChoiceResponseModel value, int index, boolean isSelected, boolean cellHasFocus) {
     return new ChoiceCellComponent(value, isSelected);
   }
+
   static private class ChoiceCellComponent extends JPanel {
+
     private final ChoiceResponseModel model;
     private BufferedImage iconSheet;
 
@@ -22,7 +30,7 @@ class ChoiceRenderer implements ListCellRenderer<ChoiceResponseModel> {
       super();
 
       this.model = choiceResponseModel;
-      var text = new SuperTextDisplayPane(1, 0);
+      var text = new SuperTextEditorPane(1, 0);
       var iconPanel = new ChoiceIconComponent(choiceResponseModel, selected);
       text.setFont(Assets.getLittle());
       text.setPreferredSize(new Dimension(250, text.getPreferredSize().height));
@@ -44,6 +52,7 @@ class ChoiceRenderer implements ListCellRenderer<ChoiceResponseModel> {
   }
 
   static private class ChoiceIconComponent extends JPanel {
+
     private ChoiceResponseModel model;
     private BufferedImage iconSheet;
 
@@ -57,6 +66,7 @@ class ChoiceRenderer implements ListCellRenderer<ChoiceResponseModel> {
       this.model = choiceResponseModel;
       this.setPreferredSize(new Dimension(14, 14));
     }
+
     public void paintComponent(Graphics g) {
       super.paintComponent(g);
       var xoffset = model.getIcon().ordinal() * 7;

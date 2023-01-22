@@ -127,7 +127,8 @@ public class TalkPageEditorView extends AbstractPageEditorView {
             .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
                 .addComponent(styleCheck)
                 .addComponent(style.getLabel())
-                .addComponent(style.getField(), style.getHeight(), style.getHeight(), style.getHeight()))
+                .addComponent(style.getField(), style.getHeight(), style.getHeight(),
+                    style.getHeight()))
             .addGroup(layout.createParallelGroup(Alignment.CENTER)
                 .addComponent(skipCheck)
                 .addComponent(skipLabelPanel))
@@ -238,9 +239,8 @@ public class TalkPageEditorView extends AbstractPageEditorView {
     var behaviorMenu = new JMenu("Behaviors");
 
     var kit = getEditorKit();
-    kit.getColorActions().forEach(colorMenu::add);
-    kit.getBehaviorActions().forEach(behaviorMenu::add);
-    behaviorMenu.add(kit.getClearBehaviorAction());
+    SuperTextEditorKit.getColorActions().forEach(colorMenu::add);
+    SuperTextEditorKit.getBehaviorActions().forEach(behaviorMenu::add);
     var delay = new JMenuItem(new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {

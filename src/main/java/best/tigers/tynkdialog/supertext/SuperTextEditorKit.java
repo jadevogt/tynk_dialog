@@ -2,6 +2,8 @@ package best.tigers.tynkdialog.supertext;
 
 import best.tigers.tynkdialog.game.Constants;
 import best.tigers.tynkdialog.gui.view.components.FunctionCallDialog;
+import best.tigers.tynkdialog.gui.view.components.IntegerDialog;
+import best.tigers.tynkdialog.gui.view.components.SuperTextEditorPane;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -43,12 +45,17 @@ public class SuperTextEditorKit extends StyledEditorKit {
   public static final String TYNK_WHITE_TEXT = "White";
   public static final String TYNK_GREY_TEXT = "Grey";
 
-  public static final TynkDelayAction DELAY_ACTION_FIVE = new TynkDelayAction(5);
-  public static final TynkDelayAction DELAY_ACTION_FIFTEEN = new TynkDelayAction(15);
-  public static final TynkDelayAction DELAY_ACTION_SIXTY = new TynkDelayAction(60);
+  public static final TynkDelayAction DELAY_ACTION_FIVE = new TynkDelayAction(5,
+      KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.CTRL_DOWN_MASK, true));
+  public static final TynkDelayAction DELAY_ACTION_FIFTEEN = new TynkDelayAction(15,
+      KeyStroke.getKeyStroke(KeyEvent.VK_2, InputEvent.CTRL_DOWN_MASK, true));
+  public static final TynkDelayAction DELAY_ACTION_SIXTY = new TynkDelayAction(60,
+      KeyStroke.getKeyStroke(KeyEvent.VK_3, InputEvent.CTRL_DOWN_MASK, true));
+  public static final TynkFunctionCallAction FUNCTION_CALL_ACTION = new TynkFunctionCallAction();
+  public static final TynkDelayAction DELAY_ACTION = new TynkDelayAction();
 
 
-  public static final Action[] defaultActions = {
+  public static final ShortcutAction[] defaultActions = {
       new TynkColorAction(Constants.TextColor.RED, KeyStroke.getKeyStroke(KeyEvent.VK_R,
           InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, true)),
       new TynkColorAction(Constants.TextColor.YELLOW, KeyStroke.getKeyStroke(KeyEvent.VK_Y,
@@ -65,10 +72,13 @@ public class SuperTextEditorKit extends StyledEditorKit {
           InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK, true)),
       new TynkBehaviorAction(Constants.Behavior.QUAKE, KeyStroke.getKeyStroke(KeyEvent.VK_Q,
           InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK, true)),
-      new ClearTynkBehaviorAction(),
+      new TynkBehaviorAction(KeyStroke.getKeyStroke(KeyEvent.VK_B,
+          InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK, true)),
       DELAY_ACTION_FIVE,
       DELAY_ACTION_FIFTEEN,
       DELAY_ACTION_SIXTY,
+      FUNCTION_CALL_ACTION,
+      DELAY_ACTION,
   };
   private final MouseMotionListener listener;
   private final MouseListener clickListener;
@@ -148,6 +158,12 @@ public class SuperTextEditorKit extends StyledEditorKit {
     };
   }
 
+  public static Stream<TynkDelayAction> getCannedDelayActions() {
+    return Arrays.stream(defaultActions).filter(
+        a -> a.equals(DELAY_ACTION_FIVE) || a.equals(DELAY_ACTION_FIFTEEN) || a.equals(
+            DELAY_ACTION_SIXTY)).map(TynkDelayAction.class::cast);
+  }
+
   public static void addTimeDelay(JTextComponent e, int delayMagnitude) {
     if (e instanceof JEditorPane editor) {
       var document = editor.getDocument();
@@ -166,6 +182,23 @@ public class SuperTextEditorKit extends StyledEditorKit {
     }
   }
 
+  public static Stream<TynkColorAction> getColorActions() {
+    return Arrays.stream(defaultActions)
+        .filter((action -> action instanceof TynkColorAction))
+        .map(action -> (TynkColorAction) action);
+  }
+
+  public static Stream<TynkBehaviorAction> getBehaviorActions() {
+    return Arrays.stream(defaultActions).filter((action -> action instanceof TynkBehaviorAction))
+        .map(action -> (TynkBehaviorAction) action);
+  }
+
+  public static Stream<StyledTextAction> getInsertActions() {
+    return Arrays.stream(defaultActions)
+        .filter((action -> action.equals(FUNCTION_CALL_ACTION) || action.equals(DELAY_ACTION)))
+        .map(StyledTextAction.class::cast);
+  }
+
   @Override
   public String getContentType() {
     return "supertext/supertext";
@@ -181,23 +214,11 @@ public class SuperTextEditorKit extends StyledEditorKit {
     return new SuperTextViewFactory();
   }
 
-  public Stream<TynkColorAction> getColorActions() {
-    return Arrays.stream(defaultActions).filter((action -> action instanceof TynkColorAction))
-        .map(a -> (TynkColorAction) a);
-  }
-
-  public Stream<TynkBehaviorAction> getBehaviorActions() {
-    return Arrays.stream(defaultActions).filter((action -> action instanceof TynkBehaviorAction))
-        .map(a -> (TynkBehaviorAction) a);
-  }
-
-  public Action getClearBehaviorAction() {
-    return new ClearTynkBehaviorAction();
-  }
-
   @Override
   public Action[] getActions() {
-    return StyledTextAction.augmentList(super.getActions(), defaultActions);
+    var actions = Arrays.stream(defaultActions).filter(action -> action instanceof Action)
+        .map(action -> ((Action) action)).toArray(Action[]::new);
+    return StyledTextAction.augmentList(super.getActions(), actions);
   }
 
   @Override
@@ -233,6 +254,13 @@ public class SuperTextEditorKit extends StyledEditorKit {
     super.deinstall(c);
   }
 
+  public static interface ShortcutAction {
+
+    public KeyStroke getKeyStroke();
+
+    public String getKeyMapName();
+  }
+
   static class TynkColorIcon implements Icon {
 
     private final Constants.TextColor color;
@@ -260,7 +288,7 @@ public class SuperTextEditorKit extends StyledEditorKit {
     }
   }
 
-  public static class TynkColorAction extends ForegroundAction {
+  public static class TynkColorAction extends ForegroundAction implements ShortcutAction {
 
     private final KeyStroke shortcutKey;
     private final String keyMapName;
@@ -275,35 +303,18 @@ public class SuperTextEditorKit extends StyledEditorKit {
       putValue(Action.LARGE_ICON_KEY, new TynkColorIcon(new Dimension(32, 16), tynkColor));
     }
 
-    public KeyStroke getShortcutKey() {
+    @Override
+    public KeyStroke getKeyStroke() {
       return shortcutKey;
     }
 
+    @Override
     public String getKeyMapName() {
       return keyMapName;
     }
   }
 
-  public static class ClearTynkBehaviorAction extends StyledTextAction {
-
-    //private Constants.Behavior tynkBehavior;
-    public ClearTynkBehaviorAction() {
-      super("None");
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-      var textComponent = getTextComponent(e);
-      if (textComponent instanceof JEditorPane editor) {
-        var document = getStyledDocument(editor);
-        if (document instanceof SuperTextDocument doc) {
-          doc.clearBehavior(editor.getSelectionStart(), editor.getSelectionEnd());
-        }
-      }
-    }
-  }
-
-  public static class TynkBehaviorAction extends StyledTextAction {
+  public static class TynkBehaviorAction extends StyledTextAction implements ShortcutAction {
 
     private final Constants.Behavior tynkBehavior;
     private final KeyStroke shortcutKey;
@@ -316,10 +327,19 @@ public class SuperTextEditorKit extends StyledEditorKit {
       this.tynkBehavior = tynkBehavior;
     }
 
-    public KeyStroke getShortcutKey() {
+    public TynkBehaviorAction(KeyStroke shortcutKey) {
+      super("Clear Behavior");
+      this.shortcutKey = shortcutKey;
+      this.keyMapName = "Clear" + "keyboardShortcut";
+      this.tynkBehavior = null;
+    }
+
+    @Override
+    public KeyStroke getKeyStroke() {
       return shortcutKey;
     }
 
+    @Override
     public String getKeyMapName() {
       return keyMapName;
     }
@@ -330,41 +350,99 @@ public class SuperTextEditorKit extends StyledEditorKit {
       if (textComponent instanceof JEditorPane editor) {
         var document = getStyledDocument(editor);
         if (document instanceof SuperTextDocument doc) {
-          doc.setBehavior(editor.getSelectionStart(), editor.getSelectionEnd(), tynkBehavior);
+          if (tynkBehavior == null) {
+            doc.clearBehavior(editor.getSelectionStart(), editor.getSelectionEnd());
+          } else {
+            doc.setBehavior(editor.getSelectionStart(), editor.getSelectionEnd(), tynkBehavior);
+          }
         }
       }
     }
   }
 
-  public static class TynkDelayAction extends StyledTextAction {
 
-    private final int delayMagnitude;
+  public static class TynkDelayAction extends StyledTextAction implements ShortcutAction {
 
-    public TynkDelayAction(int delayMagnitude) {
-      super("Wait " + delayMagnitude);
+    private final Integer delayMagnitude;
+    private KeyStroke keyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_D,
+        InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK, true);
+    private String keyMapName = "addDelayShortcut";
+
+    public TynkDelayAction(int delayMagnitude, KeyStroke keyStroke) {
+      super("Delay " + delayMagnitude + " ticks");
       this.delayMagnitude = delayMagnitude;
+      this.keyStroke = keyStroke;
+      this.keyMapName = "delay" + delayMagnitude + "Ticks";
+    }
+
+    public TynkDelayAction() {
+      super("Delay...");
+      this.delayMagnitude = null;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-      SuperTextEditorKit.addTimeDelay(getTextComponent(e), delayMagnitude);
+      if (delayMagnitude != null) {
+        SuperTextEditorKit.addTimeDelay(getTextComponent(e), delayMagnitude);
+      } else {
+        if (SuperTextEditorPane.lastFocused == null) {
+          return;
+        }
+        var magnitude = IntegerDialog.promptForInteger();
+        SuperTextEditorKit.addTimeDelay(getTextComponent(e), magnitude);
+      }
+    }
+
+    @Override
+    public KeyStroke getKeyStroke() {
+      return this.keyStroke;
+    }
+
+    @Override
+    public String getKeyMapName() {
+      return this.keyMapName;
     }
   }
 
-  public static class TynkFunctionCallAction extends StyledTextAction {
+  public static class TynkFunctionCallAction extends StyledTextAction implements ShortcutAction {
 
-    private final String functionName;
-    private final String functionParam;
+    public static KeyStroke KEY_STROKE = KeyStroke.getKeyStroke(KeyEvent.VK_F,
+        InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK, true);
+    public static String KEY_MAP_NAME = "functionCallShortcut";
+    private final Runnable autoDisableSkip;
 
-    public TynkFunctionCallAction(String functionName, String functionParam) {
-      super("Function call: " + functionName + '(' + functionParam + ')');
-      this.functionName = functionName;
-      this.functionParam = functionParam;
+    public TynkFunctionCallAction() {
+      super("Function call...");
+      autoDisableSkip = null;
+    }
+
+
+    public TynkFunctionCallAction(Runnable autoDisableSkip) {
+      super("Function call...");
+      this.autoDisableSkip = autoDisableSkip;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-      SuperTextEditorKit.addFunctionCall(getTextComponent(e), functionName, functionParam);
+      var functionDetails = FunctionCallDialog.promptForFunctionDetails();
+      if (SuperTextEditorPane.lastFocused == null) {
+        return;
+      }
+      SuperTextEditorKit.addFunctionCall(SuperTextEditorPane.lastFocused, functionDetails[0],
+          functionDetails[1]);
+      if (autoDisableSkip != null) {
+        autoDisableSkip.run();
+      }
+    }
+
+    @Override
+    public KeyStroke getKeyStroke() {
+      return KEY_STROKE;
+    }
+
+    @Override
+    public String getKeyMapName() {
+      return KEY_MAP_NAME;
     }
   }
 

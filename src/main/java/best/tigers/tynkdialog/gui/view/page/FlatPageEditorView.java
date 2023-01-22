@@ -3,7 +3,6 @@ package best.tigers.tynkdialog.gui.view.page;
 import best.tigers.tynkdialog.game.page.AbstractPage;
 import best.tigers.tynkdialog.game.page.FlatPage;
 import best.tigers.tynkdialog.gui.model.page.FlatPageModel;
-import best.tigers.tynkdialog.gui.view.components.LabeledField;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JTextField;
