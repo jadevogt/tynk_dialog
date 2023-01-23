@@ -36,24 +36,26 @@ public class Assets {
 
 
   private Assets() {
-    ClassLoader classLoader = getClass().getClassLoader();
-    File terminusFile = new File(
-        Objects.requireNonNull(classLoader.getResource("terminus.ttf")).getFile());
-    File littleFile = new File(
-        Objects.requireNonNull(classLoader.getResource("little.ttf")).getFile());
-    File choiceIconsDimFile = new File(
-        Objects.requireNonNull(classLoader.getResource("choice_icons_dim.png")).getFile());
-    File choiceIconsLitFile = new File(
-        Objects.requireNonNull(classLoader.getResource("choice_icons_lit.png")).getFile());
-
     defaults = UIManager.getDefaults();
+    try {
+      ClassLoader classLoader = getClass().getClassLoader();
+      var terminusFile =
+              Objects.requireNonNull(classLoader.getResource("terminus.ttf")).openStream();
+      var littleFile =
+              Objects.requireNonNull(classLoader.getResource("little.ttf")).openStream();
+      var choiceIconsDimFile = ImageIO.read(
+              Objects.requireNonNull(classLoader.getResource("dim.png")).openStream());
+      var choiceIconsLitFile = ImageIO.read(
+              Objects.requireNonNull(classLoader.getResource("lit.png")).openStream());
+
+
+
     terminus = null;
     little = null;
     imageIconsDim = null;
     imageIconsLit = null;
-    try {
-      imageIconsDim = ImageIO.read(choiceIconsDimFile);
-      imageIconsLit = ImageIO.read(choiceIconsLitFile);
+      imageIconsDim = choiceIconsDimFile;
+      imageIconsLit = choiceIconsLitFile;
       GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
       terminus = Font.createFont(Font.TRUETYPE_FONT, terminusFile).deriveFont(20F);
       ge.registerFont(terminus);
@@ -69,6 +71,18 @@ public class Assets {
       singleInstance = new Assets();
     }
     return singleInstance;
+  }
+
+  public void refreshAssets() {
+    ClassLoader classLoader = getClass().getClassLoader();
+    File terminusFile = new File(
+            Objects.requireNonNull(classLoader.getResource("terminus.ttf")).getFile());
+    File littleFile = new File(
+            Objects.requireNonNull(classLoader.getResource("little.ttf")).getFile());
+    File choiceIconsDimFile = new File(
+            Objects.requireNonNull(classLoader.getResource("dim.png")).getFile());
+    File choiceIconsLitFile = new File(
+            Objects.requireNonNull(classLoader.getResource("lit.png")).getFile());
   }
 
   private static void addOSXKeyStrokes(InputMap inputMap) {

@@ -34,7 +34,6 @@ import javax.swing.text.Position;
 import javax.swing.text.StyledEditorKit;
 import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
-import org.apache.commons.lang3.StringUtils;
 
 public class SuperTextEditorKit extends StyledEditorKit {
 
@@ -293,8 +292,14 @@ public class SuperTextEditorKit extends StyledEditorKit {
     private final KeyStroke shortcutKey;
     private final String keyMapName;
 
+    private static String capitalize(String input) {
+      var begin = input.substring(0,1).toUpperCase();
+      var end = input.substring(1);
+      return begin + end;
+    }
+
     public TynkColorAction(Constants.TextColor tynkColor, KeyStroke shortcutKey) {
-      super(StringUtils.capitalize(tynkColor.getGameName()), tynkColor.toAWT());
+      super(capitalize(tynkColor.getGameName()), tynkColor.toAWT());
       this.shortcutKey = shortcutKey;
       this.keyMapName = tynkColor.getGameName() + "keyboardShortcut";
       putValue(Action.SHORT_DESCRIPTION,

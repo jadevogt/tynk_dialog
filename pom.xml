@@ -3,6 +3,7 @@
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <artifactId>tynk_dialog</artifactId>
+
   <build>
 
     <plugins>
@@ -19,6 +20,25 @@
         </configuration>
         <groupId>org.apache.maven.plugins</groupId>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jlink-plugin</artifactId>
+        <version>3.1.0</version>
+      </plugin>
+      <plugin>
+        <groupId>org.panteleyev</groupId>
+        <artifactId>jpackage-maven-plugin</artifactId>
+        <version>1.4.0</version>
+        <configuration>
+          <name>TreeFX</name>
+          <appVersion>1.0.0</appVersion>
+          <vendor>com.acme</vendor>
+          <destination>target/dist</destination>
+          <module>target/tynk.dialog</module>
+          <runtimeImage>target</runtimeImage>
+        </configuration>
+      </plugin>
+
     </plugins>
     <resources>
       <resource>
@@ -28,6 +48,7 @@
         </includes>
       </resource>
     </resources>
+
   </build>
   <dependencies>
     <dependency>
@@ -36,21 +57,10 @@
       <version>1.1.4</version>
     </dependency>
     <dependency>
-      <artifactId>javax.json</artifactId>
-      <groupId>org.glassfish</groupId>
-      <version>1.1.4</version>
-    </dependency>
-    <dependency>
       <artifactId>junit-jupiter</artifactId>
       <groupId>org.junit.jupiter</groupId>
       <scope>test</scope>
       <version>5.9.0</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
-    <dependency>
-      <artifactId>commons-lang3</artifactId>
-      <groupId>org.apache.commons</groupId>
-      <version>3.12.0</version>
     </dependency>
 
     <dependency>
@@ -70,14 +80,9 @@
       <version>RELEASE</version>
     </dependency>
     <dependency>
-      <artifactId>jSystemThemeDetector</artifactId>
-      <groupId>com.github.Dansoftowner</groupId>
-      <version>3.8</version>
-    </dependency>
-    <dependency>
       <artifactId>lombok</artifactId>
       <groupId>org.projectlombok</groupId>
-      <scope>provided</scope>
+      <scope>compile</scope>
       <version>1.18.24</version>
     </dependency>
   </dependencies>
@@ -88,11 +93,6 @@
     <maven.compiler.target>8</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-  <repositories>
-    <repository>
-      <id>jitpack.io</id>
-      <url>https://jitpack.io</url>
-    </repository>
-  </repositories>
   <version>1.0-SNAPSHOT</version>
+
 </project>
