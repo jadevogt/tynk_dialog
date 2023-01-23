@@ -33,7 +33,7 @@ public class IntegerDialog {
   public IntegerDialog() {
     value = 0;
     intField = new JTextField();
-    dialog = new JDialog();
+    dialog = new DynamicDialog();
     dialog.setModal(true);
     okayButton = new JButton("OK (Enter)");
   }

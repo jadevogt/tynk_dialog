@@ -1,7 +1,17 @@
 package best.tigers.tynkdialog.gui.model;
 
+import best.tigers.tynkdialog.exceptions.PageModelException;
 import best.tigers.tynkdialog.game.Dialog;
-import best.tigers.tynkdialog.game.DialogPage;
+import best.tigers.tynkdialog.game.page.AbstractPage;
+import best.tigers.tynkdialog.game.page.ChoicePage;
+import best.tigers.tynkdialog.game.page.BranchPage;
+import best.tigers.tynkdialog.game.page.FlatPage;
+import best.tigers.tynkdialog.game.page.TalkPage;
+import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
+import best.tigers.tynkdialog.gui.model.page.BranchPageModel;
+import best.tigers.tynkdialog.gui.model.page.ChoicePageModel;
+import best.tigers.tynkdialog.gui.model.page.FlatPageModel;
+import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
 import best.tigers.tynkdialog.gui.view.TObserver;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,11 +19,11 @@ import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
-public class DialogModel extends AbstractModel implements ListModel<DialogPageModel>, TObserver {
+public class DialogModel extends AbstractModel implements ListModel<AbstractPageModel>, TObserver {
 
-  private final ArrayList<DialogPageModel> pages;
+  private final ArrayList<AbstractPageModel> pages;
   private final ArrayList<ListDataListener> listDataListeners;
-  private DialogPageTableModel dptm;
+  private PageTableModel dptm;
   private String title;
 
   public DialogModel() {
@@ -22,26 +32,35 @@ public class DialogModel extends AbstractModel implements ListModel<DialogPageMo
 
   public DialogModel(Dialog dialog) {
     pages = new ArrayList<>();
-    dptm = new DialogPageTableModel(pages);
+    dptm = new PageTableModel(pages);
     listDataListeners = new ArrayList<>();
     setTitle(dialog.getTitle());
-    for (DialogPage page : dialog.getPages()) {
-      addPage(new DialogPageModel(page));
+    for (AbstractPage page : dialog.getPages()) {
+      var pageKind = page.getPageKind();
+      switch (pageKind) {
+        case "talk" -> addPage(new TalkPageModel((TalkPage) page));
+        case "flat" -> addPage(new FlatPageModel((FlatPage) page));
+        case "choice" -> addPage(new ChoicePageModel((ChoicePage) page));
+        case "branch" -> addPage(new BranchPageModel((BranchPage) page));
+        default -> throw new PageModelException("No models exists for page kind " + pageKind + ".");
+      }
     }
   }
 
-  public void addPage(DialogPageModel newPage) {
+  public void addPage(AbstractPageModel newPage) {
     newPage.attachSubscriber(this);
     pages.add(newPage);
     notifyListeners();
   }
 
-  public void deletePage(DialogPageModel removedPage) {
+  public void deletePage(AbstractPageModel removedPage) {
     pages.remove(removedPage);
+    removedPage.setDeleted(true);
+    removedPage.notifySubscribers();
     notifyListeners();
   }
 
-  public ArrayList<DialogPageModel> getPages() {
+  public ArrayList<AbstractPageModel> getPages() {
     return pages;
   }
 
@@ -51,7 +70,7 @@ public class DialogModel extends AbstractModel implements ListModel<DialogPageMo
   }
 
   @Override
-  public DialogPageModel getElementAt(int index) {
+  public AbstractPageModel getElementAt(int index) {
     return pages.get(index);
   }
 
@@ -66,7 +85,7 @@ public class DialogModel extends AbstractModel implements ListModel<DialogPageMo
     for (ListDataListener listener : listDataListeners) {
       listener.contentsChanged(event);
     }
-    dptm = new DialogPageTableModel(pages);
+    dptm = new PageTableModel(pages);
     notifySubscribers();
   }
 
@@ -100,7 +119,7 @@ public class DialogModel extends AbstractModel implements ListModel<DialogPageMo
     notifyListeners();
   }
 
-  public int getPageIndex(DialogPageModel pageModel) {
+  public int getPageIndex(AbstractPageModel pageModel) {
     return pages.indexOf(pageModel);
   }
 
@@ -109,14 +128,14 @@ public class DialogModel extends AbstractModel implements ListModel<DialogPageMo
   }
 
   public Dialog getDialog() {
-    ArrayList<DialogPage> contents = new ArrayList<>();
-    for (DialogPageModel page : pages) {
-      contents.add(page.getDialogPage());
+    ArrayList<AbstractPage> contents = new ArrayList<>();
+    for (AbstractPageModel page : pages) {
+      contents.add(page.getPage());
     }
     return new Dialog(title, contents);
   }
 
-  public DialogPageTableModel getDptm() {
+  public PageTableModel getDptm() {
     return dptm;
   }
 }

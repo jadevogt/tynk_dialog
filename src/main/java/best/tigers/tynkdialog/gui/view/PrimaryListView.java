@@ -6,6 +6,7 @@ import best.tigers.tynkdialog.gui.view.components.DialogCellRenderer;
 import best.tigers.tynkdialog.gui.view.components.MenuBar;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import javax.swing.JButton;
@@ -23,7 +24,7 @@ import javax.swing.WindowConstants;
 
 public class PrimaryListView implements TObserver {
 
-  private static final Dimension PREFERRED_SIZE = new Dimension(600, 400);
+  private static final Dimension PREFERRED_SIZE = new Dimension(1000, 600);
   private final JFrame frame;
   private final JSplitPane splitPane;
   private final JList<DialogController> dialogList;
@@ -49,6 +50,10 @@ public class PrimaryListView implements TObserver {
     var view = new PrimaryListView(model);
     view.setupView();
     return view;
+  }
+
+  public Frame getFrame() {
+    return frame;
   }
 
   private void setupView() {

@@ -1,15 +1,16 @@
 package best.tigers.tynkdialog.gui.view;
 
 import best.tigers.tynkdialog.gui.model.DialogModel;
-import best.tigers.tynkdialog.gui.model.DialogPageModel;
-import best.tigers.tynkdialog.gui.model.DialogPageTableModel;
+import best.tigers.tynkdialog.gui.model.PageTableModel;
+import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
+import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
 import best.tigers.tynkdialog.gui.view.components.AutoResizingTable;
+import best.tigers.tynkdialog.gui.view.components.cells.OverviewCellRenderer;
+import best.tigers.tynkdialog.gui.view.components.cells.DetailedCellRenderer;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 import java.util.Arrays;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -24,7 +25,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
-public class DialogEditorView implements ShortcutSupport, DialogViewer, TObserver {
+public class DialogEditorView implements ShortcutSupport, TObserver {
 
   private final JPanel panel;
   private final JToolBar editorToolBar;
@@ -61,6 +62,7 @@ public class DialogEditorView implements ShortcutSupport, DialogViewer, TObserve
   private JScrollPane setupScrollPane() {
     var scrollPane = new JScrollPane(pageList);
     scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+    scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
     return scrollPane;
   }
 
@@ -98,16 +100,20 @@ public class DialogEditorView implements ShortcutSupport, DialogViewer, TObserve
       titleField.setText(model.getTitle());
     }
     pageList.setModel(model.getDptm());
-    pageList.resizeColumnWidth();
+    pageList.setDefaultRenderer(AbstractPageModel.class, new DetailedCellRenderer());
+    pageList.setDefaultRenderer(TalkPageModel.class, new DetailedCellRenderer());
+    var columnModel = pageList.getColumnModel();
+    var column = columnModel.getColumn(0);
+    column.setCellRenderer(new OverviewCellRenderer());
+    pageList.setupView();
+    //pageList.resizeColumnWidth();
     pageList.validate();
   }
 
-  @Override
   public String getTitle() {
     return titleField.getText();
   }
 
-  @Override
   public void setTitle(String newTitle) {
     if (!newTitle.equals(titleField.getText())) {
       titleField.setText(newTitle);
@@ -123,17 +129,9 @@ public class DialogEditorView implements ShortcutSupport, DialogViewer, TObserve
             super.focusLost(e);
           }
         });
-    titleField.addMouseMotionListener(
-        new MouseMotionAdapter() {
-          @Override
-          public void mouseMoved(MouseEvent e) {
-            SwingUtilities.invokeLater(runner);
-            super.mouseMoved(e);
-          }
-        });
   }
 
-  public DialogPageModel getSelectedPage() {
+  public AbstractPageModel getSelectedPage() {
     return model.getDptm().getPageAt(pageList.getSelectedRow());
   }
 
@@ -145,11 +143,11 @@ public class DialogEditorView implements ShortcutSupport, DialogViewer, TObserve
     }
   }
 
-  public DialogPageModel getSelectedModel() {
+  public AbstractPageModel getSelectedModel() {
     return getSelectedPage();
   }
 
-  public DialogPageTableModel getDptm() {
+  public PageTableModel getDptm() {
     return model.getDptm();
   }
 

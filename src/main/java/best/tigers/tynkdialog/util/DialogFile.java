@@ -1,7 +1,7 @@
 package best.tigers.tynkdialog.util;
 
 import best.tigers.tynkdialog.exceptions.DialogFileIOException;
-import best.tigers.tynkdialog.exceptions.DialogParseException;
+import best.tigers.tynkdialog.exceptions.PageParseException;
 import best.tigers.tynkdialog.game.Dialog;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -60,7 +60,7 @@ public class DialogFile {
       DialogBuilder dialogBuilder = new DialogBuilder();
       try {
         dialogBuilder.ParseJSON(item.asJsonObject());
-      } catch (DialogParseException dpe) {
+      } catch (PageParseException dpe) {
         addError(dpe.getMessage());
       }
       dialog.add(dialogBuilder.build());
@@ -79,7 +79,6 @@ public class DialogFile {
       Log.info("Attempting to save JSON file to disk: " + path);
       writer = Json.createWriter(new FileWriter(path));
     } catch (IOException ioe) {
-      System.err.println(ioe.getLocalizedMessage());
       Log.error(
           "(FATAL) IOException encountered while trying to save file " + ioe.getLocalizedMessage());
       System.exit(1);
