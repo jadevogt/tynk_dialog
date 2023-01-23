@@ -2,6 +2,7 @@ package best.tigers.tynkdialog.gui.controller;
 
 import best.tigers.tynkdialog.gui.controller.page.AbstractPageController;
 import best.tigers.tynkdialog.gui.factories.AbstractPageMvcFactory;
+import best.tigers.tynkdialog.gui.factories.BranchPageMvcFactory;
 import best.tigers.tynkdialog.gui.factories.ChoicePageMvcFactory;
 import best.tigers.tynkdialog.gui.factories.FlatPageMvcFactory;
 import best.tigers.tynkdialog.gui.factories.TalkPageMvcFactory;
@@ -50,6 +51,7 @@ public class DialogController {
       case "flat" -> factory = new FlatPageMvcFactory();
       case "talk" -> factory = new TalkPageMvcFactory();
       case "choice" -> factory = new ChoicePageMvcFactory();
+      case "branch" -> factory = new BranchPageMvcFactory();
       default -> {
         Log.info("Couldn't find a MvcFactory for pageKind \"" + pageKind
             + ",\" falling back to talkKind.");
@@ -77,7 +79,7 @@ public class DialogController {
     table.attachFunctionalKeyboardShortcut(enterKey, enterMapKey, this::editPage);
 
     view.addEditorActions(new EditAction(), buildAddAction("talk"), buildAddAction("flat"),
-        buildAddAction("choice"),
+        buildAddAction("choice"), buildAddAction("branch"),
         new DeleteAction(), new SwapUpAction(), new SwapDownAction());
     view.attachFocusListener(this::saveTitle);
 

@@ -25,11 +25,16 @@ public class BranchRequirement {
   @Setter
   private Comparison comparison;
 
-  public BranchRequirement(String flag, Category category, String value, ValueType valueType) {
+  public BranchRequirement(String flag, Category category, String value, ValueType valueType, Comparison comparison) {
     this.flag = flag;
     this.category = category;
     this.value = value;
     this.valueType = valueType;
+    this.comparison = comparison;
+  }
+
+  public BranchRequirement() {
+    this("", Category.STORY, "", ValueType.INTEGER, Comparison.EQUAL);
   }
 
   public JsonObject serialize() {
@@ -77,4 +82,26 @@ public class BranchRequirement {
     STRING,
     INTEGER,
   }
+
+  public static String valueTypeCanonical(ValueType vt) {
+    return switch(vt) {
+      case REAL_NUMBER -> "real";
+      case BOOLEAN -> "bool";
+      case STRING -> "string";
+      case INTEGER -> "int";
+    };
+  }
+
+  public static String comparisonCanonical(Comparison c) {
+    return switch(c) {
+      case EQUAL -> "=";
+      case LESS_THAN -> "<";
+      case GREATER_THAN -> ">";
+    };
+  }
+
+  public BranchRequirement clone() {
+    return new BranchRequirement(flag, category, value, valueType, comparison);
+  }
 }
+

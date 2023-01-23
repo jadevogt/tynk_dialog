@@ -1,7 +1,7 @@
-package best.tigers.tynkdialog.gui.view.components.cells.factories;
+package best.tigers.tynkdialog.gui.view.components.cells;
 
 import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
-import best.tigers.tynkdialog.gui.view.components.cells.AbstractPageCellFactory;
+import best.tigers.tynkdialog.gui.view.components.cells.factories.AbstractPageCellFactory;
 import best.tigers.tynkdialog.util.Assets;
 import java.awt.Component;
 import java.awt.Font;
@@ -19,7 +19,9 @@ public class DetailedCellRenderer implements TableCellRenderer {
     if (value instanceof AbstractPageModel pageModel) {
       var factory = AbstractPageCellFactory.getPageCellFactory(pageModel);
       comp = factory.getDetailedComponent(pageModel, isSelected);
-      table.setRowHeight(row, comp.getPreferredSize().height);
+      if (table.getRowHeight(row) < comp.getPreferredSize().height) {
+        table.setRowHeight(row, comp.getPreferredSize().height);
+      }
     }
     return comp;
   }

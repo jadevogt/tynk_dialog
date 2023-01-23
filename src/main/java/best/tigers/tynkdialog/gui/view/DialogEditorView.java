@@ -6,7 +6,7 @@ import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
 import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
 import best.tigers.tynkdialog.gui.view.components.AutoResizingTable;
 import best.tigers.tynkdialog.gui.view.components.cells.OverviewCellRenderer;
-import best.tigers.tynkdialog.gui.view.components.cells.factories.DetailedCellRenderer;
+import best.tigers.tynkdialog.gui.view.components.cells.DetailedCellRenderer;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;

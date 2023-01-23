@@ -1,4 +1,4 @@
-package best.tigers.tynkdialog.gui.view.components.cells;
+package best.tigers.tynkdialog.gui.view.components.cells.factories;
 
 import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
 import best.tigers.tynkdialog.gui.view.components.cells.detailed.AbstractDetailedCellComponent;

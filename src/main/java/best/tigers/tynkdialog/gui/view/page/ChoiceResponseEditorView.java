@@ -42,22 +42,26 @@ public class ChoiceResponseEditorView extends JPanel implements TObserver {
     iconJComboBox.addItem(ChoiceResponse.ResponseIcon.SPEAK);
     add(iconJComboBox);
     add(resultField);
+
+    superTextEditorPane.setText(model.getContent());
+    iconJComboBox.setSelectedItem(model.getIcon());
+    resultField.setText(model.getResult());
     superTextEditorPane.addFocusListener(new FocusAdapter() {
+
       @Override
       public void focusLost(FocusEvent e) {
-        super.focusGained(e);
+        super.focusLost(e);
         saveChanges();
       }
     });
     resultField.addFocusListener(new FocusAdapter() {
       @Override
       public void focusLost(FocusEvent e) {
-        super.focusGained(e);
+        super.focusLost(e);
         saveChanges();
       }
     });
     iconJComboBox.addActionListener((e) -> saveChanges());
-    update();
   }
 
   public ChoiceResponseModel getModel() {

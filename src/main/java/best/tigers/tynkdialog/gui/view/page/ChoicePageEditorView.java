@@ -185,6 +185,7 @@ public class ChoicePageEditorView extends AbstractPageEditorView implements List
     contentField.setText(model.getContent());
     blip.setText(model.getBlip());
     skipCheck.setSelected(model.isCanSkip());
+
     responseListModel.removeListDataListener(this);
     responseListModel = model.cloneChoiceResponses();
     responseListModel.addListDataListener(this);

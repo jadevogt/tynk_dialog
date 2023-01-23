@@ -1,7 +1,6 @@
 package best.tigers.tynkdialog.gui.view.components.cells.factories;
 
 import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
-import best.tigers.tynkdialog.gui.view.components.cells.AbstractPageCellFactory;
 import best.tigers.tynkdialog.gui.view.components.cells.detailed.AbstractDetailedCellComponent;
 import best.tigers.tynkdialog.gui.view.components.cells.detailed.TalkDetailedCellComponent;
 import best.tigers.tynkdialog.gui.view.components.cells.overview.AbstractOverviewCellComponent;

@@ -21,6 +21,7 @@ public class GenericListController<T> {
       onDelete.run();
       var value = model.getElementAt(selectedIndex);
       model.deleteResponse(value);
+      model.notifyListeners();
     }
   }
 
@@ -28,6 +29,7 @@ public class GenericListController<T> {
     if (selectedIndex > 0) {
       model.swapListItems(selectedIndex, selectedIndex - 1);
       setIndices.accept(new int[]{selectedIndex - 1});
+      model.notifyListeners();
     } else {
       Toolkit.getDefaultToolkit().beep();
     }
@@ -38,6 +40,7 @@ public class GenericListController<T> {
     if (selectedIndex < size - 1 && selectedIndex > -1) {
       model.swapListItems(selectedIndex, selectedIndex + 1);
       setIndices.accept(new int[]{selectedIndex + 1});
+      model.notifyListeners();
     } else {
       Toolkit.getDefaultToolkit().beep();
     }

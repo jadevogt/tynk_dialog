@@ -3,6 +3,7 @@ package best.tigers.tynkdialog.util;
 import best.tigers.tynkdialog.exceptions.PageParseException;
 import best.tigers.tynkdialog.game.Dialog;
 import best.tigers.tynkdialog.game.page.AbstractPage;
+import best.tigers.tynkdialog.util.page.BranchPageBuilder;
 import best.tigers.tynkdialog.util.page.ChoicePageBuilder;
 import best.tigers.tynkdialog.util.page.FlatPageBuilder;
 import best.tigers.tynkdialog.util.page.PageBuilder;
@@ -34,6 +35,7 @@ public class DialogBuilder {
         case "talk" -> builder = new TalkPageBuilder();
         case "flat" -> builder = new FlatPageBuilder();
         case "choice" -> builder = new ChoicePageBuilder();
+        case "branch" -> builder = new BranchPageBuilder();
         default -> throw new PageParseException("Page kind " + kind + " is not yet supported!");
       }
       if (currentPage.getValueType() != JsonValue.ValueType.OBJECT) {

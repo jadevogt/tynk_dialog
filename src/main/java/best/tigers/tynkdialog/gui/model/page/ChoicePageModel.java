@@ -21,7 +21,7 @@ public class ChoicePageModel extends AbstractPageModel {
   public ChoicePageModel(ChoicePage page) {
     this.page = page;
     this.responseModels = new GenericListModel<>();
-    this.giftModels = new GenericListModel<>();
+    this.giftModels = new GenericListModel<>(page.getGifts());
     page.getResponses().forEach(m -> responseModels.addItem(new ChoiceResponseModel(m)));
   }
 
@@ -37,6 +37,8 @@ public class ChoicePageModel extends AbstractPageModel {
   @Override
   public void setPage(AbstractPage page) {
     this.page = (ChoicePage) page;
+    this.giftModels = new GenericListModel<>(((ChoicePage) page).getGifts());
+    ((ChoicePage) page).getResponses().forEach(m -> responseModels.addItem(new ChoiceResponseModel(m)));
   }
 
   public void setBlipEnabled(boolean blipEnabled) {
