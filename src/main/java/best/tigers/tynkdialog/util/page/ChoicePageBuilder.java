@@ -6,8 +6,8 @@ import best.tigers.tynkdialog.game.page.ChoiceResponse;
 import best.tigers.tynkdialog.util.ParseUtils;
 import java.util.ArrayList;
 import java.util.List;
-import javax.json.JsonObject;
-import javax.json.JsonString;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonString;
 
 public class ChoicePageBuilder implements PageBuilder {
 

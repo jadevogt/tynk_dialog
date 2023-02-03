@@ -3,17 +3,15 @@ package best.tigers.tynkdialog.gui.view.page;
 import best.tigers.tynkdialog.game.page.BranchPage;
 import best.tigers.tynkdialog.game.page.BranchPage.Leaf;
 import best.tigers.tynkdialog.game.page.BranchRequirement;
-import best.tigers.tynkdialog.game.page.ChoiceResponse;
 import best.tigers.tynkdialog.gui.controller.GenericListController;
 import best.tigers.tynkdialog.gui.model.GenericListModel;
 import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
 import best.tigers.tynkdialog.gui.model.page.BranchPageModel;
 import best.tigers.tynkdialog.gui.model.page.BranchRequirementModel;
-import best.tigers.tynkdialog.gui.model.page.ChoiceResponseModel;
 import best.tigers.tynkdialog.gui.view.components.LabeledField;
 import best.tigers.tynkdialog.gui.view.components.ScrollingListEditor;
+import best.tigers.tynkdialog.gui.view.page.neo.NeoBranchRequirementEditorView;
 import best.tigers.tynkdialog.util.Log;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -26,25 +24,32 @@ import lombok.Setter;
 
 public class BranchPageEditorView extends AbstractPageEditorView implements ListDataListener {
 
-  private BranchPageModel model;
-  private final ScrollingListEditor<BranchRequirementModel> branchListEditor;
-  private GenericListModel<BranchRequirementModel> branchListModel;
-  private JFrame frame = getFrame();
-  private JPanel panel = getPanel();
-  private LabeledField result = new LabeledField("result");
-  private JComboBox<Leaf> leafComboBox = new JComboBox<>();
-  private JButton saveButton = new JButton("save changes");
+  private final BranchPageModel model;
+  private final ScrollingListEditor<BranchRequirementModel> requirementListEditor;
+  private GenericListModel<BranchRequirementModel> requirementListModel;
+  private final JFrame frame = getFrame();
+  private final JPanel panel = getPanel();
+  private final LabeledField result = new LabeledField("result");
+  private final JComboBox<Leaf> leafComboBox = new JComboBox<>();
+  private final JButton saveButton = new JButton("save changes");
   private GenericListController<BranchRequirementModel> branchListController;
   private final JPanel requirementEditorPanel = new JPanel();
   @Getter @Setter
-  private BranchRequirementEditorView currentEditorView = null;
+  private NeoBranchRequirementEditorView currentEditorView = null;
   public BranchPageEditorView(AbstractPageModel pageModel) {
     model = (BranchPageModel) pageModel;
 
-    branchListModel = model.cloneRequirements();
-    branchListModel.addListDataListener(this);
-    branchListEditor = new ScrollingListEditor<>(branchListModel);
-    branchListEditor.setList(branchListModel);
+    var requirementModels = model.getPage()
+        .getRequirements()
+        .stream()
+        .map(BranchRequirementModel::new)
+        .toList();
+
+    requirementListModel = new GenericListModel<>(requirementModels);
+    requirementListModel.addListDataListener(this);
+
+    requirementListEditor = new ScrollingListEditor<>(requirementListModel);
+    requirementListEditor.setList(requirementListModel);
 
     var layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
     panel.setLayout(layout);
@@ -56,7 +61,7 @@ public class BranchPageEditorView extends AbstractPageEditorView implements List
     resultSubPanel.add(result.getLabel());
     resultSubPanel.add(result.getField());
     panel.add(resultSubPanel);
-    panel.add(branchListEditor);
+    panel.add(requirementListEditor);
     panel.add(requirementEditorPanel);
     panel.add(saveButton);
     frame.pack();
@@ -66,14 +71,17 @@ public class BranchPageEditorView extends AbstractPageEditorView implements List
 
   @Override
   public BranchPage asPage() {
-    branchListModel.getContent().stream().map(b -> b.clone().getRequirement()).forEach(m -> Log.info(m.getValue()));
-    var listModel = branchListModel;
-    return new BranchPage((Leaf) leafComboBox.getSelectedItem(), result.getText(),
-        listModel.getContent().stream().map(BranchRequirementModel::getRequirement).toList());
+    var listModel = requirementListModel;
+    var newLeaf = (Leaf) leafComboBox.getSelectedItem();
+    return new BranchPage(
+        newLeaf,
+        result.getText(),
+        listModel.getContent().stream().map(BranchRequirementModel::getRequirement).toList()
+    );
   }
 
   @Override
-  AbstractPageModel getModel() {
+  public AbstractPageModel getModel() {
     return model;
   }
 
@@ -85,8 +93,8 @@ public class BranchPageEditorView extends AbstractPageEditorView implements List
       editorView.unsubscribe(editorView.getModel());
     }
     if (requirementModel != null) {
-      setCurrentEditorView(new BranchRequirementEditorView(requirementModel, branchListModel));
-      requirementPanel.add(currentEditorView);
+      setCurrentEditorView(new NeoBranchRequirementEditorView(requirementModel, requirementListModel));
+      requirementPanel.add(currentEditorView.getRootPanel());
       requirementPanel.repaint();
       frame.pack();
     }
@@ -98,18 +106,23 @@ public class BranchPageEditorView extends AbstractPageEditorView implements List
     leafComboBox.setSelectedItem(model.getLeaf());
     result.setText(model.getBranchResult());
 
-    branchListModel.removeListDataListener(this);
-    branchListModel = model.cloneRequirements();
-    branchListModel.addListDataListener(this);
-    branchListEditor.setList(branchListModel);
+    var requirementModels = model.getPage()
+        .getRequirements()
+        .stream()
+        .map(BranchRequirementModel::new)
+        .toList();
 
+    requirementListModel.removeListDataListener(this);
+    requirementListModel = new GenericListModel<>(requirementModels);
+    requirementListModel.addListDataListener(this);
+    requirementListEditor.setList(requirementListModel);
 
-    branchListController = new GenericListController<>(branchListModel);
-    branchListEditor.setAddAction(() -> branchListController.addChoice(new BranchRequirementModel(new BranchRequirement())));
-    branchListEditor.setDeleteItemAction((indexConsumer) -> branchListController.deleteChoice(indexConsumer, () -> {}));
-    branchListEditor.setMoveUpAction(branchListController::moveUp);
-    branchListEditor.setMoveDownAction(branchListController::moveDown);
-    branchListEditor.setListSelectionAction(this::setEditorPaneModel);
+    branchListController = new GenericListController<>(requirementListModel);
+    requirementListEditor.setAddAction(() -> branchListController.addChoice(new BranchRequirementModel(new BranchRequirement())));
+    requirementListEditor.setDeleteItemAction((indexConsumer) -> branchListController.deleteChoice(indexConsumer, () -> {}));
+    requirementListEditor.setMoveUpAction(branchListController::moveUp);
+    requirementListEditor.setMoveDownAction(branchListController::moveDown);
+    requirementListEditor.setListSelectionAction(this::setEditorPaneModel);
   }
 
   @Override
@@ -121,16 +134,16 @@ public class BranchPageEditorView extends AbstractPageEditorView implements List
 
   @Override
   public void intervalAdded(ListDataEvent e) {
-    branchListEditor.getList().revalidate();
+    requirementListEditor.getList().revalidate();
   }
 
   @Override
   public void intervalRemoved(ListDataEvent e) {
-    branchListEditor.getList().revalidate();
+    requirementListEditor.getList().revalidate();
   }
 
   @Override
   public void contentsChanged(ListDataEvent e) {
-    branchListEditor.getList().revalidate();
+    requirementListEditor.getList().revalidate();
   }
 }

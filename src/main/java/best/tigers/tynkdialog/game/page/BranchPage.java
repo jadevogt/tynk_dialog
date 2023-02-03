@@ -2,9 +2,10 @@ package best.tigers.tynkdialog.game.page;
 
 import best.tigers.tynkdialog.gui.model.page.BranchPageModel;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import javax.json.Json;
-import javax.json.JsonObject;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,19 +14,19 @@ public class BranchPage extends AbstractPage {
   @Getter
   private final String pageKind = "branch";
   @Getter
-  @Setter
-  private Leaf leaf;
+  private final Leaf leaf;
   @Getter
-  @Setter
-  private String branchResult;
-  @Getter
-  @Setter
-  private ArrayList<BranchRequirement> requirements;
+  private final String branchResult;
+  private final ArrayList<BranchRequirement> requirements;
 
   public BranchPage(Leaf leaf, String branchResult, List<BranchRequirement> requirements) {
     this.leaf = leaf;
     this.branchResult = branchResult;
     this.requirements = new ArrayList<>(requirements);
+  }
+
+  public List<BranchRequirement> getRequirements() {
+    return Collections.unmodifiableList(requirements);
   }
 
   public BranchPage() {

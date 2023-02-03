@@ -21,7 +21,7 @@ public class SuperTextEditorPane extends JEditorPane {
     setFont(Assets.getTerminus());
     setForeground(Constants.TextColor.WHITE.toAWT());
     setBackground(Constants.TextColor.BACKGROUND.toAWT());
-    setContentType("supertext/supertext");
+    setContentType("text/supertext");
     setPreferredSize(new Dimension(600, 30));
     if (getDocument() instanceof SuperTextDocument superTextDocument) {
       superTextDocument.setMaxLines(maxLines);
@@ -34,6 +34,7 @@ public class SuperTextEditorPane extends JEditorPane {
         lastFocused = self;
       }
     });
+    setEditorKit(new SuperTextEditorKit());
   }
 
   public SuperTextEditorPane(int maxLines, int insets) {
@@ -44,6 +45,7 @@ public class SuperTextEditorPane extends JEditorPane {
     } else {
       setPreferredSize(new Dimension(600, insets * 6));
     }
+    setEditorKit(new SuperTextEditorKit());
   }
 
   public SuperTextEditorPane() {

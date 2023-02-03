@@ -1,34 +1,27 @@
 package best.tigers.tynkdialog.game.page;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
 import lombok.Getter;
-import lombok.Setter;
 
 public class ChoicePage extends AbstractPage {
 
   @Getter
   private final String pageKind = "choice";
   @Getter
-  @Setter
-  private String speaker;
+  private final String speaker;
   @Getter
-  @Setter
-  private String content;
+  private final String content;
   @Getter
-  @Setter
-  private String blip;
+  private final String blip;
+  private final ArrayList<String> gifts;
+  private final ArrayList<ChoiceResponse> responses;
   @Getter
-  @Setter
-  private ArrayList<String> gifts;
-  @Getter
-  private ArrayList<ChoiceResponse> responses;
-  @Getter
-  @Setter
-  private boolean canSkip;
+  private final boolean canSkip;
 
   public ChoicePage(
       String speaker, String content, String blip, boolean canSkip, List<String> gifts,
@@ -71,7 +64,11 @@ public class ChoicePage extends AbstractPage {
     return result.build();
   }
 
-  public void setResponses(List<ChoiceResponse> newResponses) {
-    this.responses = new ArrayList<>(newResponses);
+  public List<String> getGifts() {
+    return Collections.unmodifiableList(gifts);
+  }
+
+  public List<ChoiceResponse> getResponses() {
+    return Collections.unmodifiableList(responses);
   }
 }

@@ -200,7 +200,7 @@ public class SuperTextEditorKit extends StyledEditorKit {
 
   @Override
   public String getContentType() {
-    return "supertext/supertext";
+    return "text/supertext";
   }
 
   @Override

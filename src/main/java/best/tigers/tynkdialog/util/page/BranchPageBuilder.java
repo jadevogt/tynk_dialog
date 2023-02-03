@@ -12,7 +12,7 @@ import best.tigers.tynkdialog.util.ParseUtils;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.stream.Stream;
-import javax.json.JsonObject;
+import jakarta.json.JsonObject;
 
 public class BranchPageBuilder implements PageBuilder {
   private Leaf leaf;
@@ -39,7 +39,12 @@ public class BranchPageBuilder implements PageBuilder {
   private BranchRequirement buildRequirement(JsonObject req) {
     var flag = ParseUtils.getNullableTynkString(req.get("flag")).orElse("prog");
     var rawCategory = ParseUtils.getNullableTynkString(req.get("category")).orElse("story");
-    var value = req.getString("value");
+    String value;
+    if (req.containsKey("value")) {
+      value = req.getString("value");
+    } else {
+      value = req.getString("val");
+    }
     var rawValueType = ParseUtils.getNullableTynkString(req.get("valueType")).orElse("int");
     var rawEval = ParseUtils.getNullableTynkString(req.get("eval")).orElse("=");
     BranchRequirement.Category category = switch (rawCategory.toLowerCase()) {
@@ -65,13 +70,11 @@ public class BranchPageBuilder implements PageBuilder {
   private boolean parseRequirement(JsonObject req) {
     String flag;
     String category;
-    String value;
     String valueType;
     String eval;
     try {
       flag = ParseUtils.getNullableTynkString(req.get("flag")).orElse("prog");
       category = ParseUtils.getNullableTynkString(req.get("category")).orElse("story");
-      value = req.getString("value");
       valueType = ParseUtils.getNullableTynkString(req.get("valueType")).orElse("int");
       eval = ParseUtils.getNullableTynkString(req.get("eval")).orElse("=");
     } catch (ClassCastException cce) {

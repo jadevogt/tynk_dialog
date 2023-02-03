@@ -1,24 +1,24 @@
 package best.tigers.tynkdialog.gui.controller.page;
 
 import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
-import best.tigers.tynkdialog.gui.view.page.TalkPageEditorView;
+import best.tigers.tynkdialog.gui.view.page.neo.NeoTalkPageEditorView;
 import best.tigers.tynkdialog.supertext.SuperTextEditorKit;
 import lombok.Getter;
 
 public class TalkPageController extends AbstractPageController {
 
-  private final TalkPageEditorView view;
+  private final NeoTalkPageEditorView view;
   @Getter
   private final TalkPageModel model;
 
-  public TalkPageController(TalkPageModel model, TalkPageEditorView view) {
+  public TalkPageController(TalkPageModel model, NeoTalkPageEditorView view) {
     this.model = model;
     this.view = view;
     initView();
   }
 
   @Override
-  TalkPageEditorView getView() {
+  NeoTalkPageEditorView getView() {
     return view;
   }
 

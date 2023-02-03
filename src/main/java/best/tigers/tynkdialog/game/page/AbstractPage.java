@@ -1,7 +1,7 @@
 package best.tigers.tynkdialog.game.page;
 
-import javax.json.Json;
-import javax.json.JsonObject;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
 
 public abstract class AbstractPage {
 

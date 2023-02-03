@@ -9,8 +9,8 @@ import best.tigers.tynkdialog.util.page.FlatPageBuilder;
 import best.tigers.tynkdialog.util.page.PageBuilder;
 import best.tigers.tynkdialog.util.page.TalkPageBuilder;
 import java.util.ArrayList;
-import javax.json.JsonObject;
-import javax.json.JsonValue;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonValue;
 
 public class DialogBuilder {
 

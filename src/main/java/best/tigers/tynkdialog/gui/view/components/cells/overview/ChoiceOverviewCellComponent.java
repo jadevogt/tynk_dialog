@@ -15,7 +15,7 @@ public class ChoiceOverviewCellComponent extends AbstractOverviewCellComponent {
     super(pageModel, isSelected);
     var page = (ChoicePageModel) pageModel;
 
-    add(new QuickPair("Choices", Integer.toString(page.getResponses().size())));
+    add(new QuickPair("Choices", Integer.toString(page.getResponseListModel().getSize())));
   }
 
 }
