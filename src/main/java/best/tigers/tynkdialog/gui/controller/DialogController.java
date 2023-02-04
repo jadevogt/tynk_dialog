@@ -74,6 +74,18 @@ public class DialogController {
     var ctrlNKey = "Ctrl+N released";
     view.attachFunctionalKeyboardShortcut(ctrlN, ctrlNKey, () -> addPage("talk"));
 
+    KeyStroke ctrlC = KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK, true);
+    var ctrlCKey = "Ctrl+C released";
+    view.attachFunctionalKeyboardShortcut(ctrlC, ctrlCKey, () -> addPage("choice"));
+
+    KeyStroke ctrlB = KeyStroke.getKeyStroke(KeyEvent.VK_B, InputEvent.CTRL_DOWN_MASK, true);
+    var ctrlBKey = "Ctrl+B released";
+    view.attachFunctionalKeyboardShortcut(ctrlB, ctrlBKey, () -> addPage("branch"));
+
+    KeyStroke ctrlF = KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK, true);
+    var ctrlFKey = "Ctrl+F released";
+    view.attachFunctionalKeyboardShortcut(ctrlF, ctrlFKey, () -> addPage("flat"));
+
     KeyStroke enterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
     var enterMapKey = "Enter";
     table.attachFunctionalKeyboardShortcut(enterKey, enterMapKey, this::editPage);
@@ -135,7 +147,8 @@ public class DialogController {
 
   public void saveTitle() {
     var newTitle = view.getTitle();
-    model.setTitle(newTitle);
+    model.setTitleSuppressed(newTitle);
+    PrimaryListController.getInstance().getView().update();
   }
 
   void bindPageEditorShortcuts(AbstractPageModel model, AbstractPageEditorView view,
@@ -219,7 +232,7 @@ public class DialogController {
         addPage(pageKind);
       }
     };
-    newAction.putValue(Action.NAME, "Add " + pageKind + " page");
+    newAction.putValue(Action.NAME, "Add (" + pageKind.substring(0,1).toUpperCase() + ")" + pageKind.substring(1) + " page");
     newAction.putValue(Action.SHORT_DESCRIPTION,
         "Create a new " + pageKind + " page and open it in the editor");
     return newAction;

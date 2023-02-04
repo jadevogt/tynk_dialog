@@ -3,6 +3,7 @@ package best.tigers.tynkdialog.util.page;
 import best.tigers.tynkdialog.exceptions.PageParseException;
 import best.tigers.tynkdialog.game.page.TalkPage;
 import best.tigers.tynkdialog.util.ParseUtils;
+import best.tigers.tynkdialog.util.PredictiveTextService;
 import jakarta.json.JsonObject;
 
 public class TalkPageBuilder implements PageBuilder {
@@ -24,12 +25,19 @@ public class TalkPageBuilder implements PageBuilder {
     try {
       content = pageData.getString("txt");
       speaker = pageData.getString("speaker");
+      PredictiveTextService.getInstance().incrementTerm("characters", speaker);
       canSkip = pageData.getBoolean("canSkip");
     } catch (ClassCastException cce) {
       throw new PageParseException("Invalid page data: " + pageData);
     }
     textBoxStyle = ParseUtils.getNullableTynkString(pageData.get("textbox")).orElse(null);
+    if (textBoxStyle != null) {
+      PredictiveTextService.getInstance().incrementTerm("textboxes", textBoxStyle);
+    }
     blip = ParseUtils.getNullableTynkString(pageData.get("blip")).orElse(null);
+    if (blip != null) {
+      PredictiveTextService.getInstance().incrementTerm("blips", blip);
+    }
   }
 
   public TalkPage build() {

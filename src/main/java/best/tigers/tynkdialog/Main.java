@@ -13,12 +13,11 @@ public class Main {
 
   public static void main(String... args) {
     Assets.getInstance().refreshAssets();
-      FlatMaterialDesignDarkIJTheme.setup();
-    var defaults = Assets.getInstance();
+    FlatMaterialDesignDarkIJTheme.setup();
     Assets.runIntegrations();
-    System.out.println(SuperTextEditorKit.class.getCanonicalName());
     JEditorPane.registerEditorKitForContentType("text/supertext",
-        SuperTextEditorKit.class.getCanonicalName());
+        "best.tigers.tynkdialog.supertext.SuperTextEditorKit"
+    );
     EventQueue.invokeLater(
         PrimaryListController::getInstance);
   }

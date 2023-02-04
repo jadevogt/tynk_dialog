@@ -3,6 +3,7 @@ package best.tigers.tynkdialog.gui.controller.page;
 import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
 import best.tigers.tynkdialog.gui.view.page.neo.NeoTalkPageEditorView;
 import best.tigers.tynkdialog.supertext.SuperTextEditorKit;
+import best.tigers.tynkdialog.util.PredictiveTextService;
 import lombok.Getter;
 
 public class TalkPageController extends AbstractPageController {
@@ -20,6 +21,18 @@ public class TalkPageController extends AbstractPageController {
   @Override
   NeoTalkPageEditorView getView() {
     return view;
+  }
+
+  @Override
+  public void saveChanges() {
+    super.saveChanges();
+    PredictiveTextService.getInstance().incrementTerm("characters", model.getSpeaker());
+    if (model.getBlip() != null) {
+      PredictiveTextService.getInstance().incrementTerm("blips", model.getBlip());
+    }
+    if (model.getTextStyle() != null) {
+      PredictiveTextService.getInstance().incrementTerm("textboxes", model.getTextStyle());
+    }
   }
 
   @Override

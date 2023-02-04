@@ -56,7 +56,17 @@ public class BranchPage extends AbstractPage {
   }
 
   public enum Leaf {
-    JUMP,
-    ADD,
+    JUMP {
+      @Override
+      public String toString() {
+        return "Jump";
+      }
+    },
+    ADD {
+      @Override
+      public String toString() {
+        return "Add";
+      }
+    },
   }
 }

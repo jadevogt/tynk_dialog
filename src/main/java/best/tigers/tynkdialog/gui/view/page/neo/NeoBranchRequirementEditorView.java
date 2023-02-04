@@ -1,5 +1,6 @@
 package best.tigers.tynkdialog.gui.view.page.neo;
 
+import best.tigers.tynkdialog.game.page.BranchRequirement;
 import best.tigers.tynkdialog.game.page.BranchRequirement.Category;
 import best.tigers.tynkdialog.game.page.BranchRequirement.Comparison;
 import best.tigers.tynkdialog.game.page.BranchRequirement.ValueType;
@@ -60,6 +61,16 @@ public class NeoBranchRequirementEditorView implements TObserver {
     categoryJComboBox.addActionListener((e) -> saveChanges());
     comparisonJComboBox.addActionListener((e) -> saveChanges());
     valueTypeJComboBox.addActionListener((e) -> saveChanges());
+  }
+
+  public static NeoBranchRequirementEditorView nullView() {
+    var nullView = new NeoBranchRequirementEditorView(new BranchRequirementModel(new BranchRequirement()), new GenericListModel<>());
+    nullView.categoryJComboBox.setEnabled(false);
+    nullView.flag.setEnabled(false);
+    nullView.valueTypeJComboBox.setEnabled(false);
+    nullView.comparisonJComboBox.setEnabled(false);
+    nullView.value.setEnabled(false);
+    return nullView;
   }
 
   public BranchRequirementModel getModel() {

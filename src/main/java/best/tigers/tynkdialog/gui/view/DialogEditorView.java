@@ -106,7 +106,6 @@ public class DialogEditorView implements ShortcutSupport, TObserver {
     var column = columnModel.getColumn(0);
     column.setCellRenderer(new OverviewCellRenderer());
     pageList.setupView();
-    //pageList.resizeColumnWidth();
     pageList.validate();
   }
 
@@ -158,7 +157,7 @@ public class DialogEditorView implements ShortcutSupport, TObserver {
   @Override
   public void attachFunctionalKeyboardShortcut(KeyStroke keyStroke, String actionMapKey,
       Runnable action) {
-    var inputMap = panel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+    var inputMap = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     inputMap.put(keyStroke, actionMapKey);
     var actionMap = panel.getActionMap();
     var actionInstance = new AbstractAction() {
@@ -173,7 +172,7 @@ public class DialogEditorView implements ShortcutSupport, TObserver {
   @Override
   public void attachKeyboardShortcut(KeyStroke keyStroke, String actionMapKey,
       AbstractAction action) {
-    var inputMap = panel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+    var inputMap = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     inputMap.put(keyStroke, actionMapKey);
     var actionMap = panel.getActionMap();
     actionMap.put(actionMapKey, action);

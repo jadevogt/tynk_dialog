@@ -21,7 +21,7 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Save Changes"/>
+              <text value="Save Changes (Shift + Enter)"/>
             </properties>
           </component>
           <component id="b30d6" class="javax.swing.JButton" binding="createAnotherButton">
@@ -29,7 +29,7 @@
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Create Next Texbox"/>
+              <text value="Create Next Texbox (Ctrl + Enter)"/>
             </properties>
           </component>
         </children>
@@ -78,13 +78,15 @@
               <text value="Speaker"/>
             </properties>
           </component>
-          <component id="1c411" class="javax.swing.JTextField" binding="character">
+          <component id="95ca9" class="javax.swing.JComboBox" binding="character">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
-            <properties/>
+            <properties>
+              <editable value="true"/>
+            </properties>
           </component>
         </children>
       </grid>
@@ -104,21 +106,25 @@
               <text value=""/>
             </properties>
           </component>
-          <component id="e27ef" class="javax.swing.JTextField" binding="blip">
+          <component id="8ec3e" class="javax.swing.JComboBox" binding="blip">
             <constraints>
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
-            <properties/>
+            <properties>
+              <editable value="true"/>
+            </properties>
           </component>
-          <component id="a1e6a" class="javax.swing.JTextField" binding="style">
+          <component id="cba3b" class="javax.swing.JComboBox" binding="style">
             <constraints>
               <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
-            <properties/>
+            <properties>
+              <editable value="true"/>
+            </properties>
           </component>
           <component id="1c344" class="javax.swing.JLabel" binding="blipLabel">
             <constraints>

@@ -22,10 +22,9 @@ public class SuperTextEditorPane extends JEditorPane {
     setForeground(Constants.TextColor.WHITE.toAWT());
     setBackground(Constants.TextColor.BACKGROUND.toAWT());
     setContentType("text/supertext");
+    setEditorKit(new SuperTextEditorKit());
     setPreferredSize(new Dimension(600, 30));
-    if (getDocument() instanceof SuperTextDocument superTextDocument) {
-      superTextDocument.setMaxLines(maxLines);
-    }
+    ((SuperTextDocument) getDocument()).setMaxLines(maxLines);
     var self = this;
     addFocusListener(new FocusAdapter() {
       @Override
@@ -34,7 +33,6 @@ public class SuperTextEditorPane extends JEditorPane {
         lastFocused = self;
       }
     });
-    setEditorKit(new SuperTextEditorKit());
   }
 
   public SuperTextEditorPane(int maxLines, int insets) {
@@ -45,7 +43,6 @@ public class SuperTextEditorPane extends JEditorPane {
     } else {
       setPreferredSize(new Dimension(600, insets * 6));
     }
-    setEditorKit(new SuperTextEditorKit());
   }
 
   public SuperTextEditorPane() {
@@ -63,6 +60,7 @@ public class SuperTextEditorPane extends JEditorPane {
   public SuperTextEditorKit getSuperTextEditorKit() {
     var editorKit = this.getEditorKit();
     if (!(editorKit instanceof SuperTextEditorKit)) {
+      this.setEditorKit(new SuperTextEditorKit());
       Log.error("EditorKit is not instance of SuperTextEditorKit");
     }
     return (SuperTextEditorKit) this.getEditorKit();

@@ -2,13 +2,11 @@ package best.tigers.tynkdialog.gui.factories;
 
 import best.tigers.tynkdialog.game.page.AbstractPage;
 import best.tigers.tynkdialog.game.page.BranchPage;
-import best.tigers.tynkdialog.gui.controller.page.AbstractPageController;
 import best.tigers.tynkdialog.gui.controller.page.BranchPageController;
 import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
 import best.tigers.tynkdialog.gui.model.page.BranchPageModel;
 import best.tigers.tynkdialog.gui.view.page.AbstractPageEditorView;
-import best.tigers.tynkdialog.gui.view.page.BranchPageEditorView;
-import best.tigers.tynkdialog.util.page.BranchPageBuilder;
+import best.tigers.tynkdialog.gui.view.page.neo.NeoBranchPageEditorView;
 
 public class BranchPageMvcFactory extends AbstractPageMvcFactory {
 
@@ -27,8 +25,8 @@ public class BranchPageMvcFactory extends AbstractPageMvcFactory {
   }
 
   @Override
-  public BranchPageEditorView createPageView(AbstractPageModel pageModel) {
-    return new BranchPageEditorView((BranchPageModel) pageModel);
+  public NeoBranchPageEditorView createPageView(AbstractPageModel pageModel) {
+    return new NeoBranchPageEditorView((BranchPageModel) pageModel);
   }
 
   @Override

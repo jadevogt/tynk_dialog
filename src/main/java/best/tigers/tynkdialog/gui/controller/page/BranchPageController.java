@@ -3,15 +3,15 @@ package best.tigers.tynkdialog.gui.controller.page;
 import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
 import best.tigers.tynkdialog.gui.model.page.BranchPageModel;
 import best.tigers.tynkdialog.gui.view.page.AbstractPageEditorView;
-import best.tigers.tynkdialog.gui.view.page.BranchPageEditorView;
+import best.tigers.tynkdialog.gui.view.page.neo.NeoBranchPageEditorView;
 
 public class BranchPageController extends AbstractPageController {
-  private BranchPageEditorView view;
+  private NeoBranchPageEditorView view;
   private BranchPageModel model;
 
   public BranchPageController(AbstractPageModel model, AbstractPageEditorView view) {
     this.model = (BranchPageModel) model;
-    this.view = (BranchPageEditorView) view;
+    this.view = (NeoBranchPageEditorView) view;
     initView();
   }
 
@@ -21,7 +21,7 @@ public class BranchPageController extends AbstractPageController {
   }
 
   @Override
-  BranchPageEditorView getView() {
+  NeoBranchPageEditorView getView() {
     return view;
   }
 }

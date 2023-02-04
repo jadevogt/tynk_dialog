@@ -4,6 +4,8 @@ import best.tigers.tynkdialog.game.Constants;
 import best.tigers.tynkdialog.gui.view.components.FunctionCallDialog;
 import best.tigers.tynkdialog.gui.view.components.IntegerDialog;
 import best.tigers.tynkdialog.gui.view.components.SuperTextEditorPane;
+import best.tigers.tynkdialog.gui.view.components.neo.NeoFunctionCallDialog;
+
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -147,7 +149,7 @@ public class SuperTextEditorKit extends StyledEditorKit {
         if (v != null
             && v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_CALL_NAME) != null) {
           if (v.getDocument() instanceof SuperTextDocument doc) {
-            String[] newDetails = FunctionCallDialog.promptForFunctionDetails(
+            String[] newDetails = NeoFunctionCallDialog.promptForFunctionDetails(
                 (String) v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_CALL_NAME),
                 (String) v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_PARAM_NAME));
             doc.changeFunctionCall(v.getElement(), newDetails[0], newDetails[1]);
@@ -429,7 +431,7 @@ public class SuperTextEditorKit extends StyledEditorKit {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-      var functionDetails = FunctionCallDialog.promptForFunctionDetails();
+      var functionDetails = NeoFunctionCallDialog.promptForFunctionDetails();
       if (SuperTextEditorPane.lastFocused == null) {
         return;
       }

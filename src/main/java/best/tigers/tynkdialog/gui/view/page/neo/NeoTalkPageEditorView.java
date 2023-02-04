@@ -5,9 +5,12 @@ import best.tigers.tynkdialog.game.page.TalkPage;
 import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
 import best.tigers.tynkdialog.gui.view.components.FunctionCallDialog;
 import best.tigers.tynkdialog.gui.view.components.IntegerDialog;
+import best.tigers.tynkdialog.gui.view.components.neo.NeoFunctionCallDialog;
 import best.tigers.tynkdialog.gui.view.page.AbstractPageEditorView;
 import best.tigers.tynkdialog.supertext.SuperTextEditorKit;
 import best.tigers.tynkdialog.util.Assets;
+import best.tigers.tynkdialog.util.PredictiveTextService;
+
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -31,11 +34,11 @@ import javax.swing.text.DefaultEditorKit;
 public class NeoTalkPageEditorView extends AbstractPageEditorView {
 
   private JPanel rootPanel;
-  private JTextField character;
+  private javax.swing.JComboBox<String> character;
   private JCheckBox blipCheck;
   private TalkPageModel model;
-  private JTextField blip;
-  private JTextField style;
+  private javax.swing.JComboBox<String> blip;
+  private javax.swing.JComboBox<String> style;
   private JCheckBox styleCheck;
   private JButton saveButton;
   private JButton createAnotherButton;
@@ -71,6 +74,22 @@ public class NeoTalkPageEditorView extends AbstractPageEditorView {
         styleCheck.doClick();
       }
     });
+
+    PredictiveTextService.getInstance()
+            .getCollectionTerms("characters")
+            .stream()
+            .limit(5)
+            .forEachOrdered(x -> character.addItem(x.getKey()));
+    PredictiveTextService.getInstance()
+            .getCollectionTerms("blips")
+            .stream()
+            .limit(5)
+            .forEachOrdered(x -> blip.addItem(x.getKey()));
+    PredictiveTextService.getInstance()
+            .getCollectionTerms("textboxes")
+            .stream()
+            .limit(5)
+            .forEachOrdered(x -> style.addItem(x.getKey()));
     getFrame().pack();
     getFrame().setJMenuBar(createContentMenubar());
     getFrame().pack();
@@ -92,23 +111,27 @@ public class NeoTalkPageEditorView extends AbstractPageEditorView {
     style.setEnabled(isStyleEnabled);
     blipCheck.setSelected(isBlipEnabled);
     styleCheck.setSelected(isStyleEnabled);
-    character.setText(model.getSpeaker());
+    character.setSelectedItem(model.getSpeaker());
     contentField.setText(model.getContent());
-    blip.setText(model.getBlip());
-    style.setText(model.getTextStyle());
+    if (isBlipEnabled) {
+      blip.setSelectedItem(model.getBlip());
+    }
+    if (isStyleEnabled) {
+      style.setSelectedItem(model.getTextStyle());
+    }
     skipCheck.setSelected(model.isCanSkip());
   }
 
   public TalkPage asPage() {
-    var blipValue = blip.getText();
+    var blipValue = (String) blip.getSelectedItem();
     if (!blipCheck.isSelected()) {
       blipValue = null;
     }
-    var styleValue = style.getText();
+    var styleValue = (String) style.getSelectedItem();
     if (!styleCheck.isSelected()) {
       styleValue = null;
     }
-    return new TalkPage(character.getText(), contentField.getText(), styleValue, blipValue,
+    return new TalkPage((String) character.getSelectedItem(), contentField.getText(), styleValue, blipValue,
         skipCheck.isSelected());
   }
 
@@ -132,7 +155,7 @@ public class NeoTalkPageEditorView extends AbstractPageEditorView {
     var function = new JButton(new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        String[] details = FunctionCallDialog.promptForFunctionDetails();
+        String[] details = NeoFunctionCallDialog.promptForFunctionDetails();
         SuperTextEditorKit.addFunctionCall(cf, details[0], details[1]);
         autoDisableSkip();
       }
@@ -175,7 +198,7 @@ public class NeoTalkPageEditorView extends AbstractPageEditorView {
     var function = new JMenuItem(new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        String[] details = FunctionCallDialog.promptForFunctionDetails();
+        String[] details = NeoFunctionCallDialog.promptForFunctionDetails();
         SuperTextEditorKit.addFunctionCall(cf, details[0], details[1]);
         autoDisableSkip();
       }

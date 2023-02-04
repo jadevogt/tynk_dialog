@@ -9,13 +9,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import jakarta.json.Json;
-import jakarta.json.JsonArray;
-import jakarta.json.JsonArrayBuilder;
-import jakarta.json.JsonReader;
-import jakarta.json.JsonStructure;
-import jakarta.json.JsonValue;
-import jakarta.json.JsonWriter;
+
+import jakarta.json.*;
 
 public class DialogFile {
 
@@ -74,24 +69,29 @@ public class DialogFile {
    * @param dialogData data to be written
    */
   public void writeFile(ArrayList<Dialog> dialogData) throws DialogFileIOException {
-    JsonWriter writer = null;
+    JsonWriter writer;
+    JsonArray out;
+    try {
+      Log.info("Attempting to build JSON Array...");
+      JsonArrayBuilder builder = Json.createArrayBuilder();
+      for (Dialog dialog : dialogData) {
+        builder.add(dialog.serialize());
+      }
+      out = builder.build();
+    } catch (JsonException e) {
+      return;
+    }
     try {
       Log.info("Attempting to save JSON file to disk: " + path);
       writer = Json.createWriter(new FileWriter(path));
+      writer.write(out);
+      writer.close();
+      Log.info("Data written successfully!");
     } catch (IOException ioe) {
       Log.error(
-          "(FATAL) IOException encountered while trying to save file " + ioe.getLocalizedMessage());
+              "(FATAL) IOException encountered while trying to save file " + ioe.getLocalizedMessage());
       System.exit(1);
     }
-    Log.info("Successfully opened file, writing data...");
-    JsonArrayBuilder builder = Json.createArrayBuilder();
-    for (Dialog dialog : dialogData) {
-      builder.add(dialog.serialize());
-    }
-    JsonArray out = builder.build();
-    writer.write(out);
-    writer.close();
-    Log.info("Data written successfully!");
   }
 
   public void addError(String newError) {

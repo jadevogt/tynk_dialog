@@ -14,7 +14,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.prefs.Preferences;
 import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 import lombok.Getter;
@@ -22,7 +21,6 @@ import lombok.Getter;
 public class PrimaryListController {
 
   private static PrimaryListController singleInstance = null;
-  private final Preferences prefs = Preferences.userRoot().node(this.getClass().getName());
   @Getter
   private final PrimaryListView view;
   private final DialogFile fileHandle;
