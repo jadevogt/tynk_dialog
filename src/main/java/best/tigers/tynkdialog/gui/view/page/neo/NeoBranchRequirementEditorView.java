@@ -7,13 +7,13 @@ import best.tigers.tynkdialog.game.page.BranchRequirement.ValueType;
 import best.tigers.tynkdialog.gui.model.GenericListModel;
 import best.tigers.tynkdialog.gui.model.page.BranchRequirementModel;
 import best.tigers.tynkdialog.gui.view.TObserver;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+
+import java.awt.event.*;
 import java.util.Arrays;
-import javax.swing.BoxLayout;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.print.Doc;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class NeoBranchRequirementEditorView implements TObserver {
   private final BranchRequirementModel model;
@@ -55,6 +55,22 @@ public class NeoBranchRequirementEditorView implements TObserver {
       public void focusLost(FocusEvent e) {
         super.focusLost(e);
         saveChanges();
+      }
+    });
+
+    flag.addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyReleased(KeyEvent e) {
+        super.keyReleased(e);
+        SwingUtilities.invokeLater(() -> saveChanges());
+      }
+    });
+
+    value.addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyReleased(KeyEvent e) {
+        super.keyReleased(e);
+        SwingUtilities.invokeLater(() -> saveChanges());
       }
     });
 

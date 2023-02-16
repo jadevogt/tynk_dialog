@@ -74,7 +74,6 @@ public class NeoBranchPageEditorView extends AbstractPageEditorView implements L
 
     public void setEditorPaneModel(BranchRequirementModel requirementModel) {
         var newRequirementModel = requirementListEditor.getList().getSelectedValue();
-        System.out.println(newRequirementModel);
         var requirementPanel = requirementEditorPanel;
         var editorView = currentEditorView;
         requirementPanel.removeAll();

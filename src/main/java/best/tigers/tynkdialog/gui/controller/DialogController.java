@@ -9,6 +9,7 @@ import best.tigers.tynkdialog.gui.factories.TalkPageMvcFactory;
 import best.tigers.tynkdialog.gui.model.DialogModel;
 import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
 import best.tigers.tynkdialog.gui.view.DialogEditorView;
+import best.tigers.tynkdialog.gui.view.PrimaryListView;
 import best.tigers.tynkdialog.gui.view.components.AutoResizingTable;
 import best.tigers.tynkdialog.gui.view.page.AbstractPageEditorView;
 import best.tigers.tynkdialog.util.Log;
@@ -149,6 +150,7 @@ public class DialogController {
     var newTitle = view.getTitle();
     model.setTitleSuppressed(newTitle);
     PrimaryListController.getInstance().getView().update();
+    PrimaryListController.getInstance().setModified(true);
   }
 
   void bindPageEditorShortcuts(AbstractPageModel model, AbstractPageEditorView view,

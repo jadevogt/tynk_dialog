@@ -105,6 +105,10 @@ public class PrimaryListController {
     view.update();
   }
 
+  public void setModified(boolean modified) {
+    model.setModified(modified);
+  }
+
   public void updateUI() {
     SwingUtilities.updateComponentTreeUI(PrimaryListController.getInstance().getView().getFrame());
   }

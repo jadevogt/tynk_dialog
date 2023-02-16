@@ -36,6 +36,7 @@ public abstract class AbstractPageController {
 
   public void saveAndExit() {
     this.saveChanges();
+    getView().getPanel().getRootPane().requestFocus();
     getView().close();
   }
 
