@@ -15,6 +15,8 @@ import lombok.Setter;
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class NeoBranchPageEditorView extends AbstractPageEditorView implements ListDataListener {
     private final BranchPageModel model;
@@ -58,6 +60,9 @@ public class NeoBranchPageEditorView extends AbstractPageEditorView implements L
 
     @Override
     public BranchPage asPage() {
+        if (getCurrentEditorView() != null) {
+            getCurrentEditorView().saveChanges();
+        }
         var listModel = requirementListModel;
         var newLeaf = (BranchPage.Leaf) leafComboBox.getSelectedItem();
         return new BranchPage(
@@ -123,9 +128,7 @@ public class NeoBranchPageEditorView extends AbstractPageEditorView implements L
 
     @Override
     public void setupSaveActions() {
-
         saveButton.addActionListener(getSaveAction());
-
     }
 
     @Override

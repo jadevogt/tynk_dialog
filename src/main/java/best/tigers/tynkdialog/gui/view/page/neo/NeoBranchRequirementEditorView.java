@@ -58,22 +58,6 @@ public class NeoBranchRequirementEditorView implements TObserver {
       }
     });
 
-    flag.addKeyListener(new KeyAdapter() {
-      @Override
-      public void keyReleased(KeyEvent e) {
-        super.keyReleased(e);
-        SwingUtilities.invokeLater(() -> saveChanges());
-      }
-    });
-
-    value.addKeyListener(new KeyAdapter() {
-      @Override
-      public void keyReleased(KeyEvent e) {
-        super.keyReleased(e);
-        SwingUtilities.invokeLater(() -> saveChanges());
-      }
-    });
-
     categoryJComboBox.addActionListener((e) -> saveChanges());
     comparisonJComboBox.addActionListener((e) -> saveChanges());
     valueTypeJComboBox.addActionListener((e) -> saveChanges());
