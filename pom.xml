@@ -73,7 +73,7 @@
     <dependency>
       <artifactId>flatlaf-intellij-themes</artifactId>
       <groupId>com.formdev</groupId>
-      <version>2.4</version>
+      <version>3.0</version>
     </dependency>
     <dependency>
       <artifactId>annotations</artifactId>
