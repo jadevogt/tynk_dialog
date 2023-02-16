@@ -13,9 +13,12 @@ import best.tigers.tynkdialog.util.Log;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.nio.file.Path;
 import java.util.ArrayList;
-import javax.swing.JFileChooser;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
+import javax.swing.filechooser.FileView;
+
+import best.tigers.tynkdialog.util.PreferencesService;
 import lombok.Getter;
 
 public class PrimaryListController {
@@ -114,15 +117,22 @@ public class PrimaryListController {
   }
 
   public String selectFile() {
-    JFileChooser chooser = new DynamicFileChooser();
+    var prefs = PreferencesService.getInstance();
+    JFileChooser chooser = new JFileChooser();
+    Path lastOpenedPath = prefs.getLastOpenedPath();
     chooser.setDialogType(JFileChooser.SAVE_DIALOG);
     JSONFilter jFilter = new JSONFilter();
     TextFilter tFilter = new TextFilter();
     chooser.addChoosableFileFilter(jFilter);
     chooser.addChoosableFileFilter(tFilter);
-    chooser.setFileFilter(jFilter);
+    if (lastOpenedPath != null) {
+      chooser.setCurrentDirectory(lastOpenedPath.toFile());
+    }
+    Action details = chooser.getActionMap().get("viewTypeDetails");
+    details.actionPerformed(null);
     chooser.showDialog(null, "Select or Create");
     String newPath = chooser.getSelectedFile().getAbsolutePath();
+    prefs.setLastOpenedPath(chooser.getSelectedFile().getParentFile().toPath());
     model.setPath(newPath);
     return newPath;
   }
