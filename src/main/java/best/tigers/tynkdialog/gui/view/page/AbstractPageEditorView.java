@@ -22,11 +22,12 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import lombok.Getter;
+import lombok.Setter;
 
 public abstract class AbstractPageEditorView implements TObserver, ShortcutSupport {
 
-  @Getter
-  private final JPanel panel;
+  @Getter @Setter
+  private JPanel panel;
   @Getter
   private final JFrame frame;
   @Getter
@@ -47,7 +48,7 @@ public abstract class AbstractPageEditorView implements TObserver, ShortcutSuppo
     frame.dispose();
   }
 
-  abstract AbstractPageModel getModel();
+  public abstract AbstractPageModel getModel();
 
   public void init() {
     getModel().attachSubscriber(this);

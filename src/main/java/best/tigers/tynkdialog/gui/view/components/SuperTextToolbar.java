@@ -1,21 +1,21 @@
 package best.tigers.tynkdialog.gui.view.components;
 
+import best.tigers.tynkdialog.gui.view.components.neo.NeoFunctionCallDialog;
 import best.tigers.tynkdialog.supertext.SuperTextEditorKit;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
-import javax.swing.AbstractAction;
-import javax.swing.JButton;
-import javax.swing.JToolBar;
+import javax.swing.*;
 
 public class SuperTextToolbar extends JToolBar {
 
   public SuperTextToolbar(SuperTextEditorPane editorPane, Runnable autoDisableSkip) {
     super();
     var map = editorPane.getActionMap();
+    var inputMap = editorPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     var function = new JButton(new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        String[] details = FunctionCallDialog.promptForFunctionDetails();
+        String[] details = NeoFunctionCallDialog.promptForFunctionDetails();
         SuperTextEditorKit.addFunctionCall(editorPane, details[0], details[1]);
         autoDisableSkip.run();
       }
@@ -32,7 +32,9 @@ public class SuperTextToolbar extends JToolBar {
         SuperTextEditorKit.DELAY_ACTION_FIFTEEN,
         SuperTextEditorKit.DELAY_ACTION_SIXTY
     };
-    Arrays.stream(actions).forEach(action -> add(map.get(action)));
+    Arrays.stream(actions).forEach(action -> {
+      add(map.get(action));
+    });
     add(function);
   }
 }

@@ -8,9 +8,7 @@ import best.tigers.tynkdialog.gui.view.components.AutoResizingTable;
 import best.tigers.tynkdialog.gui.view.components.cells.OverviewCellRenderer;
 import best.tigers.tynkdialog.gui.view.components.cells.DetailedCellRenderer;
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.awt.event.*;
 import java.util.Arrays;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -106,7 +104,6 @@ public class DialogEditorView implements ShortcutSupport, TObserver {
     var column = columnModel.getColumn(0);
     column.setCellRenderer(new OverviewCellRenderer());
     pageList.setupView();
-    //pageList.resizeColumnWidth();
     pageList.validate();
   }
 
@@ -121,14 +118,13 @@ public class DialogEditorView implements ShortcutSupport, TObserver {
   }
 
   public void attachFocusListener(Runnable runner) {
-    titleField.addFocusListener(
-        new FocusAdapter() {
-          @Override
-          public void focusLost(FocusEvent e) {
-            SwingUtilities.invokeLater(runner);
-            super.focusLost(e);
-          }
-        });
+    titleField.addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyReleased(KeyEvent e) {
+        super.keyReleased(e);
+        SwingUtilities.invokeLater(runner);
+      }
+    });
   }
 
   public AbstractPageModel getSelectedPage() {
@@ -158,7 +154,7 @@ public class DialogEditorView implements ShortcutSupport, TObserver {
   @Override
   public void attachFunctionalKeyboardShortcut(KeyStroke keyStroke, String actionMapKey,
       Runnable action) {
-    var inputMap = panel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+    var inputMap = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     inputMap.put(keyStroke, actionMapKey);
     var actionMap = panel.getActionMap();
     var actionInstance = new AbstractAction() {
@@ -173,7 +169,7 @@ public class DialogEditorView implements ShortcutSupport, TObserver {
   @Override
   public void attachKeyboardShortcut(KeyStroke keyStroke, String actionMapKey,
       AbstractAction action) {
-    var inputMap = panel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+    var inputMap = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     inputMap.put(keyStroke, actionMapKey);
     var actionMap = panel.getActionMap();
     actionMap.put(actionMapKey, action);

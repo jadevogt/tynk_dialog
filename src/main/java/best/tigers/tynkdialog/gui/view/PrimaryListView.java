@@ -9,24 +9,14 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 
 public class PrimaryListView implements TObserver {
 
   private static final Dimension PREFERRED_SIZE = new Dimension(1000, 600);
   private final JFrame frame;
   private final JSplitPane splitPane;
+  private JComponent selectedView = null;
   private final JList<DialogController> dialogList;
   private final MenuBar menuBar;
   private final JToolBar toolBar;
@@ -138,10 +128,17 @@ public class PrimaryListView implements TObserver {
     frame.setTitle("Tynk Dialog Editor - " + model.getPath() + modified);
     DialogController selected = dialogList.getSelectedValue();
     if (selected != null) {
-      splitPane.setRightComponent(selected.getPanel());
+      if (selectedView != selected.getPanel()) {
+        splitPane.setRightComponent(selected.getPanel());
+        selectedView = selected.getPanel();
+      }
     } else {
       splitPane.remove(splitPane.getRightComponent());
       splitPane.setRightComponent(new JPanel());
+    }
+    dialogList.updateUI();
+    if (selectedView != null) {
+      selectedView.updateUI();
     }
   }
 

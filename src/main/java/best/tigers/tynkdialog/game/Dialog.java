@@ -2,8 +2,8 @@ package best.tigers.tynkdialog.game;
 
 import best.tigers.tynkdialog.game.page.AbstractPage;
 import java.util.ArrayList;
-import javax.json.Json;
-import javax.json.JsonObject;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
 
 /**
  * Represents what the internal documentation refers to as a "Dialog File," essentially a titled
@@ -59,7 +59,7 @@ public class Dialog {
    * @return the JSON representation of the Dialog
    */
   public JsonObject serialize() {
-    javax.json.JsonArrayBuilder pageArray = Json.createArrayBuilder();
+    jakarta.json.JsonArrayBuilder pageArray = Json.createArrayBuilder();
     for (AbstractPage currentPage : contents) {
       pageArray.add(currentPage.asPage());
     }

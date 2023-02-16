@@ -45,7 +45,7 @@ public class ChoiceResponseEditorView extends JPanel implements TObserver {
 
     superTextEditorPane.setText(model.getContent());
     iconJComboBox.setSelectedItem(model.getIcon());
-    resultField.setText(model.getResult());
+    resultField.setText(model.getChoiceResult());
     superTextEditorPane.addFocusListener(new FocusAdapter() {
 
       @Override
@@ -72,7 +72,7 @@ public class ChoiceResponseEditorView extends JPanel implements TObserver {
   public void update() {
     superTextEditorPane.setText(model.getContent());
     iconJComboBox.setSelectedItem(model.getIcon());
-    resultField.setText(model.getResult());
+    resultField.setText(model.getChoiceResult());
   }
 
   public void saveChanges() {
@@ -85,7 +85,7 @@ public class ChoiceResponseEditorView extends JPanel implements TObserver {
     if (model.getIcon() != newIcon) {
       model.setIcon(newIcon);
     }
-    if (!Objects.equals(model.getResult(), resultField.getText())) {
+    if (!Objects.equals(model.getChoiceResult(), resultField.getText())) {
       model.setChoiceResult(newResult);
     }
     listModel.notifyListeners();

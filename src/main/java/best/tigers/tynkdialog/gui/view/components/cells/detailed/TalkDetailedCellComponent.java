@@ -3,6 +3,7 @@ package best.tigers.tynkdialog.gui.view.components.cells.detailed;
 import best.tigers.tynkdialog.game.Constants;
 import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
 import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
+import best.tigers.tynkdialog.supertext.SuperTextEditorKit;
 import best.tigers.tynkdialog.util.Assets;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -29,7 +30,8 @@ public class TalkDetailedCellComponent extends AbstractDetailedCellComponent {
     contentField.setFont(Assets.getInstance().getTerminus());
     contentField.setForeground(Constants.TextColor.WHITE.toAWT());
     contentField.setBackground(Constants.TextColor.BACKGROUND.toAWT());
-    contentField.setContentType("supertext/supertext");
+    contentField.setContentType("text/supertext");
+    contentField.setEditorKit(new SuperTextEditorKit());
     contentField.setPreferredSize(new Dimension(600, 100));
 
     contentField.setText(talkPageModel.getContent());

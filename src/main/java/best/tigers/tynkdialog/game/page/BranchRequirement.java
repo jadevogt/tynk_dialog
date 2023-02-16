@@ -1,8 +1,8 @@
 package best.tigers.tynkdialog.game.page;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,20 +10,20 @@ public class BranchRequirement {
 
 
   @Getter
-  @Setter
-  private String flag;
+  private final String flag;
   @Getter
-  @Setter
-  private Category category;
+  private final Category category;
   @Getter
-  @Setter
-  private String value;
+  private final String value;
   @Getter
-  @Setter
-  private ValueType valueType;
+  private final ValueType valueType;
   @Getter
-  @Setter
-  private Comparison comparison;
+  private final Comparison comparison;
+
+  @Override
+  public String toString() {
+    return "%s: %s (%s) %s %s".formatted(category, flag, valueType, comparison, value);
+  }
 
   public BranchRequirement(String flag, Category category, String value, ValueType valueType, Comparison comparison) {
     this.flag = flag;
@@ -40,10 +40,8 @@ public class BranchRequirement {
   public JsonObject serialize() {
     JsonObjectBuilder result = Json.createObjectBuilder();
     result.add("flag", flag);
-    switch (category) {
-      default -> result.add("category", "story");
-    }
-    result.add("value", value);
+    result.add("category", category.toString());
+    result.add("val", value);
     String typeValue;
     switch (valueType) {
       case STRING -> typeValue = "str";
@@ -55,9 +53,7 @@ public class BranchRequirement {
     String comparisonValue;
     switch (comparison) {
       case LESS_THAN -> comparisonValue = "<";
-      //case LESS_THAN_OR_EQUAL -> comparisonValue = "<=";
       case GREATER_THAN -> comparisonValue = ">";
-      //case GREATER_THAN_OR_EQUAL -> comparisonValue = ">=";
       default -> comparisonValue = "=";
     }
     result.add("eval", comparisonValue);
@@ -65,43 +61,135 @@ public class BranchRequirement {
   }
 
   public enum Category {
-    STORY,
+    STORY {
+      @Override
+      public String toString() {
+        return "story";
+      }
+    },
+    SKILL{
+      @Override
+      public String toString() {
+        return "skills";
+      }
+    },
+    DIALOG_SEEN{
+      @Override
+      public String toString() {
+        return "dialogSeen";
+      }
+    },
+    DUNGEON{
+      @Override
+      public String toString() {
+        return "dungeon";
+      }
+    },
+    CH00{
+      @Override
+      public String toString() {
+        return "ch00";
+      }
+    },
+    CH01{
+      @Override
+      public String toString() {
+        return "ch01";
+      }
+    },
+    CH02{
+      @Override
+      public String toString() {
+        return "ch02";
+      }
+    },
+    CH03{
+      @Override
+      public String toString() {
+        return "ch03";
+      }
+    },
+    CH04{
+      @Override
+      public String toString() {
+        return "ch04";
+      }
+    },
+    CH05{
+      @Override
+      public String toString() {
+        return "ch05";
+      }
+    },
+    CH06{
+      @Override
+      public String toString() {
+        return "ch06";
+      }
+    },
+    CH07{
+      @Override
+      public String toString() {
+        return "ch07";
+      }
+    },
+    CH08{
+      @Override
+      public String toString() {
+        return "ch08";
+      }
+    },
+    OTHER{
+      @Override
+      public String toString() {
+        return "other";
+      }
+    },
   }
 
   public enum Comparison {
-    LESS_THAN,
-    //LESS_THAN_OR_EQUAL,
-    GREATER_THAN,
-    //GREATER_THAN_OR_EQUAL,
-    EQUAL,
+    LESS_THAN {
+      @Override
+      public String toString() {
+        return "<";
+      }
+    },
+    GREATER_THAN {
+      @Override
+      public String toString() {
+        return ">";
+      }
+    },
+    EQUAL {
+      @Override
+      public String toString() {
+        return "==";
+      }
+    },
   }
 
   public enum ValueType {
-    REAL_NUMBER,
-    BOOLEAN,
-    STRING,
-    INTEGER,
-  }
-
-  public static String valueTypeCanonical(ValueType vt) {
-    return switch(vt) {
-      case REAL_NUMBER -> "real";
-      case BOOLEAN -> "bool";
-      case STRING -> "string";
-      case INTEGER -> "int";
-    };
-  }
-
-  public static String comparisonCanonical(Comparison c) {
-    return switch(c) {
-      case EQUAL -> "=";
-      case LESS_THAN -> "<";
-      case GREATER_THAN -> ">";
-    };
-  }
-
-  public BranchRequirement clone() {
-    return new BranchRequirement(flag, category, value, valueType, comparison);
+    REAL_NUMBER {
+      @Override
+      public String toString() {
+        return "real";
+      }
+    },
+    BOOLEAN {
+      public String toString() {
+        return "bool";
+      }
+    },
+    STRING {
+      public String toString() {
+        return "string";
+      }
+    },
+    INTEGER {
+      public String toString() {
+        return "int";
+      }
+    },
   }
 }
 

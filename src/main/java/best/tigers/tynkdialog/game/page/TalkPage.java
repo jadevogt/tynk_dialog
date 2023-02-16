@@ -1,29 +1,23 @@
 package best.tigers.tynkdialog.game.page;
 
-import javax.json.Json;
-import javax.json.JsonObject;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
 import lombok.Getter;
-import lombok.Setter;
 
 public class TalkPage extends AbstractPage {
 
   @Getter
   private final String pageKind = "talk";
   @Getter
-  @Setter
-  private String speaker;
+  private final String speaker;
   @Getter
-  @Setter
-  private String content;
+  private final String content;
   @Getter
-  @Setter
-  private String textStyle;
+  private final String textStyle;
   @Getter
-  @Setter
-  private String blip;
+  private final String blip;
   @Getter
-  @Setter
-  private boolean canSkip;
+  private final boolean canSkip;
 
   public TalkPage(
       String speaker, String content, String textStyle, String blip, boolean canSkip) {
@@ -48,7 +42,7 @@ public class TalkPage extends AbstractPage {
   }
 
   public JsonObject serialize() {
-    javax.json.JsonObjectBuilder result =
+    jakarta.json.JsonObjectBuilder result =
         Json.createObjectBuilder()
             .add("txt", content)
             .add("canSkip", canSkip)

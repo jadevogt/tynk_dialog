@@ -13,16 +13,17 @@ import best.tigers.tynkdialog.util.Log;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.prefs.Preferences;
-import javax.swing.JFileChooser;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
+import javax.swing.filechooser.FileView;
+
+import best.tigers.tynkdialog.util.PreferencesService;
 import lombok.Getter;
 
 public class PrimaryListController {
 
   private static PrimaryListController singleInstance = null;
-  private final Preferences prefs = Preferences.userRoot().node(this.getClass().getName());
   @Getter
   private final PrimaryListView view;
   private final DialogFile fileHandle;
@@ -107,20 +108,31 @@ public class PrimaryListController {
     view.update();
   }
 
+  public void setModified(boolean modified) {
+    model.setModified(modified);
+  }
+
   public void updateUI() {
     SwingUtilities.updateComponentTreeUI(PrimaryListController.getInstance().getView().getFrame());
   }
 
   public String selectFile() {
-    JFileChooser chooser = new DynamicFileChooser();
+    var prefs = PreferencesService.getInstance();
+    JFileChooser chooser = new JFileChooser();
+    Path lastOpenedPath = prefs.getLastOpenedPath();
     chooser.setDialogType(JFileChooser.SAVE_DIALOG);
     JSONFilter jFilter = new JSONFilter();
     TextFilter tFilter = new TextFilter();
     chooser.addChoosableFileFilter(jFilter);
     chooser.addChoosableFileFilter(tFilter);
-    chooser.setFileFilter(jFilter);
+    if (lastOpenedPath != null) {
+      chooser.setCurrentDirectory(lastOpenedPath.toFile());
+    }
+    Action details = chooser.getActionMap().get("viewTypeDetails");
+    details.actionPerformed(null);
     chooser.showDialog(null, "Select or Create");
     String newPath = chooser.getSelectedFile().getAbsolutePath();
+    prefs.setLastOpenedPath(chooser.getSelectedFile().getParentFile().toPath());
     model.setPath(newPath);
     return newPath;
   }

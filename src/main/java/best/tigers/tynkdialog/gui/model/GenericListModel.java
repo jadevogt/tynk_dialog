@@ -69,7 +69,8 @@ public class GenericListModel<T> extends AbstractModel
     listDataListeners.remove(l);
   }
 
-  public ArrayList<T> getContent() {
-    return new ArrayList<>(items);
+  public List<T> getContent() {
+    return Collections.unmodifiableList(items);
   }
+
 }

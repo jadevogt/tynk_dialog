@@ -1,41 +1,31 @@
-package best.tigers.tynkdialog.gui.view.page;
+package best.tigers.tynkdialog.gui.view.page.neo;
 
 import best.tigers.tynkdialog.game.page.BranchRequirement;
 import best.tigers.tynkdialog.game.page.BranchRequirement.Category;
 import best.tigers.tynkdialog.game.page.BranchRequirement.Comparison;
 import best.tigers.tynkdialog.game.page.BranchRequirement.ValueType;
-import best.tigers.tynkdialog.game.page.ChoiceResponse;
 import best.tigers.tynkdialog.gui.model.GenericListModel;
 import best.tigers.tynkdialog.gui.model.page.BranchRequirementModel;
-import best.tigers.tynkdialog.gui.model.page.ChoiceResponseModel;
 import best.tigers.tynkdialog.gui.view.TObserver;
-import best.tigers.tynkdialog.gui.view.components.LabeledField;
-import best.tigers.tynkdialog.gui.view.components.SuperTextEditorPane;
-import best.tigers.tynkdialog.gui.view.components.SuperTextToolbar;
-import best.tigers.tynkdialog.util.Assets;
-import best.tigers.tynkdialog.util.Log;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+
+import java.awt.event.*;
 import java.util.Arrays;
-import java.util.Objects;
-import javax.swing.BoxLayout;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.print.Doc;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
-public class BranchRequirementEditorView extends JPanel implements TObserver {
-
+public class NeoBranchRequirementEditorView implements TObserver {
   private final BranchRequirementModel model;
-  private final JComboBox<BranchRequirement.Category> categoryJComboBox = new JComboBox<>();
-  private final JComboBox<BranchRequirement.Comparison> comparisonJComboBox = new JComboBox<>();
-  private final JComboBox<BranchRequirement.ValueType> valueTypeJComboBox = new JComboBox<>();
-  private final LabeledField flag = new LabeledField("Flag");
-  private final LabeledField value = new LabeledField("Value");
   private final GenericListModel<BranchRequirementModel> listModel;
+  private JTextField flag;
+  private JComboBox comparisonJComboBox;
+  private JTextField value;
+  private JComboBox valueTypeJComboBox;
+  private JComboBox categoryJComboBox;
+  private JPanel rootPanel;
 
-
-
-  public BranchRequirementEditorView(BranchRequirementModel model,
+  public NeoBranchRequirementEditorView(BranchRequirementModel model,
       GenericListModel<BranchRequirementModel> listModel) {
     super();
     this.listModel = listModel;
@@ -45,28 +35,14 @@ public class BranchRequirementEditorView extends JPanel implements TObserver {
     Arrays.stream(Category.values()).forEach(categoryJComboBox::addItem);
     Arrays.stream(Comparison.values()).forEach(comparisonJComboBox::addItem);
     Arrays.stream(ValueType.values()).forEach(valueTypeJComboBox::addItem);
-    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-    var subPanelFlag = new JPanel();
-    subPanelFlag.add(flag.getLabel());
-    subPanelFlag.add(flag.getField());
-    var subPanelValue = new JPanel();
-    subPanelValue.add(value.getLabel());
-    subPanelValue.add(value.getField());
-
-    add(subPanelFlag);
-    add(categoryJComboBox);
-    add(comparisonJComboBox);
-    add(subPanelValue);
-    add(valueTypeJComboBox);
 
     categoryJComboBox.setSelectedItem(model.getCategory());
     valueTypeJComboBox.setSelectedItem(model.getValueType());
     comparisonJComboBox.setSelectedItem(model.getComparison());
-    flag.getField().setText(model.getFlag());
-    value.getField().setText(model.getValue());
+    flag.setText(model.getFlag());
+    value.setText(model.getValue());
 
-    flag.getField().addFocusListener(new FocusAdapter() {
+    flag.addFocusListener(new FocusAdapter() {
       @Override
       public void focusLost(FocusEvent e) {
         super.focusLost(e);
@@ -74,7 +50,7 @@ public class BranchRequirementEditorView extends JPanel implements TObserver {
       }
     });
 
-    value.getField().addFocusListener(new FocusAdapter() {
+    value.addFocusListener(new FocusAdapter() {
       @Override
       public void focusLost(FocusEvent e) {
         super.focusLost(e);
@@ -87,13 +63,27 @@ public class BranchRequirementEditorView extends JPanel implements TObserver {
     valueTypeJComboBox.addActionListener((e) -> saveChanges());
   }
 
+  public static NeoBranchRequirementEditorView nullView() {
+    var nullView = new NeoBranchRequirementEditorView(new BranchRequirementModel(new BranchRequirement()), new GenericListModel<>());
+    nullView.categoryJComboBox.setEnabled(false);
+    nullView.flag.setEnabled(false);
+    nullView.valueTypeJComboBox.setEnabled(false);
+    nullView.comparisonJComboBox.setEnabled(false);
+    nullView.value.setEnabled(false);
+    return nullView;
+  }
+
   public BranchRequirementModel getModel() {
     return model;
   }
 
+  public JPanel getRootPanel() {
+    return rootPanel;
+  }
+
   @Override
   public void update() {
-    flag.getField().setText(model.getFlag());
+    flag.setText(model.getFlag());
     categoryJComboBox.setSelectedItem(model.getCategory());
     comparisonJComboBox.setSelectedItem(model.getComparison());
     value.setText(model.getValue());

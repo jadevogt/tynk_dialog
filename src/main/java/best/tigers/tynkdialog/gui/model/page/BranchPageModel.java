@@ -2,45 +2,60 @@ package best.tigers.tynkdialog.gui.model.page;
 
 import best.tigers.tynkdialog.game.page.AbstractPage;
 import best.tigers.tynkdialog.game.page.BranchPage;
+import best.tigers.tynkdialog.game.page.BranchPage.Leaf;
+import best.tigers.tynkdialog.game.page.BranchRequirement;
 import best.tigers.tynkdialog.gui.model.GenericListModel;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Delegate;
 
 public class BranchPageModel extends AbstractPageModel {
-  @Getter @Setter
-  private GenericListModel<BranchRequirementModel> requirementListModel;
-  @Delegate
-  private BranchPage model;
+  @Getter
+  private Leaf leaf;
+  @Getter
+  private String branchResult;
+  @Getter
+  private GenericListModel<BranchRequirement> requirementListModel;
 
-  public BranchPageModel(BranchPage model) {
-    this.model = model;
-    this.requirementListModel = new GenericListModel<>(model.getRequirements().stream().map(
-        BranchRequirementModel::new).toList());
-  }
-
-  public BranchPageModel() {
-    this.model = new BranchPage();
+  public BranchPageModel(BranchPage page) {
+    super();
+    setPage(page);
   }
 
   @Override
   public BranchPage getPage() {
-    return model;
+    return new BranchPage(leaf, branchResult, requirementListModel.getContent());
   }
 
   @Override
   public void setPage(AbstractPage page) {
-    this.model = (BranchPage) page;
-    this.requirementListModel = new GenericListModel<>(model.getRequirements().stream().map(
-        BranchRequirementModel::new).toList());
+    var branchPage = (BranchPage) page;
+    this.leaf = branchPage.getLeaf();
+    this.branchResult = branchPage.getBranchResult();
+    this.requirementListModel = new GenericListModel<>(branchPage.getRequirements());
+    notifySubscribers();
   }
 
   @Override
   public AbstractPageModel continuationModel() {
-    return null;
+    return new BranchPageModel(getPage());
   }
 
-  public GenericListModel<BranchRequirementModel> cloneRequirements() {
-    return new GenericListModel<>(this.requirementListModel.getContent().stream().map(m -> new BranchRequirementModel(m.getRequirement().clone())).toList());
+  public GenericListModel<BranchRequirement> cloneRequirements() {
+    return new GenericListModel<>(requirementListModel.getContent());
+  }
+
+  public void setLeaf(Leaf leaf) {
+    this.leaf = leaf;
+    notifySubscribers();
+  }
+
+  public void setBranchResult(String branchResult) {
+    this.branchResult = branchResult;
+    notifySubscribers();
+  }
+
+  public void setRequirementListModel(
+      GenericListModel<BranchRequirement> requirementListModel) {
+    this.requirementListModel = requirementListModel;
+    notifySubscribers();
   }
 }

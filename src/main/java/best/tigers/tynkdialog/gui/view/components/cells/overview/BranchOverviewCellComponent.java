@@ -15,7 +15,7 @@ public class BranchOverviewCellComponent extends AbstractOverviewCellComponent {
     super(pageModel, isSelected);
     var model = (BranchPageModel) pageModel;
     add(new QuickPair("Result", model.getBranchResult()));
-    add(new QuickPair("Requirements", Integer.toString(model.getRequirements().size())));
+    add(new QuickPair("Requirements", Integer.toString(model.getRequirementListModel().getContent().size())));
   }
 
 }

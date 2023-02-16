@@ -8,74 +8,71 @@ import best.tigers.tynkdialog.game.page.BranchRequirement.ValueType;
 import best.tigers.tynkdialog.game.page.ChoiceResponse;
 import best.tigers.tynkdialog.game.page.ChoiceResponse.ResponseIcon;
 import best.tigers.tynkdialog.gui.model.AbstractModel;
+import lombok.Getter;
+import lombok.Setter;
 
 public class BranchRequirementModel extends AbstractModel {
 
-  private final BranchRequirement requirement;
+  @Getter
+  private String flag;
+  @Getter
+  private Category category;
+  @Getter
+  private String value;
+  @Getter
+  private ValueType valueType;
+  @Getter
+  private Comparison comparison;
 
   public BranchRequirementModel(BranchRequirement requirement) {
-    this.requirement = requirement;
+    super();
+    setRequirement(requirement);
   }
 
-  public String getFlag() {
-    return requirement.getFlag();
-  }
-
-  public void setFlag(String flag) {
-    requirement.setFlag(flag);
-  }
-
-  public Category getCategory() {
-    return requirement.getCategory();
-  }
-
-  public void setCategory(Category category) {
-    requirement.setCategory(category);
-  }
-
-  public String getValue() {
-    return requirement.getValue();
-  }
-
-  public void setValue(String value) {
-    requirement.setValue(value);
-  }
-
-  public ValueType getValueType(){
-    return requirement.getValueType();
-  }
-
-  public void setValueType(ValueType valueType) {
-    requirement.setValueType(valueType);
-  }
-
-  public Comparison getComparison() {
-    return requirement.getComparison();
-  }
-
-  public void setComparison(Comparison comparison) {
-    requirement.setComparison(comparison);
-  }
-
-
-  public BranchRequirement getRequirement() {
-    return requirement;
+  public void setRequirement(BranchRequirement requirement) {
+    flag = requirement.getFlag();
+    category = requirement.getCategory();
+    value = requirement.getValue();
+    valueType = requirement.getValueType();
+    comparison = requirement.getComparison();
+    notifySubscribers();
   }
 
   @Override
   public String toString() {
-    var str = new StringBuilder();
-    str.append(requirement.getFlag());
-    str.append(" (");
-    str.append(BranchRequirement.valueTypeCanonical(requirement.getValueType()));
-    str.append(") ");
-    str.append(BranchRequirement.comparisonCanonical(requirement.getComparison()));
-    str.append(" ");
-    str.append(requirement.getValue());
-    return str.toString();
+    return getRequirement().toString();
+  }
+
+  public BranchRequirement getRequirement() {
+    return new BranchRequirement(flag, category, value, valueType, comparison);
   }
 
   public BranchRequirementModel clone() {
-    return new BranchRequirementModel(requirement.clone());
+    return new BranchRequirementModel(getRequirement());
+  }
+
+  public void setFlag(String flag) {
+    this.flag = flag;
+    notifySubscribers();
+  }
+
+  public void setCategory(Category category) {
+    this.category = category;
+    notifySubscribers();
+  }
+
+  public void setValue(String value) {
+    this.value = value;
+    notifySubscribers();
+  }
+
+  public void setValueType(ValueType valueType) {
+    this.valueType = valueType;
+    notifySubscribers();
+  }
+
+  public void setComparison(Comparison comparison) {
+    this.comparison = comparison;
+    notifySubscribers();
   }
 }

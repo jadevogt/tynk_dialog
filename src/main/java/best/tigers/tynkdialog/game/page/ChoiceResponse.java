@@ -1,22 +1,19 @@
 package best.tigers.tynkdialog.game.page;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
 import lombok.Getter;
 import lombok.Setter;
 
 public class ChoiceResponse {
 
   @Getter
-  @Setter
-  private String content;
+  private final String content;
   @Getter
-  @Setter
-  private String choiceResult;
+  private final String choiceResult;
   @Getter
-  @Setter
-  private ResponseIcon icon;
+  private final ResponseIcon icon;
 
   public ChoiceResponse(String content, String choiceResult, ResponseIcon icon) {
     this.content = content;
@@ -67,10 +64,6 @@ public class ChoiceResponse {
     }
     result.add("symbol", iconValue);
     return result.build();
-  }
-
-  public ChoiceResponse clone() {
-    return new ChoiceResponse(content, choiceResult, icon);
   }
 
   public enum ResponseIcon {

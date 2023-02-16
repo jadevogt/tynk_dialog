@@ -6,7 +6,7 @@ import best.tigers.tynkdialog.gui.controller.page.TalkPageController;
 import best.tigers.tynkdialog.gui.model.page.AbstractPageModel;
 import best.tigers.tynkdialog.gui.model.page.TalkPageModel;
 import best.tigers.tynkdialog.gui.view.page.AbstractPageEditorView;
-import best.tigers.tynkdialog.gui.view.page.TalkPageEditorView;
+import best.tigers.tynkdialog.gui.view.page.neo.NeoTalkPageEditorView;
 
 public class TalkPageMvcFactory extends AbstractPageMvcFactory {
 
@@ -21,13 +21,13 @@ public class TalkPageMvcFactory extends AbstractPageMvcFactory {
   }
 
   @Override
-  public TalkPageEditorView createPageView(AbstractPageModel pageModel) {
-    return new TalkPageEditorView((TalkPageModel) pageModel);
+  public NeoTalkPageEditorView createPageView(AbstractPageModel pageModel) {
+    return new NeoTalkPageEditorView((TalkPageModel) pageModel);
   }
 
   @Override
   public TalkPageController createPageController(AbstractPageModel pageModel,
       AbstractPageEditorView pageView) {
-    return new TalkPageController((TalkPageModel) pageModel, (TalkPageEditorView) pageView);
+    return new TalkPageController((TalkPageModel) pageModel, (NeoTalkPageEditorView) pageView);
   }
 }

@@ -235,13 +235,18 @@ public class ChoicePageEditorView extends AbstractPageEditorView implements List
 
   @Override
   public AbstractPage asPage() {
-    var blipValue = blip.getText();
-    if (!blipCheck.isSelected()) {
-      blipValue = null;
-    }
-    return new ChoicePage(character.getText(), contentField.getText(), blipValue,
-        skipCheck.isSelected(), giftListModel.getContent(),
-        responseListModel.getContent().stream().map(m -> m.clone().getResponse()).toList());
+    var blipValue = blipCheck.isSelected() ? blip.getText() : null;
+    var responseModels = responseListModel.getContent()
+        .stream()
+        .map(ChoiceResponseModel::getChoiceResponse)
+        .toList();
+    return new ChoicePage(
+        character.getText(),
+        contentField.getText(),
+        blipValue,
+        skipCheck.isSelected(),
+        giftListModel.getContent(),
+        responseModels);
 
   }
 
@@ -256,7 +261,7 @@ public class ChoicePageEditorView extends AbstractPageEditorView implements List
   }
 
   @Override
-  AbstractPageModel getModel() {
+  public AbstractPageModel getModel() {
     return model;
   }
 
