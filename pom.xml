@@ -79,7 +79,7 @@
       <artifactId>annotations</artifactId>
       <groupId>org.jetbrains</groupId>
       <scope>compile</scope>
-      <version>RELEASE</version>
+      <version>24.0.1</version>
     </dependency>
     <dependency>
       <groupId>jakarta.json</groupId>
