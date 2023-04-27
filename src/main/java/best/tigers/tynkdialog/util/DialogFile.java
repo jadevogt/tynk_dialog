@@ -12,6 +12,8 @@ import java.util.LinkedList;
 
 import jakarta.json.*;
 
+import javax.swing.*;
+
 public class DialogFile {
 
   private static final String SEP = System.getProperty("file.separator");
@@ -79,6 +81,7 @@ public class DialogFile {
       }
       out = builder.build();
     } catch (JsonException e) {
+      JOptionPane.showMessageDialog(null, "(FATAL) JsonException encountered while trying to save file. The file was not overwritten: " + e.getLocalizedMessage());
       return;
     }
     try {
@@ -90,6 +93,8 @@ public class DialogFile {
     } catch (IOException ioe) {
       Log.error(
               "(FATAL) IOException encountered while trying to save file " + ioe.getLocalizedMessage());
+
+      JOptionPane.showMessageDialog(null, "(FATAL) IOException encountered while trying to save file " + ioe.getLocalizedMessage());
       System.exit(1);
     }
   }

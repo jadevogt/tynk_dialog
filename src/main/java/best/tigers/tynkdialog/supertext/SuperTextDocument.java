@@ -1,11 +1,8 @@
 package best.tigers.tynkdialog.supertext;
 
 import best.tigers.tynkdialog.game.Constants;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Shape;
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Arrays;
@@ -85,7 +82,7 @@ public class SuperTextDocument extends DefaultStyledDocument {
   }
 
   public void insertFunctionCall(int offset, String functionName, String functionParam) {
-    if (functionName.strip().equals("")) {
+    if (functionName.strip().equals("") || functionParam.strip().equals("")) {
       java.awt.Toolkit.getDefaultToolkit().beep();
       return;
     }
@@ -108,9 +105,10 @@ public class SuperTextDocument extends DefaultStyledDocument {
       insertString(offset, " ", attrs);
     } catch (BadLocationException e) {
       e.printStackTrace();
-      JOptionPane.showMessageDialog(null, "Can't insert function call!");
+      JOptionPane.showMessageDialog(null, "Can't insert function call: %s(%s)".formatted(functionName, functionParam));
+    } finally {
+      lengthLock = true;
     }
-    lengthLock = true;
   }
 
   public void changeDelayMagnitude(Element e, int magnitude) {
@@ -122,6 +120,10 @@ public class SuperTextDocument extends DefaultStyledDocument {
 
   public void changeFunctionCall(Element e, String functionName, String functionParams) {
     var attribs = new SimpleAttributeSet();
+    if(functionName.strip().equals("") || functionParams.strip().equals("")) {
+      Toolkit.getDefaultToolkit().beep();
+      return;
+    }
     attribs.addAttribute(SuperTextDocument.FUNCTION_CALL_NAME, functionName);
     attribs.addAttribute(SuperTextDocument.FUNCTION_PARAM_NAME, functionParams);
     setCharacterAttributes(
