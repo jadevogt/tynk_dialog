@@ -146,8 +146,7 @@ public class SuperTextEditorKit extends StyledEditorKit {
           }
         }
 
-        if (v != null
-            && v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_CALL_NAME) != null) {
+        if (v != null && v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_CALL_NAME) != null) {
           if (v.getDocument() instanceof SuperTextDocument doc) {
             String[] newDetails = NeoFunctionCallDialog.promptForFunctionDetails(
                 (String) v.getAttributes().getAttribute(SuperTextDocument.FUNCTION_CALL_NAME),
