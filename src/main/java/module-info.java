@@ -5,4 +5,5 @@ module tynk.dialog {
     requires java.prefs;
     requires com.formdev.flatlaf.intellijthemes;
     requires java.logging;
+    //requires forms.rt;
 }
